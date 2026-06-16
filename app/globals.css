@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/* Stronger pastel + deep sage theme for a more noticeable UI */
+:root {
+  --studio-bg: #efe7dc;        /* Warm beige base */
+  --studio-hero: #f5efe6;      /* Soft cream highlight */
+  --studio-card: #e7ddcf;      /* Richer warm card surface */
+  --studio-footer: #31423b;    /* Deep sage/olive panel */
+  --studio-border: #d3c5b3;    /* Soft sand divider lines */
+  --studio-moss: #31433c;      /* Darker text tone for contrast */
+  --studio-gold: #cfa45a;      /* Stronger gold accent */
+  --studio-muted: #627069;     /* Softer secondary text */
+  --studio-surface-light: #fffaf6;
+  --studio-surface-dark: #2a3631;
+}
+
+@theme {
+  --color-brand-light: var(--studio-bg);
+  --color-brand-dark: var(--studio-moss);
+  --color-brand-gold: var(--studio-gold);
+  --color-brand-muted: var(--studio-muted);
+}
+
+body {
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0) 26%),
+    linear-gradient(135deg, var(--studio-bg) 0%, #f7f3ec 44%, #ebe3d8 100%);
+  color: var(--studio-moss);
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+
+::selection {
+  background: rgba(179, 142, 54, 0.2);
+  color: var(--studio-moss);
+}
+
+html {
+  scroll-behavior: smooth;
+}
