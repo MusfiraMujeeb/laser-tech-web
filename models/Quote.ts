@@ -8,6 +8,7 @@ export interface IQuote extends Document {
   material: string;
   dimensions?: string;
   description: string;
+  fileUrl?: string; // Tracks the cloud file pointer link
   createdAt: Date;
 }
 
@@ -19,6 +20,7 @@ const QuoteSchema: Schema = new Schema({
   material: { type: String, required: true },
   dimensions: { type: String },
   description: { type: String, required: true },
+  fileUrl: { type: String, default: '' }, // Initialized safely as an empty string fallback
   createdAt: { type: Date, default: Date.now }
 });
 

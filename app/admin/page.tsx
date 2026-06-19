@@ -11,6 +11,7 @@ interface QuoteItem {
   material: string;
   dimensions: string;
   description: string;
+  fileUrl?: string; // Appended property to track the uploaded cloud storage URL
   createdAt: string;
 }
 
@@ -186,7 +187,23 @@ export default function AdminDashboard() {
                       <td className="p-4 align-top max-w-[220px]">
                         <p className="font-black text-slate-900">{quote.name}</p>
                         <p className="text-xs font-semibold" style={{ color: 'var(--studio-muted)' }}>{quote.email}</p>
-                        <a href={`https://wa.me/${quote.phone.replace(/[^0-9]/g, '')}`} target="_blank" className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-lg text-xs font-bold text-white bg-emerald-700 shadow-xs">💬 WhatsApp</a>
+                        
+                        <div className="flex flex-col gap-2 mt-2">
+                          <a href={`https://wa.me/${quote.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-700 shadow-xs">
+                            💬 WhatsApp
+                          </a>
+                          
+                          {/* Conditional view button execution verifying if a cloud blueprint link exists */}
+                          {quote.fileUrl ? (
+                            <a href={quote.fileUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-800 bg-amber-100 border border-amber-200 shadow-xs hover:bg-amber-200 transition-colors">
+                              📐 View Blueprint File
+                            </a>
+                          ) : (
+                            <span className="text-[11px] text-center font-medium italic block py-1" style={{ color: 'var(--studio-muted)' }}>
+                              No file attached
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="p-4 align-top">
                         <span className="inline-block px-2.5 py-1 rounded-md text-[11px] font-black tracking-wide uppercase mb-1.5 border" style={{ backgroundColor: 'var(--studio-hero)', borderColor: 'var(--studio-border)', color: 'var(--studio-moss)' }}>{quote.service}</span>

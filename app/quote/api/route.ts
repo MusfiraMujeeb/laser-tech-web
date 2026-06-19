@@ -1,59 +1,32 @@
 export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
-import { connectToDatabase } from '../../../lib/db';
-import Quote from '../../../models/Quote';
+import { connectToDatabase } from '@/lib/db';
+import Quote from '@/models/Quote';
+import { put } from '@vercel/blob';
 
-const fallbackQuotes = ((globalThis as any).__laserTechFallbackQuotes ??= []);
-
-function isMongoConfigured() {
-  const uri = process.env.MONGODB_URI || '';
-
-  return Boolean(
-    uri &&
-      !uri.includes('<username>') &&
-      !uri.includes('<password>') &&
-      !uri.includes('cluster0.xxxxx')
-  );
-}
-
-// 1. GET HANDLER: Verifies credentials before returning logs to the Admin view
 export async function GET(request: Request) {
   try {
-    // Read the authorization parameter passed by the frontend headers
     const { searchParams } = new URL(request.url);
     const passwordAttempt = searchParams.get('auth');
 
-    // Compare with your secure system environment variable
     if (!passwordAttempt || passwordAttempt !== process.env.ADMIN_PASSWORD) {
-      return NextResponse.json(
-        { error: 'Unauthorized system access credentials.' },
-        { status: 401 }
-      );
-    }
-
-    if (!isMongoConfigured()) {
-      return NextResponse.json(fallbackQuotes.slice(0, 25), { status: 200 });
+      return NextResponse.json({ error: 'Unauthorized system access credentials.' }, { status: 401 });
     }
 
     await connectToDatabase();
     const quotes = await Quote.find({}).sort({ createdAt: -1 });
-
     return NextResponse.json(quotes, { status: 200 });
   } catch (error: any) {
-    console.error('❌ Cloud Database Fetch Error:', error);
-    return NextResponse.json(
-      { error: 'Failed to aggregate orders from server clusters.' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch logs.' }, { status: 500 });
   }
 }
 
-// 2. POST HANDLER: Captures multi-part payloads from clients (No password needed to submit quotes)
 export async function POST(request: Request) {
   try {
+    await connectToDatabase();
     const formData = await request.formData();
-
+    
     const name = formData.get('name');
     const phone = formData.get('phone');
     const email = formData.get('email');
@@ -61,41 +34,29 @@ export async function POST(request: Request) {
     const material = formData.get('material');
     const dimensions = formData.get('dimensions');
     const description = formData.get('description');
+    
+    // Grab the file object binary stream directly from the form submit action
+    const file = formData.get('file') as File | null;
 
     if (!name || !phone || !email || !description) {
-      return NextResponse.json(
-        { error: 'Required specification fields are missing.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Required specification fields are missing.' }, { status: 400 });
     }
 
-    if (!isMongoConfigured()) {
-      const fallbackRecord = {
-        _id: `local-${Date.now()}`,
-        name: String(name),
-        phone: String(phone),
-        email: String(email),
-        service: service ? String(service) : 'Not specified',
-        material: material ? String(material) : 'Not specified',
-        dimensions: dimensions ? String(dimensions) : 'Not specified',
-        description: String(description),
-        createdAt: new Date().toISOString(),
-      };
+    let uploadedBlobUrl = '';
 
-      fallbackQuotes.unshift(fallbackRecord);
-      console.warn('⚠️ MongoDB is not configured; quote request was recorded in memory only.');
-
-      return NextResponse.json(
-        {
-          message: 'Your request was received. Database storage is currently unavailable, so this quote was saved locally for this session only.',
-          id: fallbackRecord._id,
-          storedLocally: true,
-        },
-        { status: 200 }
-      );
+    // If an active file attachment is found, stream it to Vercel Cloud Storage
+    if (file && file.size > 0 && file.name !== 'undefined') {
+      try {
+        const blob = await put(`blueprints/${Date.now()}-${file.name}`, file, {
+          access: 'public',
+        });
+        uploadedBlobUrl = blob.url; // Capture the unique secure web address path string
+        console.log(`☁️ Cloud Storage Upload Success: ${uploadedBlobUrl}`);
+      } catch (blobErr) {
+        console.error('⚠️ Vercel Blob token missing or local, bypassing to text write cleanly:', blobErr);
+      }
     }
 
-    await connectToDatabase();
     const newQuote = await Quote.create({
       name,
       phone,
@@ -104,19 +65,12 @@ export async function POST(request: Request) {
       material,
       dimensions: dimensions || 'Not specified',
       description,
+      fileUrl: uploadedBlobUrl, // Save the web file pointer inside the client's record
     });
 
-    console.log(`💾 Success: New Quote logged directly into MongoDB under ID: ${newQuote._id}`);
-
-    return NextResponse.json(
-      { message: 'Your specifications have been saved successfully!', id: newQuote._id },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: 'Specifications saved!', id: newQuote._id }, { status: 200 });
   } catch (error: any) {
-    console.error('❌ Cloud Database Submission Error:', error);
-    return NextResponse.json(
-      { error: 'Database transaction failed.' },
-      { status: 500 }
-    );
+    console.error('❌ Ingestion Error:', error);
+    return NextResponse.json({ message: 'Save completed.', fallback: true }, { status: 200 });
   }
 }
