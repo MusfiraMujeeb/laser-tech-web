@@ -31,13 +31,28 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Workshop Contact Details Card */}
-          <div className="p-8 rounded-3xl shadow-[0_18px_40px_rgba(49,67,60,0.18)]" style={{ background: 'linear-gradient(180deg, var(--studio-card) 0%, #efe5d8 100%)', border: '1px solid var(--studio-border)' }}>
-            <span className="text-3xl mb-4 block">📍</span>
-            <h3 className="text-xl font-black mb-1" style={{ color: 'var(--studio-moss)' }}>Our Studio Workshop</h3>
-            <p className="text-sm mb-6" style={{ color: 'var(--studio-muted)' }}>33/1 Kandy - Colombo Rd, Mawanella</p>
+          {/* Interactive Workshop Card & Live Map Embedded Panel */}
+          <div className="p-6 md:p-8 rounded-3xl shadow-[0_18px_40px_rgba(49,67,60,0.18)] flex flex-col gap-6" style={{ background: 'linear-gradient(180deg, var(--studio-card) 0%, #efe5d8 100%)', border: '1px solid var(--studio-border)' }}>
+            <div>
+              <span className="text-3xl mb-3 block">📍</span>
+              <h3 className="text-xl font-black mb-1" style={{ color: 'var(--studio-moss)' }}>Our Studio Workshop</h3>
+              <p className="text-sm" style={{ color: 'var(--studio-muted)' }}>33/1 Kandy - Colombo Rd, Mawanella</p>
+            </div>
             
-            <div className="grid grid-cols-2 gap-4 pt-4 text-xs mb-6" style={{ borderTop: '1px solid var(--studio-bg)' }}>
+            {/* Live Interactive Map Frame Container */}
+            <div className="w-full h-56 rounded-2xl overflow-hidden border shadow-inner border-slate-300">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.888111637817!2d80.44777549999999!3d7.253573400000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae315006ed4ab7d%3A0x4902102f60dc78df!2sLaser%20Tech!5e0!3m2!1sen!2slk!4v1781879984552!5m2!1sen!2slk" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen={true} 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 pt-2 text-xs" style={{ borderTop: '1px solid var(--studio-bg)' }}>
               <div>
                 <p className="font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--studio-muted)' }}>Workshop Status</p>
                 <p className="text-emerald-700 font-bold text-sm">Open • Closes 6 PM</p>
@@ -47,15 +62,11 @@ export default function Home() {
                 <p className="font-bold text-sm" style={{ color: 'var(--studio-moss)' }}>5.0 ⭐⭐⭐⭐⭐ (2 Reviews)</p>
               </div>
             </div>
-
-            <Link href="https://maps.app.goo.gl/xYourGoogleMapsLink" target="_blank" className="w-full block text-center font-bold py-3.5 rounded-xl text-xs transition-colors" style={{ backgroundColor: 'var(--studio-bg)', color: 'var(--studio-moss)', border: '1px solid var(--studio-border)' }}>
-              Open Map Location
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* 2. SERVICES SECTION WITH FIXED ALIGNMENT */}
+      {/* 2. SERVICES SECTION */}
       <section id="services" className="py-24 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight" style={{ color: 'var(--studio-moss)' }}>Our Core Services</h2>
@@ -63,7 +74,6 @@ export default function Home() {
           <p className="text-sm max-w-sm mx-auto leading-relaxed" style={{ color: 'var(--studio-muted)' }}>Precision fabrication paths meeting crisp artistic design. Quality manufacturing with trusted island-wide logistics.</p>
         </div>
 
-        {/* The grid tracks are set to cross-stretch items naturally */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
           
           {/* Service Card 1: Laser Crafts */}
