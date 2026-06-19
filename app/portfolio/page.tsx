@@ -14,14 +14,16 @@ const showcaseCards = [
     title: 'Acrylic & Engraving',
     badge: 'Premium Finish',
     summary: 'Engraved acrylic boards, nameplates, and clean branding pieces with a polished studio finish.',
-    image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=900&q=80',
+    // UPDATED: Points directly to your clean, text-free acrylic machinery graphic asset
+    image: '/acrylic-engraving.jpg', 
     cta: 'See finished pieces',
   },
   {
     title: 'Branding & Print Work',
     badge: 'Creative Projects',
     summary: 'Merchandise, stickers, display material, and print-ready branding work prepared for businesses.',
-    image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80',
+    // UPDATED: Points directly to your clean corporate printed items asset
+    image: '/branding-print.jpg', 
     cta: 'Explore our gallery',
   },
 ];
@@ -119,5 +121,5 @@ export default function PortfolioPage() {
         </div>
       </section>
     </main>
-  );
+  ); 
 }
