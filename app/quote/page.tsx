@@ -21,8 +21,8 @@ export default function QuotePage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  // ⚠️ Update this with the owner's actual phone number (country code + number, no spaces/plus signs)
-  const WORKSHOP_WHATSAPP = "94771234567"; 
+  // ✅ UPDATED: The owner's actual live WhatsApp phone number string
+  const WORKSHOP_WHATSAPP = "94757991141"; 
 
   // Shipping rate matrix configuration
   const deliveryRates: Record<string, number> = {
