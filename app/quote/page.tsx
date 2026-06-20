@@ -21,7 +21,7 @@ export default function QuotePage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  // ✅ UPDATED: The owner's actual live WhatsApp phone number string
+  // ✅ Verfied: Live registered workshop mobile route
   const WORKSHOP_WHATSAPP = "94757991141"; 
 
   // Shipping rate matrix configuration
@@ -52,6 +52,7 @@ export default function QuotePage() {
         ? `${formData.customWidth}x${formData.customHeight} inches` 
         : formData.sizeOption;
 
+      // 📝 Instructive message detailing the manual attachment rule
       const textTemplate = encodeURIComponent(
         `Hello Laser Tech! I am requesting a quote for a custom project.\n\n` +
         `• Name: ${formData.name || 'Customer'}\n` +
@@ -60,14 +61,14 @@ export default function QuotePage() {
         `• Size: ${parsedSize}\n` +
         `• Delivery: ${deliveryDistrict} (Est: Rs. ${currentShippingCost})\n` +
         `• File Name: ${selectedFile.name}\n\n` +
-        `I am attaching my large production file right below.`
+        `⚠️ NOTE: I am attaching my project file below manually using the WhatsApp attachment button (📎/+) right now!`
       );
 
-      // Save the generated URL link to state and prompt the user to click the button
+      // Save the generated URL link to state and prompt the user to click the button explicitly
       setWhatsappUrl(`https://wa.me/${WORKSHOP_WHATSAPP}?text=${textTemplate}`);
-      setErrorMessage("This design file is too heavy for the browser! Please click the button below to send it via WhatsApp instantly.");
+      setErrorMessage(`This design file is too heavy for the browser! Click the green button below to open WhatsApp, then use the (+) or (📎) button in WhatsApp to attach "${selectedFile.name}".`);
       
-      e.target.value = ""; // Clear file selector state value
+      e.target.value = ""; // Clear file selector input element value
     } else {
       setErrorMessage('');
       setWhatsappUrl('');
@@ -78,7 +79,7 @@ export default function QuotePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // If there is an unsaved large file error, block the database standard submission
+    // Block standard network transmission if a large file flow is currently ongoing
     if (whatsappUrl) {
       alert("Please send your production file via the WhatsApp link button first!");
       return;
