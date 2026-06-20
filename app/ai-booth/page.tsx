@@ -27,16 +27,11 @@ export default function PerfectLaserStudio() {
 
   const isWood = design.material.includes('Mahogany') || design.material.includes('MDF');
 
-  // ✅ GUARANTEED STATIC IDS: Fixed raw textures containing absolutely zero hidden background elements
-  const textureUrl = isWood
-    ? "https://images.unsplash.com/photo-1541123437800-1bb1317badc2?auto=format&fit=crop&w=600&q=80" // 100% Pure Raw Fine Mahogany Wood Board
-    : "https://images.unsplash.com/photo-1554034483-04fda0d3507b?auto=format&fit=crop&w=600&q=80"; // 100% Seamless Frosted Acrylic satin background
-
   return (
     <div className="min-h-screen py-10 px-4 md:px-8" style={{ backgroundColor: 'var(--studio-bg)' }}>
       <div className="max-w-7xl mx-auto">
         
-        {/* HEADER VIEWER MODULE */}
+        {/* MONITOR HEADER CONTROL */}
         <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-6" style={{ borderColor: 'var(--studio-border)' }}>
           <div>
             <h1 className="text-3xl font-black text-slate-800 tracking-tight">CAD Parameter Design Center</h1>
@@ -61,13 +56,13 @@ export default function PerfectLaserStudio() {
           </div>
         </div>
 
-        {/* WORKSPACE LAYOUT SPLIT */}
+        {/* WORKSPACE MAIN INTERFACE SPLIT */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* LEFT COLUMN: CONTROL CONSOLE */}
           <div className="lg:col-span-5 space-y-6">
             
-            {/* STAGE 1: GEOMETRY AND COMPREHENSION SPECIFICATIONS */}
+            {/* LAYER 1: BASE STRUCTURAL SPECS */}
             <div className="bg-white border p-6 rounded-2xl shadow-xs space-y-4" style={{ borderColor: 'var(--studio-border)' }}>
               <h3 className="font-black text-xs uppercase tracking-wider text-slate-400 border-b pb-2">📦 1. Structural Layer Specs</h3>
               
@@ -83,7 +78,7 @@ export default function PerfectLaserStudio() {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Material Base Compound</label>
-                  <select name="material" value={design.material} onChange={handleInputChange} className="w-full px-3 py-2 rounded-xl border text-xs bg-slate-50 text-slate-800 focus:outline-none">
+                  <select name="material" value={design.material} className="w-full px-3 py-2 rounded-xl border text-xs bg-slate-50 text-slate-800 focus:outline-none" onChange={handleInputChange}>
                     <option value="Natural Mahogany Core">Natural Mahogany Core (Premium Wood)</option>
                     <option value="Wood / MDF">Wood / MDF (Classic Matte Finish)</option>
                     <option value="Acrylic">Acrylic (Glass-like Glossy Perspex)</option>
@@ -113,7 +108,7 @@ export default function PerfectLaserStudio() {
               </div>
             </div>
 
-            {/* STAGE 2: ADORNMENTS & DECORATIVE ACCENTS */}
+            {/* LAYER 2: EMBELLISHMENTS & DECORATIVE ACCENTS */}
             <div className="bg-white border p-6 rounded-2xl shadow-xs space-y-4" style={{ borderColor: 'var(--studio-border)' }}>
               <h3 className="font-black text-xs uppercase tracking-wider text-slate-400 border-b pb-2">🎨 2. Embellishments & Fonts</h3>
               <div className="grid grid-cols-3 gap-4">
@@ -146,7 +141,7 @@ export default function PerfectLaserStudio() {
               </div>
             </div>
 
-            {/* STAGE 3: WORDING TYPOGRAPHY FIELD CONSOLE */}
+            {/* LAYER 3: LAYOUT CUSTOM WORDING */}
             <div className="bg-white border p-6 rounded-2xl shadow-xs space-y-4" style={{ borderColor: 'var(--studio-border)' }}>
               <h3 className="font-black text-xs uppercase tracking-wider text-slate-400 border-b pb-2">✍️ 3. Layout Custom Wording</h3>
               <div className="space-y-3">
@@ -167,131 +162,151 @@ export default function PerfectLaserStudio() {
 
           </div>
 
-          {/* RIGHT COLUMN: HIGH-PRECISION GRAPHICAL VIEWPORT CANVASES */}
+          {/* RIGHT COLUMN: PROFESSIONAL EMBEDDED TECHNICAL CANVAS */}
           <div className="lg:col-span-7 space-y-4">
-            <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 block px-1">🖥_ Live CAD Viewport</span>
+            <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 block px-1">🖥️ Live CAD Viewport</span>
             
             <div className="bg-slate-900 rounded-3xl border border-slate-800 p-8 flex flex-col items-center justify-center min-h-[480px] relative overflow-hidden bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]">
               
-              {/* DYNAMIC SVG ELEMENT */}
+              {/* DYNAMIC PURE GRADIENT SVG ENGINE CANVAS */}
               <svg width="320" height="320" className="relative z-10 transition-all duration-300 drop-shadow-[0_10px_25px_rgba(0,0,0,0.5)]">
                 
+                {/* 🟢 CACHE-PROOF GRADIENT MATRIX: No external images used */}
                 <defs>
-                  <pattern id="materialTexture" patternUnits="userSpaceOnUse" width="320" height="320">
-                    <image href={textureUrl} x="0" y="0" width="320" height="320" preserveAspectRatio="xMidYMid slice" />
-                  </pattern>
+                  {/* Rich Warm Mahogany Core Wood Representation */}
+                  <linearGradient id="mahoganyWood" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#7c2d12" />
+                    <stop offset="50%" stopColor="#451a03" />
+                    <stop offset="100%" stopColor="#290b00" />
+                  </linearGradient>
+                  
+                  {/* Frosted Satin Translucent Acrylic Vibe */}
+                  <linearGradient id="acrylicGlass" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="rgba(241, 245, 249, 0.45)" />
+                    <stop offset="100%" stopColor="rgba(203, 213, 225, 0.2)" />
+                  </linearGradient>
+
+                  {/* Soft Burn Inset Shadow Filter for Realistic Carving */}
+                  <filter id="carveEffect" x="-10%" y="-10%" width="120%" height="120%">
+                    <feDropShadow dx="1" dy="1" stdDeviation="1" floodColor="#000000" floodOpacity="0.6" />
+                  </filter>
                 </defs>
 
-                {/* Outer Perimeter Shape Layers */}
+                {/* Base Core Plate Geometry Layers */}
                 {design.shape === 'circular' && (
                   <circle cx="160" cy="160" r="125" 
-                    fill={realisticView ? "url(#materialTexture)" : "none"} 
-                    stroke={realisticView ? isWood ? '#3b1601' : '#cbd5e1' : '#10b981'} 
-                    strokeWidth={realisticView ? '3' : '2'} 
+                    fill={realisticView ? isWood ? "url(#mahoganyWood)" : "url(#acrylicGlass)" : "none"} 
+                    stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#10b981'} 
+                    strokeWidth={realisticView ? '4' : '2'} 
                   />
                 )}
                 {design.shape === 'rectangular' && (
                   <rect x="20" y="30" width="280" height="260" rx="16" 
-                    fill={realisticView ? "url(#materialTexture)" : "none"} 
-                    stroke={realisticView ? isWood ? '#3b1601' : '#cbd5e1' : '#10b981'} 
-                    strokeWidth={realisticView ? '3' : '2'} 
+                    fill={realisticView ? "url(#mahoganyWood)" : "url(#acrylicGlass)" : "none"} 
+                    stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#10b981'} 
+                    strokeWidth={realisticView ? '4' : '2'} 
                   />
                 )}
                 {design.shape === 'arched' && (
                   <path d="M 35 270 L 35 130 A 125 125 0 0 1 285 130 L 285 270 Z" 
-                    fill={realisticView ? "url(#materialTexture)" : "none"} 
-                    stroke={realisticView ? isWood ? '#3b1601' : '#cbd5e1' : '#10b981'} 
-                    strokeWidth={realisticView ? '3' : '2'} 
+                    fill={realisticView ? "url(#mahoganyWood)" : "url(#acrylicGlass)" : "none"} 
+                    stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#10b981'} 
+                    strokeWidth={realisticView ? '4' : '2'} 
                   />
                 )}
                 {design.shape === 'hexagon' && (
                   <polygon points="160,20 275,85 275,235 160,300 45,235 45,85" 
-                    fill={realisticView ? "url(#materialTexture)" : "none"} 
-                    stroke={realisticView ? isWood ? '#3b1601' : '#cbd5e1' : '#10b981'} 
-                    strokeWidth={realisticView ? '3' : '2'} 
+                    fill={realisticView ? "url(#mahoganyWood)" : "url(#acrylicGlass)" : "none"} 
+                    stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#10b981'} 
+                    strokeWidth={realisticView ? '4' : '2'} 
                   />
                 )}
                 {design.shape === 'oval' && (
                   <ellipse cx="160" cy="160" rx="135" ry="100" 
-                    fill={realisticView ? "url(#materialTexture)" : "none"} 
-                    stroke={realisticView ? isWood ? '#3b1601' : '#cbd5e1' : '#10b981'} 
-                    strokeWidth={realisticView ? '3' : '2'} 
+                    fill={realisticView ? "url(#mahoganyWood)" : "url(#acrylicGlass)" : "none"} 
+                    stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#10b981'} 
+                    strokeWidth={realisticView ? '4' : '2'} 
                   />
                 )}
 
-                {/* Accent Inset Lines */}
+                {/* Inner Border Outlines */}
                 {design.graphicAccent === 'solid-border' && (
-                  design.shape === 'circular' ? <circle cx="160" cy="160" r="112" fill="none" stroke={realisticView ? isWood ? '#5c2203' : '#94a3b8' : '#059669'} strokeWidth="1" /> :
-                  design.shape === 'rectangular' ? <rect x="32" y="42" width="256" height="236" rx="10" fill="none" stroke={realisticView ? isWood ? '#5c2203' : '#94a3b8' : '#059669'} strokeWidth="1" /> :
-                  design.shape === 'hexagon' ? <polygon points="160,33 263,92 263,228 160,287 57,228 57,92" fill="none" stroke={realisticView ? isWood ? '#5c2203' : '#94a3b8' : '#059669'} strokeWidth="1" /> :
-                  design.shape === 'oval' ? <ellipse cx="160" cy="160" rx="122" ry="87" fill="none" stroke={realisticView ? isWood ? '#5c2203' : '#94a3b8' : '#059669'} strokeWidth="1" /> :
-                  <path d="M 47 258 L 47 136 A 113 113 0 0 1 273 136 L 273 258 Z" fill="none" stroke={realisticView ? isWood ? '#5c2203' : '#94a3b8' : '#059669'} strokeWidth="1" />
+                  design.shape === 'circular' ? <circle cx="160" cy="160" r="112" fill="none" stroke={realisticView ? isWood ? '#260e01' : 'rgba(255,255,255,0.5)' : '#059669'} strokeWidth="1" /> :
+                  design.shape === 'rectangular' ? <rect x="32" y="42" width="256" height="236" rx="10" fill="none" stroke={realisticView ? isWood ? '#260e01' : 'rgba(255,255,255,0.5)' : '#059669'} strokeWidth="1" /> :
+                  design.shape === 'hexagon' ? <polygon points="160,33 263,92 263,228 160,287 57,228 57,92" fill="none" stroke={realisticView ? isWood ? '#260e01' : 'rgba(255,255,255,0.5)' : '#059669'} strokeWidth="1" /> :
+                  design.shape === 'oval' ? <ellipse cx="160" cy="160" rx="122" ry="87" fill="none" stroke={realisticView ? isWood ? '#260e01' : 'rgba(255,255,255,0.5)' : '#059669'} strokeWidth="1" /> :
+                  <path d="M 47 258 L 47 136 A 113 113 0 0 1 273 136 L 273 258 Z" fill="none" stroke={realisticView ? isWood ? '#260e01' : 'rgba(255,255,255,0.5)' : '#059669'} strokeWidth="1" />
                 )}
 
-                {/* Botanical Leaves Vector Passes */}
+                {/* Botanical Vines Paths */}
                 {design.graphicAccent === 'floral-frame' && (
-                  <g stroke={realisticView ? isWood ? '#4a1d02' : '#64748b' : '#f59e0b'} fill="none" strokeWidth="1.2" strokeLinecap="round">
+                  <g stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.6)' : '#f59e0b'} fill="none" strokeWidth="1.2" strokeLinecap="round" filter={realisticView ? "url(#carveEffect)" : ""}>
                     <path d="M 110 60 Q 160 45 210 60" />
-                    <path d="M 135 52 Q 130 44 137 42 Q 143 46 140 52 Z M 180 52 Q 185 44 178 42 Q 172 46 175 52 Z" fill={realisticView ? isWood ? '#4a1d02' : '#64748b' : '#f59e0b'} fillOpacity="0.2" />
+                    <path d="M 135 52 Q 130 44 137 42 Q 143 46 140 52 Z M 180 52 Q 185 44 178 42 Q 172 46 175 52 Z" fill={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.4)' : '#f59e0b'} fillOpacity="0.2" />
                     <path d="M 110 260 Q 160 275 210 260" />
-                    <path d="M 135 266 Q 130 273 138 276 Q 143 271 140 266 Z M 185 266 Q 190 273 182 276 Q 177 271 180 266 Z" fill={realisticView ? isWood ? '#4a1d02' : '#64748b' : '#f59e0b'} fillOpacity="0.2" />
+                    <path d="M 135 266 Q 130 273 138 276 Q 143 271 140 266 Z M 185 266 Q 190 273 182 276 Q 177 271 180 266 Z" fill={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.4)' : '#f59e0b'} fillOpacity="0.2" />
                   </g>
                 )}
 
-                {/* Geometric Corners */}
+                {/* Art Deco Angular Corners */}
                 {design.graphicAccent === 'corner-accents' && (
-                  <path d="M 28 52 L 28 42 L 38 42 M 292 52 L 292 42 L 282 42 M 28 268 L 28 278 L 38 278 M 292 268 L 292 278 L 282 278" fill="none" stroke={realisticView ? isWood ? '#5c2203' : '#64748b' : '#38bdf8'} strokeWidth="1.5" />
+                  <path d="M 28 52 L 28 42 L 38 42 M 292 52 L 292 42 L 282 42 M 28 268 L 28 278 L 38 278 M 292 268 L 292 278 L 282 278" fill="none" stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.6)' : '#38bdf8'} strokeWidth="1.5" filter={realisticView ? "url(#carveEffect)" : ""} />
                 )}
 
-                {/* Center Core Emblems */}
+                {/* Core Center Icon Overlays */}
                 {design.symbolAsset === 'rings' && (
-                  <g stroke={realisticView ? isWood ? '#3b1601' : '#475569' : '#e2e8f0'} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.7 : 0.4} transform="translate(132, 102)">
+                  <g stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#e2e8f0'} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.8 : 0.4} transform="translate(132, 102)" filter={realisticView ? "url(#carveEffect)" : ""}>
                     <circle cx="20" cy="20" r="16" />
                     <circle cx="36" cy="20" r="16" />
                   </g>
                 )}
                 {design.symbolAsset === 'grad-cap' && (
-                  <path d="M 160 102 L 188 112 L 160 122 L 132 112 Z M 142 116 L 142 126 C 142 132, 178 132, 178 126 L 178 116 M 180 113 L 180 130" stroke={realisticView ? isWood ? '#3b1601' : '#475569' : '#e2e8f0'} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.7 : 0.4} />
+                  <path d="M 160 102 L 188 112 L 160 122 L 132 112 Z M 142 116 L 142 126 C 142 132, 178 132, 178 126 L 178 116 M 180 113 L 180 130" stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#e2e8f0'} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.8 : 0.4} filter={realisticView ? "url(#carveEffect)" : ""} />
                 )}
-                {design.symbolAsset === 'heart' && (
-                  <path d="M 160 124 C 160 124, 135 107, 135 95 C 135 95, 145 78, 153 83 C 160 87, 160 92, 160 92 C 160 92, 160 87, 167 83 C 175 78, 185 85, 185 95 C 185 107, 160 124, 160 124 Z" stroke={realisticView ? isWood ? '#3b1601' : '#475569' : '#e2e8f0'} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.7 : 0.35} transform="translate(0, 12)" />
+                {design.symbolAsset === '#heart' && (
+                  <path d="M 160 124 C 160 124, 135 107, 135 95 C 135 95, 145 78, 153 83 C 160 87, 160 92, 160 92 C 160 92, 160 87, 167 83 C 175 78, 185 85, 185 95 C 185 107, 160 124, 160 124 Z" stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#e2e8f0'} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.8 : 0.35} transform="translate(0, 12)" filter={realisticView ? "url(#carveEffect)" : ""} />
                 )}
 
-                {/* TYPOGRAPHY OVERLAY TRACKS */}
+                {/* TOP INSCRIPTION LINE */}
                 <text
                   x="160"
                   y={design.shape === 'arched' ? '125' : '95'}
                   textAnchor="middle"
-                  fill={realisticView ? isWood ? '#5c2203' : '#475569' : '#94a3b8'}
+                  fill={realisticView ? isWood ? '#2d1100' : 'rgba(30, 41, 59, 0.8)' : '#94a3b8'}
                   fontSize="9"
                   letterSpacing="2"
                   fontWeight="bold"
+                  filter={realisticView ? "url(#carveEffect)" : ""}
                   fontFamily={design.fontStyle === 'serif' ? 'Georgia, serif' : design.fontStyle === 'sans' ? 'Arial, sans-serif' : 'Courier New, monospace'}
                 >
                   {design.topText}
                 </text>
 
+                {/* CENTER CORNER MAIN SUBJECT NAMES */}
                 <text
                   x="160"
                   y={design.shape === 'arched' ? '172' : '162'}
                   textAnchor="middle"
-                  fill={realisticView ? isWood ? '#260e01' : '#0f172a' : '#f8fafc'}
+                  fill={realisticView ? isWood ? '#1c0a00' : '#0f172a' : '#f8fafc'}
                   fontSize="14"
                   letterSpacing="0.5"
                   fontWeight="900"
+                  filter={realisticView ? "url(#carveEffect)" : ""}
                   fontFamily={design.fontStyle === 'serif' ? 'Georgia, serif' : design.fontStyle === 'sans' ? 'Arial, sans-serif' : 'Playfair Display, Georgia, serif'}
                   style={{ fontFamily: design.fontStyle === 'script' ? 'Brush Script MT, cursive, sans-serif' : '' }}
                 >
                   {design.middleText}
                 </text>
 
+                {/* BOTTOM INSCRIPTION LINE */}
                 <text
                   x="160"
                   y={design.shape === 'arched' ? '215' : '225'}
                   textAnchor="middle"
-                  fill={realisticView ? isWood ? '#5c2203' : '#334155' : '#a7f3d0'}
+                  fill={realisticView ? isWood ? '#2d1100' : 'rgba(51, 65, 85, 0.8)' : '#a7f3d0'}
                   fontSize="10"
                   letterSpacing="2.5"
+                  filter={realisticView ? "url(#carveEffect)" : ""}
                   fontFamily={design.fontStyle === 'serif' ? 'Georgia, serif' : design.fontStyle === 'sans' ? 'Arial, sans-serif' : 'Courier New, monospace'}
                 >
                   {design.bottomText}
@@ -312,7 +327,7 @@ export default function PerfectLaserStudio() {
 
           </div>
 
-          {/* IS REFERENCE LAYOUT METRICS */}
+          {/* REFERENCE INFOGRAPHIC PANEL */}
           <div className="lg:col-span-12 mt-6 p-6 bg-slate-50 border rounded-2xl text-xs text-slate-600 space-y-2">
             <h4 className="font-bold text-slate-800 uppercase tracking-wide">📐 Information Systems Panel Reference Note:</h4>
             <p>This customized environment bridges abstract customer requests directly with workspace laser capabilities. Selecting design combinations creates real-time math matrices and paths natively outputting scalable SVG blueprints.</p>
