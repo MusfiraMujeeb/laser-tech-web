@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-export default function UltimateLaserStudio() {
+export default function PerfectLaserStudio() {
   const [design, setDesign] = useState({
     itemType: 'nikah-frame',  
     shape: 'circular',       
@@ -27,10 +27,10 @@ export default function UltimateLaserStudio() {
 
   const isWood = design.material.includes('Mahogany') || design.material.includes('MDF');
 
-  // Define texture assets to inject straight inside the SVG shape nodes dynamically
+  // Clean, premium texture assets to inject straight inside the SVG shape nodes dynamically
   const textureUrl = isWood
-    ? "https://images.unsplash.com/photo-1541123437800-1bb1317badc2?auto=format&fit=crop&w=600&q=80" // Rich Wood Grain
-    : "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=600&q=80"; // Frosted Glass / Acrylic Shine
+    ? "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=600&q=80" // Premium Uniform Light/Warm Wood Grain Planks
+    : "https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?auto=format&fit=crop&w=600&q=80"; // Crisp, Frosted Abstract Light Texturing for Glass/Acrylic
 
   return (
     <div className="min-h-screen py-10 px-4 md:px-8" style={{ backgroundColor: 'var(--studio-bg)' }}>
@@ -83,7 +83,6 @@ export default function UltimateLaserStudio() {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Material Base Compound</label>
-                  {/* ✅ FIXED: Bound 'value' strictly to state variable variable instead of the input callback function */}
                   <select name="material" value={design.material} className="w-full px-3 py-2 rounded-xl border text-xs bg-slate-50 text-slate-800 focus:outline-none" onChange={handleInputChange}>
                     <option value="Natural Mahogany Core">Natural Mahogany Core (Premium Wood)</option>
                     <option value="Wood / MDF">Wood / MDF (Classic Matte Finish)</option>
