@@ -1,29 +1,35 @@
 import Link from 'next/link';
 
-// Updated to target the owner's verified WhatsApp business catalog showcase link
-const whatsappCatalogUrl = 'https://wa.me/c/175613159698553';
+// Main business fallback link
+const whatsappMainUrl = 'https://wa.me/94757991141';
 
 const showcaseCards = [
   {
-    title: 'Laser-Cut Wood Signs',
+    title: 'Laser-Cut Wood Signs & Decor',
     badge: 'Popular Work',
-    summary: 'Wood signage, layered decor pieces, and custom display items made for homes, shops, and events.',
+    summary: 'Custom wood signage, layered home decor, wall art, and custom display items crafted with clean studio artistry.',
     image: 'https://www.thegrain.co.uk/wp-content/uploads/2014/02/laser-cut-sign-the-grain-display-sign-simple-is-good.jpg',
-    cta: 'View Live Catalog Items',
+    // ✅ Maps directly to your live wood craft product link
+    productUrl: 'https://wa.me/p/30556117950703282/175613159698553', 
+    cta: 'View Wood Crafts in Catalog',
   },
   {
-    title: 'Acrylic & Engraving',
+    title: 'Acrylic Fabrication & Engraving',
     badge: 'Premium Finish',
-    summary: 'Engraved acrylic boards, nameplates, and clean branding pieces with a polished studio finish.',
+    summary: 'Polished acrylic boards, transparent corporate nameplates, desktop plaques, and high-visibility business displays.',
     image: '/acrylic-engraving.jpg', 
-    cta: 'See Finished Pieces',
+    // ✅ Maps directly to your live acrylic product link
+    productUrl: 'https://wa.me/p/24974557465502010/175613159698553', 
+    cta: 'View Acrylic Work in Catalog',
   },
   {
-    title: 'Branding & Print Work',
+    title: 'Corporate Identity & Print Packages',
     badge: 'Creative Projects',
-    summary: 'Merchandise, stickers, display material, and print-ready branding work prepared for businesses.',
+    summary: 'Premium custom printed T-shirts, branded employee identity cards, high-quality flyers, and advertising layouts.',
     image: '/branding-print.jpg', 
-    cta: 'Explore Our Gallery',
+    // ✅ Maps directly to your live printing identity product link
+    productUrl: 'https://wa.me/p/8776536555706403/175613159698553', 
+    cta: 'Explore Print Catalog Items',
   },
 ];
 
@@ -45,13 +51,13 @@ export default function PortfolioPage() {
           </div>
 
           <a
-            href={whatsappCatalogUrl}
+            href={whatsappMainUrl}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-black text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
             style={{ background: 'linear-gradient(135deg, #31433c 0%, #2a3631 100%)' }}
           >
-            Open Live Shop Updates →
+            Chat with Workshop Manager →
           </a>
         </div>
       </section>
@@ -64,7 +70,7 @@ export default function PortfolioPage() {
             <p className="text-sm" style={{ color: 'var(--studio-muted)' }}>A custom portfolio-style section where visitors can view examples of our recent work and project types.</p>
           </div>
           <span className="inline-flex w-fit rounded-full px-3 py-1 text-[11px] font-black uppercase tracking-[0.25em]" style={{ backgroundColor: 'var(--studio-card)', color: 'var(--studio-moss)', border: '1px solid var(--studio-border)' }}>
-            Digital Catalog Sync
+            Direct Product Links Ready
           </span>
         </div>
 
@@ -95,7 +101,7 @@ export default function PortfolioPage() {
 
               <div className="px-6 pb-6">
                 <a
-                  href={whatsappCatalogUrl}
+                  href={item.productUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="w-full inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-xs font-black uppercase tracking-[0.25em] text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
@@ -109,31 +115,32 @@ export default function PortfolioPage() {
         </div>
       </section>
 
-      {/* 3. HIGH-VISIBILITY WHATSAPP BUSINESS CATALOG PANEL */}
+      {/* 3. HIGH-VISIBILITY CATALOG HIGHLIGHT PANEL */}
       <section className="mx-auto max-w-6xl px-6 pb-16 md:px-12">
         <div className="rounded-3xl border p-8 shadow-md text-center flex flex-col items-center gap-4" style={{ background: 'linear-gradient(180deg, var(--studio-card) 0%, #efe5d8 100%)', borderColor: 'var(--studio-border)' }}>
           <span className="text-4xl block animate-bounce">🛍️</span>
-          <h2 className="text-2xl font-black tracking-tight" style={{ color: 'var(--studio-moss)' }}>Browse Our Complete Product Catalog</h2>
+          <h2 className="text-2xl font-black tracking-tight" style={{ color: 'var(--studio-moss)' }}>Explore Featured Items Live</h2>
           <p className="text-sm max-w-md leading-relaxed" style={{ color: 'var(--studio-muted)' }}>
-            Want to explore pricing matrices and live design variations directly? Tap the official business store link below to browse options right inside WhatsApp.
+            Each catalog item above features high-resolution details and standard material configuration options handled right inside WhatsApp.
           </p>
           
           <div className="mt-4 flex flex-wrap justify-center gap-4 w-full">
+            {/* Additional item link 4 from your set */}
             <a 
-              href={whatsappCatalogUrl} 
+              href="https://wa.me/p/26251056467842114/175613159698553" 
               target="_blank" 
               rel="noreferrer" 
-              className="rounded-xl px-6 py-3.5 text-sm font-black text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg flex items-center gap-2"
+              className="rounded-xl px-6 py-3.5 text-sm font-black text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
               style={{ backgroundColor: '#25D366' }}
             >
-              💬 Open WhatsApp Catalog Store
+              💬 View More Custom Layout Options
             </a>
             <Link 
               href="/quote" 
               className="rounded-xl border px-6 py-3.5 text-sm font-black transition-all hover:-translate-y-0.5 bg-white shadow-sm" 
               style={{ color: 'var(--studio-moss)', borderColor: 'var(--studio-border)' }}
             >
-              Request Custom Quote Instead
+              Request Custom Build Quote
             </Link>
           </div>
         </div>
