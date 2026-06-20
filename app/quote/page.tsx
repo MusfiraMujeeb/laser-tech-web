@@ -1,3 +1,4 @@
+// ✅ FIX: Added directive to ensure the whole module compiles as a Client Component
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
@@ -40,14 +41,12 @@ function QuoteFormContent() {
 
   const currentShippingCost = deliveryRates[deliveryDistrict];
 
-  // ✅ Read URL parameters to auto-fill text and match the visual catalog image
+  // Read URL parameters to auto-fill text and match the visual catalog image
   useEffect(() => {
     const descParam = searchParams.get('desc');
     if (descParam) {
-      // Decode the text string
       const decodedDesc = decodeURIComponent(descParam);
       
-      // Determine configuration parameters dynamically based on the chosen concept string
       let matchedMaterial = 'Wood / MDF';
       let matchedService = 'Laser Cutting';
       let matchedImage = null;
@@ -55,15 +54,15 @@ function QuoteFormContent() {
       if (decodedDesc.includes('Concept A')) {
         matchedMaterial = 'Wood / MDF';
         matchedService = 'Laser Cutting';
-        matchedImage = 'https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?auto=format&fit=crop&w=600&q=80'; // Swap with image_a3ab97 path
+        matchedImage = 'https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?auto=format&fit=crop&w=600&q=80'; 
       } else if (decodedDesc.includes('Concept B')) {
         matchedMaterial = 'Wood / MDF';
         matchedService = 'Laser Engraving';
-        matchedImage = 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=600&q=80'; // Swap with image_a3ab43 path
+        matchedImage = 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=600&q=80'; 
       } else if (decodedDesc.includes('Concept C')) {
         matchedMaterial = 'Acrylic (Perspex)';
         matchedService = 'Laser Engraving';
-        matchedImage = 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=600&q=80'; // Swap with image_a3abbe path
+        matchedImage = 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=600&q=80'; 
       }
 
       setFormData(prev => ({
@@ -173,7 +172,6 @@ function QuoteFormContent() {
           <h1 className="text-3xl md:text-5xl font-black mb-4 tracking-tight" style={{ color: 'var(--studio-moss)' }}>Configure Project Blueprint</h1>
         </div>
 
-        {/* Layout adjusts side-by-side if an AI model blueprint visualization matches */}
         <div className={`grid grid-cols-1 ${visualBlueprint ? 'lg:grid-cols-12' : ''} gap-8`}>
           
           {/* VISUAL BLUEPRINT INSIGHT CARD */}

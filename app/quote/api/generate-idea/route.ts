@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenAI } from '@google/generative-ai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export async function POST(request: Request) {
   try {
@@ -11,10 +11,10 @@ export async function POST(request: Request) {
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return NextResponse.json({ error: 'Gemini environment variable key missing' }, { status: 500 });
+      return NextResponse.json({ error: 'Gemini API key is unconfigured on the server environment.' }, { status: 500 });
     }
 
-    const ai = new GoogleGenAI({ apiKey });
+    const ai = new GoogleGenerativeAI(apiKey);
     const model = ai.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
     const systematicPrompt = `
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       The user has provided this raw, unstructured gift context: "${thought}"
       
       Generate exactly 3 separate, highly detailed design concepts tailored specifically to this request.
-      Each concept must strictly follow this text structure down to the character, separated by a unique line delimiter sequence "---SPLIT---" between them. Do not include markdown code wrappers or bold asterisk characters.
+      Each concept must strictly follow this structure down to the character, separated by a unique line delimiter sequence "---SPLIT---" between them. Do not include markdown code wrappers or bold asterisk characters.
       
       Format exact blueprint output rule template:
       Concept X: [Descriptive Catchy Title]
@@ -31,10 +31,19 @@ export async function POST(request: Request) {
       • Design Details: [A detailed 2-sentence description of the design, typography elements, layout specs, visual cuts, and structural parameters like hidden LED light tracking frameworks.]
     `;
 
-    const result = await model.generateContent(systematicPrompt);
-    const textOutput = result.response.text();
+    // 🟢 Fix: Explicitly request text/plain to avoid unexpected markdown block injections
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: systematicPrompt }] }],
+      generationConfig: {
+        responseMimeType: 'text/plain',
+      }
+    });
+    
+    let textOutput = result.response.text();
 
-    // Clean up response layout and separate suggestions array fields
+    // 🟢 Cleanup: Clean up accidental markdown tags if the model ignores the config block rules
+    textOutput = textOutput.replace(/```xml|```text|```html|```/g, '').trim();
+
     const suggestions = textOutput
       .split('---SPLIT---')
       .map(item => item.trim())
@@ -42,7 +51,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ suggestions });
   } catch (error: any) {
-    console.error(error);
+    console.error('API Server Error:', error);
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
