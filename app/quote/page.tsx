@@ -9,16 +9,30 @@ export default function QuotePage() {
     email: '',
     service: 'Laser Cutting',
     material: 'Wood / MDF',
-    dimensions: '',
+    sizeOption: 'Standard A4 Layout (8.3 x 11.7 in)',
+    customWidth: '',
+    customHeight: '',
     description: '',
   });
   const [file, setFile] = useState<File | null>(null);
+  const [deliveryDistrict, setDeliveryDistrict] = useState('Store Pickup (Mawanella Workshop)');
   const [errorMessage, setErrorMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  // ⚠️ Set the shop owner's real phone number here (with country code, no + or spaces)
-  const WORKSHOP_WHATSAPP = "+94757991141"; 
+  // ⚠️ Update this with the owner's actual phone number (country code + number, no spaces/plus signs)
+  const WORKSHOP_WHATSAPP = "94771234567"; 
+
+  // Shipping rate matrix configuration
+  const deliveryRates: Record<string, number> = {
+    'Store Pickup (Mawanella Workshop)': 0,
+    'Kegalle (Local District)': 350,
+    'Colombo / Gampaha / Kalutara': 500,
+    'Kandy / Matale / Nuwara Eliya': 450,
+    'Other Provinces (Island-wide)': 650,
+  };
+
+  const currentShippingCost = deliveryRates[deliveryDistrict];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,38 +42,47 @@ export default function QuotePage() {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
-    // 4.5 Megabytes calculation row
-    const maxLimit = 4.5 * 1024 * 1024; 
+    const maxLimit = 4.5 * 1024 * 1024; // 4.5 Megabytes restriction limit
 
     if (selectedFile.size > maxLimit) {
       setFile(null);
       setErrorMessage("This design file is heavy! Redirecting you to WhatsApp to send it instantly...");
       
+      const parsedSize = formData.sizeOption === 'Custom Dimensions (Specify Below)' 
+        ? `${formData.customWidth}x${formData.customHeight} inches` 
+        : formData.sizeOption;
+
       const textTemplate = encodeURIComponent(
         `Hello Laser Tech! I am requesting a quote for a custom project.\n\n` +
         `• Name: ${formData.name || 'Customer'}\n` +
         `• Track: ${formData.service}\n` +
         `• Material: ${formData.material}\n` +
+        `• Size: ${parsedSize}\n` +
+        `• Delivery: ${deliveryDistrict} (Est: Rs. ${currentShippingCost})\n` +
         `• File Name: ${selectedFile.name}\n\n` +
         `I am attaching my large production file right below.`
       );
 
-      // Graceful delay window so the customer views the notification block
+      // Graceful delay window so the customer reads the information block notice
       setTimeout(() => {
         window.open(`https://wa.me/${WORKSHOP_WHATSAPP}?text=${textTemplate}`, '_blank');
         setErrorMessage('');
       }, 2500);
 
-      e.target.value = ""; // Clear out input element
+      e.target.value = ""; // Clear file selector state value
     } else {
       setErrorMessage('');
-      setFile(selectedFile); // Small safe asset path verified
+      setFile(selectedFile); // Verified path asset small size
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+
+    const resolvedSize = formData.sizeOption === 'Custom Dimensions (Specify Below)'
+      ? `Custom: ${formData.customWidth}x${formData.customHeight} inches`
+      : formData.sizeOption;
 
     try {
       const payload = new FormData();
@@ -68,7 +91,9 @@ export default function QuotePage() {
       payload.append('email', formData.email);
       payload.append('service', formData.service);
       payload.append('material', formData.material);
-      payload.append('dimensions', formData.dimensions);
+      payload.append('dimensions', resolvedSize);
+      payload.append('shippingDistrict', deliveryDistrict);
+      payload.append('shippingCost', currentShippingCost.toString());
       payload.append('description', formData.description);
       if (file) {
         payload.append('file', file);
@@ -100,7 +125,7 @@ export default function QuotePage() {
           <div className="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">✓</div>
           <h2 className="text-2xl font-black mb-3" style={{ color: 'var(--studio-moss)' }}>Request Sent!</h2>
           <p className="text-sm mb-6 leading-relaxed" style={{ color: 'var(--studio-muted)' }}>
-            Thank you, <span className="font-bold text-slate-900">{formData.name}</span>. Laser Tech will analyze your vector graphic designs and contact you on <span className="font-mono font-bold text-slate-900">{formData.phone}</span> via WhatsApp with your quote estimation.
+            Thank you, <span className="font-bold text-slate-900">{formData.name}</span>. Laser Tech will analyze your project specs and contact you on <span className="font-mono font-bold text-slate-900">{formData.phone}</span> via WhatsApp with your detailed operational quote.
           </p>
           <button onClick={() => setSubmitted(false)} className="w-full text-white font-bold py-3.5 rounded-xl transition-all shadow-sm cursor-pointer" style={{ backgroundColor: 'var(--studio-moss)' }}>
             Submit Another Request
@@ -115,11 +140,13 @@ export default function QuotePage() {
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-5xl font-black mb-4 tracking-tight" style={{ color: 'var(--studio-moss)' }}>Request a Custom Build</h1>
-          <p className="max-w-md mx-auto text-sm leading-relaxed" style={{ color: 'var(--studio-muted)' }}>Upload your vector design blueprints, define your project specs, and our workshop will process your production layout quote.</p>
+          <p className="max-w-md mx-auto text-sm leading-relaxed" style={{ color: 'var(--studio-muted)' }}>Define your layout metrics, check real-time delivery estimations, and upload your design workspace layout blueprints.</p>
         </div>
 
         <div className="p-8 md:p-12 rounded-3xl shadow-xl" style={{ backgroundColor: 'var(--studio-card)', border: '1px solid var(--studio-border)' }}>
           <form onSubmit={handleSubmit} className="space-y-6">
+            
+            {/* SECTION 1: CONTACT DETAILS */}
             <h3 className="text-lg font-black border-b pb-2 mb-4" style={{ color: 'var(--studio-moss)', borderColor: 'var(--studio-border)' }}>1. Contact Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -137,6 +164,7 @@ export default function QuotePage() {
               <input type="email" name="email" required value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border focus:outline-none text-sm" style={{ backgroundColor: 'var(--studio-bg)', borderColor: 'var(--studio-border)', color: 'var(--studio-moss)' }} placeholder="yourname@example.com" />
             </div>
 
+            {/* SECTION 2: JOB PROFILE SPECIFICATIONS */}
             <h3 className="text-lg font-black border-b pb-2 mt-10 mb-4" style={{ color: 'var(--studio-moss)', borderColor: 'var(--studio-border)' }}>2. Job Profile Specifications</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -160,9 +188,32 @@ export default function QuotePage() {
               </div>
             </div>
 
+            {/* DYNAMIC DROP-DOWN SMART SIZE SELECTOR */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--studio-muted)' }}>Target Dimensions (e.g., 12x18 inches)</label>
-              <input type="text" name="dimensions" value={formData.dimensions} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border focus:outline-none text-sm" style={{ backgroundColor: 'var(--studio-bg)', borderColor: 'var(--studio-border)', color: 'var(--studio-moss)' }} placeholder="Specify dimensional requirements" />
+              <label className="block text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--studio-muted)' }}>Project Dimensions *</label>
+              <select name="sizeOption" value={formData.sizeOption} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border text-sm focus:outline-none mb-3" style={{ backgroundColor: 'var(--studio-bg)', borderColor: 'var(--studio-border)', color: 'var(--studio-moss)' }}>
+                <option>Standard A4 Layout (8.3 x 11.7 in)</option>
+                <option>Standard A3 Layout (11.7 x 16.5 in)</option>
+                <option>Square Board Small (12 x 12 in)</option>
+                <option>Square Board Large (24 x 24 in)</option>
+                <option>Custom Dimensions (Specify Below)</option>
+              </select>
+
+              {formData.sizeOption === 'Custom Dimensions (Specify Below)' && (
+                <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl border border-dashed transition-all" style={{ borderColor: 'var(--studio-border)', backgroundColor: 'var(--studio-bg)' }}>
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: 'var(--studio-muted)' }}>Width (inches)</label>
+                    <input type="number" name="customWidth" value={formData.customWidth} onChange={handleChange} placeholder="e.g. 15" className="w-full px-3 py-2 rounded-lg border text-sm bg-white" style={{ borderColor: 'var(--studio-border)', color: 'var(--studio-moss)' }} />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: 'var(--studio-muted)' }}>Height (inches)</label>
+                    <input type="number" name="customHeight" value={formData.customHeight} onChange={handleChange} placeholder="e.g. 20" className="w-full px-3 py-2 rounded-lg border text-sm bg-white" style={{ borderColor: 'var(--studio-border)', color: 'var(--studio-moss)' }} />
+                  </div>
+                </div>
+              )}
+              <p className="text-[11px] mt-1.5" style={{ color: 'var(--studio-muted)' }}>
+                💡 Tip: Standard A4 is normal document paper size. A3 is double the footprint area of an A4 sheet.
+              </p>
             </div>
 
             <div>
@@ -170,6 +221,34 @@ export default function QuotePage() {
               <textarea name="description" required rows={4} value={formData.description} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border focus:outline-none text-sm resize-none" style={{ backgroundColor: 'var(--studio-bg)', borderColor: 'var(--studio-border)', color: 'var(--studio-moss)' }} placeholder="Describe what you want us to create..." />
             </div>
 
+            {/* SECTION 3: FULFILLMENT & DELIVERY CHARGE SELECTOR */}
+            <h3 className="text-lg font-black border-b pb-2 mt-10 mb-4" style={{ color: 'var(--studio-moss)', borderColor: 'var(--studio-border)' }}>3. Fulfillment & Delivery</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--studio-muted)' }}>Select Delivery Destination</label>
+                <select value={deliveryDistrict} onChange={(e) => setDeliveryDistrict(e.target.value)} className="w-full px-4 py-3 rounded-xl border text-sm focus:outline-none" style={{ backgroundColor: 'var(--studio-bg)', borderColor: 'var(--studio-border)', color: 'var(--studio-moss)' }}>
+                  <option>Store Pickup (Mawanella Workshop)</option>
+                  <option>Kegalle (Local District)</option>
+                  <option>Colombo / Gampaha / Kalutara</option>
+                  <option>Kandy / Matale / Nuwara Eliya</option>
+                  <option>Other Provinces (Island-wide)</option>
+                </select>
+              </div>
+
+              <div className="p-4 rounded-2xl border flex justify-between items-center transition-all" style={{ backgroundColor: 'var(--studio-hero)', borderColor: 'var(--studio-border)' }}>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--studio-moss)' }}>Estimated Shipping Cost</p>
+                  <p className="text-[10px]" style={{ color: 'var(--studio-muted)' }}>* Base processing cost calculated and sent manually via WhatsApp</p>
+                </div>
+                <div className="text-right">
+                  <span className="text-lg font-black" style={{ color: 'var(--studio-moss)' }}>
+                    {currentShippingCost === 0 ? "FREE" : `Rs. ${currentShippingCost}.00`}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* FILE SUBMISSION MANAGEMENT COMPONENT LINK */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--studio-muted)' }}>Upload Reference Image or Design Vector</label>
               <div className="relative border-2 border-dashed rounded-2xl p-8 text-center hover:bg-opacity-50 transition-all cursor-pointer" style={{ borderColor: 'var(--studio-border)', backgroundColor: 'var(--studio-bg)' }}>
@@ -177,7 +256,7 @@ export default function QuotePage() {
                 <div className="space-y-2">
                   <span className="text-3xl block">📤</span>
                   <p className="text-sm font-bold" style={{ color: 'var(--studio-moss)' }}>{file ? file.name : "Select or drag design artwork file"}</p>
-                  <p className="text-xs" style={{ color: 'var(--studio-muted)' }}>Supports DXF, SVG, PDF, AI, PNG, or JPG up to 4.5MB (Larger files auto-route to WhatsApp)</p>
+                  <p className="text-xs" style={{ color: 'var(--studio-muted)' }}>Supports DXF, SVG, AI, PDF, PNG up to 4.5MB (Larger production files auto-route to WhatsApp safely)</p>
                 </div>
               </div>
               {errorMessage && (
