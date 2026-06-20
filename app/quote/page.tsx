@@ -63,12 +63,9 @@ export default function QuotePage() {
         `I am attaching my large production file right below.`
       );
 
-      // Graceful delay window so the customer reads the information block notice
-      setTimeout(() => {
-        window.open(`https://wa.me/${WORKSHOP_WHATSAPP}?text=${textTemplate}`, '_blank');
-        setErrorMessage('');
-      }, 2500);
-
+      // ✅ FIX: Executed instantly upon event loop to completely bypass popup blockers
+      window.open(`https://wa.me/${WORKSHOP_WHATSAPP}?text=${textTemplate}`, '_blank');
+      
       e.target.value = ""; // Clear file selector state value
     } else {
       setErrorMessage('');
