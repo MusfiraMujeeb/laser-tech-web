@@ -13,16 +13,47 @@ export default function QuotePage() {
     description: '',
   });
   const [file, setFile] = useState<File | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  // ⚠️ Set the shop owner's real phone number here (with country code, no + or spaces)
+  const WORKSHOP_WHATSAPP = "+94757991141"; 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+
+    // 4.5 Megabytes calculation row
+    const maxLimit = 4.5 * 1024 * 1024; 
+
+    if (selectedFile.size > maxLimit) {
+      setFile(null);
+      setErrorMessage("This design file is heavy! Redirecting you to WhatsApp to send it instantly...");
+      
+      const textTemplate = encodeURIComponent(
+        `Hello Laser Tech! I am requesting a quote for a custom project.\n\n` +
+        `• Name: ${formData.name || 'Customer'}\n` +
+        `• Track: ${formData.service}\n` +
+        `• Material: ${formData.material}\n` +
+        `• File Name: ${selectedFile.name}\n\n` +
+        `I am attaching my large production file right below.`
+      );
+
+      // Graceful delay window so the customer views the notification block
+      setTimeout(() => {
+        window.open(`https://wa.me/${WORKSHOP_WHATSAPP}?text=${textTemplate}`, '_blank');
+        setErrorMessage('');
+      }, 2500);
+
+      e.target.value = ""; // Clear out input element
+    } else {
+      setErrorMessage('');
+      setFile(selectedFile); // Small safe asset path verified
     }
   };
 
@@ -43,7 +74,6 @@ export default function QuotePage() {
         payload.append('file', file);
       }
 
-      // Explicit transmission targeted to the nested API route
       const response = await fetch('/quote/api', {
         method: 'POST',
         body: payload,
@@ -147,9 +177,14 @@ export default function QuotePage() {
                 <div className="space-y-2">
                   <span className="text-3xl block">📤</span>
                   <p className="text-sm font-bold" style={{ color: 'var(--studio-moss)' }}>{file ? file.name : "Select or drag design artwork file"}</p>
-                  <p className="text-xs" style={{ color: 'var(--studio-muted)' }}>Supports DXF, SVG, PDF, AI, PNG, or JPG up to 10MB</p>
+                  <p className="text-xs" style={{ color: 'var(--studio-muted)' }}>Supports DXF, SVG, PDF, AI, PNG, or JPG up to 4.5MB (Larger files auto-route to WhatsApp)</p>
                 </div>
               </div>
+              {errorMessage && (
+                <div className="mt-4 p-4 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 text-xs font-bold flex items-center gap-2 animate-pulse">
+                  <span>⚠️</span> {errorMessage}
+                </div>
+              )}
             </div>
 
             <div className="pt-4">
