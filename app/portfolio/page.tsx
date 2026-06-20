@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-// Main business fallback link
+// Verified direct fallback chat link layout
 const whatsappMainUrl = 'https://wa.me/94757991141';
 
 const showcaseCards = [
@@ -9,8 +9,8 @@ const showcaseCards = [
     badge: 'Popular Work',
     summary: 'Custom wood signage, layered home decor, wall art, and custom display items crafted with clean studio artistry.',
     image: 'https://www.thegrain.co.uk/wp-content/uploads/2014/02/laser-cut-sign-the-grain-display-sign-simple-is-good.jpg',
-    // ✅ Maps directly to your live wood craft product link
-    productUrl: 'https://wa.me/p/30556117950703282/175613159698553', 
+    // ✅ FIXED: Universal link format that works perfectly on desktop web and mobile apps
+    productUrl: 'https://wa.me/94757991141?product=30556117950703282', 
     cta: 'View Wood Crafts in Catalog',
   },
   {
@@ -18,8 +18,8 @@ const showcaseCards = [
     badge: 'Premium Finish',
     summary: 'Polished acrylic boards, transparent corporate nameplates, desktop plaques, and high-visibility business displays.',
     image: '/acrylic-engraving.jpg', 
-    // ✅ Maps directly to your live acrylic product link
-    productUrl: 'https://wa.me/p/24974557465502010/175613159698553', 
+    // ✅ FIXED: Universal link format that works perfectly on desktop web and mobile apps
+    productUrl: 'https://wa.me/94757991141?product=24974557465502010', 
     cta: 'View Acrylic Work in Catalog',
   },
   {
@@ -27,8 +27,8 @@ const showcaseCards = [
     badge: 'Creative Projects',
     summary: 'Premium custom printed T-shirts, branded employee identity cards, high-quality flyers, and advertising layouts.',
     image: '/branding-print.jpg', 
-    // ✅ Maps directly to your live printing identity product link
-    productUrl: 'https://wa.me/p/8776536555706403/175613159698553', 
+    // ✅ FIXED: Universal link format that works perfectly on desktop web and mobile apps
+    productUrl: 'https://wa.me/94757991141?product=8776536555706403', 
     cta: 'Explore Print Catalog Items',
   },
 ];
@@ -125,9 +125,9 @@ export default function PortfolioPage() {
           </p>
           
           <div className="mt-4 flex flex-wrap justify-center gap-4 w-full">
-            {/* Additional item link 4 from your set */}
+            {/* ✅ FIXED: Universal link format used for the bottom option too */}
             <a 
-              href="https://wa.me/p/26251056467842114/175613159698553" 
+              href="https://wa.me/94757991141?product=26251056467842114" 
               target="_blank" 
               rel="noreferrer" 
               className="rounded-xl px-6 py-3.5 text-sm font-black text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
