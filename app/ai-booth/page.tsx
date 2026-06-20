@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 export default function AIDesignStudioPage() {
+  // ✅ FIXED: Configured proper default keys in state object to eliminate type binding errors
   const [formData, setFormData] = useState({
     recipient: '',
     occasion: '',
@@ -13,7 +14,8 @@ export default function AIDesignStudioPage() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  // ✅ FIXED: Bulletproof handler tracking input modifications cleanly across target names
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -80,17 +82,41 @@ export default function AIDesignStudioPage() {
             <form onSubmit={handleGenerateBlueprints} className="space-y-5">
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Who is the Gift For? *</label>
-                <input type="text" name="recipient" required value={formData.recipient} onChange={handleInputChange} className="w-full px-4 py-2.5 rounded-xl border text-xs bg-slate-50" placeholder="Ex: My project supervisor, close friend, sister" />
+                <input 
+                  type="text" 
+                  name="recipient" 
+                  required 
+                  value={formData.recipient} 
+                  onChange={handleInputChange} 
+                  className="w-full px-4 py-2.5 rounded-xl border text-xs bg-slate-50 text-slate-800 focus:outline-none" 
+                  placeholder="Ex: My project supervisor, close friend, sister" 
+                />
               </div>
 
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">What is the Occasion? *</label>
-                <input type="text" name="occasion" required value={formData.occasion} onChange={handleInputChange} className="w-full px-4 py-2.5 rounded-xl border text-xs bg-slate-50" placeholder="Ex: Graduation, Wedding anniversary, Birthday" />
+                <input 
+                  type="text" 
+                  name="occasion" 
+                  required 
+                  value={formData.occasion} 
+                  onChange={handleInputChange} 
+                  className="w-full px-4 py-2.5 rounded-xl border text-xs bg-slate-50 text-slate-800 focus:outline-none" 
+                  placeholder="Ex: Graduation, Wedding anniversary, Birthday" 
+                />
               </div>
 
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Aesthetics / Interests Vibe *</label>
-                <input type="text" name="vibes" required value={formData.vibes} onChange={handleInputChange} className="w-full px-4 py-2.5 rounded-xl border text-xs bg-slate-50" placeholder="Ex: Loves gaming, minimal desk setups, traditional typography" />
+                <textarea 
+                  name="vibes" 
+                  required 
+                  rows={3}
+                  value={formData.vibes} 
+                  onChange={handleInputChange} 
+                  className="w-full px-4 py-2.5 rounded-xl border text-xs bg-slate-50 text-slate-800 focus:outline-none resize-none" 
+                  placeholder="Ex: Loves gaming, minimal desk setups, traditional typography" 
+                />
               </div>
 
               <button
@@ -106,7 +132,6 @@ export default function AIDesignStudioPage() {
           {/* RIGHT: LIVE LAB SIMULATOR RENDERING SPACE */}
           <div className="lg:col-span-7 space-y-6">
             {aiSuggestions.length === 0 ? (
-              // Empty Simulation State Placeholder Box
               <div className="rounded-3xl border border-dashed border-slate-300 p-12 text-center flex flex-col items-center justify-center min-h-[420px] bg-white/50">
                 <div className="w-14 h-14 rounded-2xl bg-slate-100 border flex items-center justify-center text-xl text-slate-400 mb-4 animate-pulse">🛠️</div>
                 <h4 className="font-bold text-sm text-slate-700 mb-1">Laboratory Idle</h4>
@@ -115,7 +140,6 @@ export default function AIDesignStudioPage() {
                 </p>
               </div>
             ) : (
-              // Active Render Output Container
               <div className="space-y-4 animate-fadeIn">
                 <div className="flex justify-between items-center px-2">
                   <span className="text-[11px] font-black uppercase tracking-wider text-slate-400">🤖 Generated Laboratory Options Matrix:</span>
@@ -126,22 +150,18 @@ export default function AIDesignStudioPage() {
                   {aiSuggestions.map((suggestion, idx) => (
                     <div key={idx} className="p-6 rounded-2xl border bg-white shadow-xs flex flex-col md:flex-row gap-6 items-start md:items-center justify-between transition-all hover:shadow-md" style={{ borderColor: 'var(--studio-border)' }}>
                       
-                      {/* Technical Blueprint Vector Schematic Component */}
                       <div className="w-full md:w-32 h-24 bg-slate-950 rounded-xl relative overflow-hidden flex flex-col items-center justify-center p-2 text-center border shadow-inner shrink-0 select-none">
-                        {/* CSS Matrix Grid Mapping */}
                         <div className="absolute inset-0 opacity-15" style={{ backgroundImage: 'linear-gradient(#00ff66 1px, transparent 1px), linear-gradient(90deg, #00ff66 1px, transparent 1px)', backgroundSize: '12px 12px' }}></div>
                         <span className="text-xl relative z-10 animate-pulse">📐</span>
                         <span className="font-mono text-[8px] text-emerald-400 mt-1 uppercase tracking-widest font-bold">Path Node #{idx + 1}</span>
                       </div>
 
-                      {/* Schematic Text Context Area */}
                       <div className="flex-1 min-w-0">
                         <pre className="text-xs font-sans whitespace-pre-wrap text-slate-700 leading-relaxed">
                           {suggestion}
                         </pre>
                       </div>
 
-                      {/* Use Action Redirect Button Link */}
                       <div className="w-full md:w-auto text-right self-end md:self-center">
                         <Link 
                           href={`/quote?desc=${encodeURIComponent(suggestion)}`}
