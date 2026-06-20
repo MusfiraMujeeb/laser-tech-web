@@ -30,12 +30,22 @@ export default function Navbar() {
             <Link href="/portfolio" className="transition-colors" style={{ color: 'var(--studio-muted)' }}>Our Work</Link>
           </div>
 
-          {/* Call to Action */}
-          <div>
+          {/* Call to Action Actions Wrapper */}
+          <div className="flex items-center gap-4">
+            
+            {/* 🪄 NEW: Flashing AI Idea Booth button element */}
+            <Link 
+              href="/ai-booth" 
+              className="font-bold text-sm text-amber-700 bg-amber-50 px-4 py-2.5 rounded-xl border border-amber-200 animate-pulse transition-all hover:bg-amber-100 hidden sm:inline-block"
+            >
+              ✨ AI Idea Booth
+            </Link>
+
             <Link href="/quote" className="text-white px-6 py-3 rounded-xl font-extrabold text-sm tracking-wide transition-all shadow-md hover:-translate-y-0.5 hover:shadow-lg" style={{ backgroundColor: 'var(--studio-moss)' }}>
               Get a Quote
             </Link>
           </div>
+
         </div>
       </div>
     </nav>
