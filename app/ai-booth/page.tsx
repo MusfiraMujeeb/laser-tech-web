@@ -29,8 +29,8 @@ export default function PerfectLaserStudio() {
 
   // Clean, premium texture assets to inject straight inside the SVG shape nodes dynamically
   const textureUrl = isWood
-    ? "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=600&q=80" // Premium Uniform Light/Warm Wood Grain Planks
-    : "https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?auto=format&fit=crop&w=600&q=80"; // Crisp, Frosted Abstract Light Texturing for Glass/Acrylic
+    ? "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=600&q=80" // Pure, object-free wood grain texture
+    : "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80"; // Pure, seamless satin frosted acrylic look
 
   return (
     <div className="min-h-screen py-10 px-4 md:px-8" style={{ backgroundColor: 'var(--studio-bg)' }}>
@@ -313,6 +313,12 @@ export default function PerfectLaserStudio() {
               </Link>
             </div>
 
+          </div>
+
+          {/* RIGHT VIEWPORT DETAIL INFOGRAPHIC */}
+          <div className="lg:col-span-12 mt-6 p-6 bg-slate-50 border rounded-2xl text-xs text-slate-600 space-y-2">
+            <h4 className="font-bold text-slate-800 uppercase tracking-wide">📐 Information Systems Panel Reference Note:</h4>
+            <p>This customized environment bridges abstract customer requests directly with workspace laser capabilities. Selecting design combinations creates real-time math matrices and paths natively outputting scalable SVG blueprints.</p>
           </div>
 
         </div>
