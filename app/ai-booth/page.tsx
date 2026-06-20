@@ -27,16 +27,16 @@ export default function PerfectLaserStudio() {
 
   const isWood = design.material.includes('Mahogany') || design.material.includes('MDF');
 
-  // 🟢 CLEAN FIXED ASSETS: High-resolution direct raw material texture streams containing ZERO background items
+  // ✅ GUARANTEED STATIC IDS: Fixed raw textures containing absolutely zero hidden background elements
   const textureUrl = isWood
-    ? "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=80" // Pure raw wooden grain texture board
-    : "https://images.unsplash.com/photo-1554034483-04fda0d3507b?auto=format&fit=crop&w=600&q=80"; // Seamless frosted acrylic minimalist finish
+    ? "https://images.unsplash.com/photo-1541123437800-1bb1317badc2?auto=format&fit=crop&w=600&q=80" // 100% Pure Raw Fine Mahogany Wood Board
+    : "https://images.unsplash.com/photo-1554034483-04fda0d3507b?auto=format&fit=crop&w=600&q=80"; // 100% Seamless Frosted Acrylic satin background
 
   return (
     <div className="min-h-screen py-10 px-4 md:px-8" style={{ backgroundColor: 'var(--studio-bg)' }}>
       <div className="max-w-7xl mx-auto">
         
-        {/* TOP MONITOR HEADER CONTROL */}
+        {/* HEADER VIEWER MODULE */}
         <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-6" style={{ borderColor: 'var(--studio-border)' }}>
           <div>
             <h1 className="text-3xl font-black text-slate-800 tracking-tight">CAD Parameter Design Center</h1>
@@ -83,7 +83,7 @@ export default function PerfectLaserStudio() {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Material Base Compound</label>
-                  <select name="material" value={design.material} className="w-full px-3 py-2 rounded-xl border text-xs bg-slate-50 text-slate-800 focus:outline-none" onChange={handleInputChange}>
+                  <select name="material" value={design.material} onChange={handleInputChange} className="w-full px-3 py-2 rounded-xl border text-xs bg-slate-50 text-slate-800 focus:outline-none">
                     <option value="Natural Mahogany Core">Natural Mahogany Core (Premium Wood)</option>
                     <option value="Wood / MDF">Wood / MDF (Classic Matte Finish)</option>
                     <option value="Acrylic">Acrylic (Glass-like Glossy Perspex)</option>
@@ -167,23 +167,22 @@ export default function PerfectLaserStudio() {
 
           </div>
 
-          {/* RIGHT COLUMN: PROFESSIONAL TECHNICAL CAD VIEWPORT MONITOR */}
+          {/* RIGHT COLUMN: HIGH-PRECISION GRAPHICAL VIEWPORT CANVASES */}
           <div className="lg:col-span-7 space-y-4">
-            <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 block px-1">🖥️ Live CAD Viewport</span>
+            <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 block px-1">🖥_ Live CAD Viewport</span>
             
             <div className="bg-slate-900 rounded-3xl border border-slate-800 p-8 flex flex-col items-center justify-center min-h-[480px] relative overflow-hidden bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]">
               
-              {/* DYNAMIC HIGH-FIDELITY VECTOR GRAPHIC SVG CANVAS */}
+              {/* DYNAMIC SVG ELEMENT */}
               <svg width="320" height="320" className="relative z-10 transition-all duration-300 drop-shadow-[0_10px_25px_rgba(0,0,0,0.5)]">
                 
-                {/* SVG DESIGN COMPONENT PATTERN MASKS */}
                 <defs>
                   <pattern id="materialTexture" patternUnits="userSpaceOnUse" width="320" height="320">
                     <image href={textureUrl} x="0" y="0" width="320" height="320" preserveAspectRatio="xMidYMid slice" />
                   </pattern>
                 </defs>
 
-                {/* Core Component Base Fill Layers */}
+                {/* Outer Perimeter Shape Layers */}
                 {design.shape === 'circular' && (
                   <circle cx="160" cy="160" r="125" 
                     fill={realisticView ? "url(#materialTexture)" : "none"} 
@@ -220,7 +219,7 @@ export default function PerfectLaserStudio() {
                   />
                 )}
 
-                {/* Border Frame Inset Paths */}
+                {/* Accent Inset Lines */}
                 {design.graphicAccent === 'solid-border' && (
                   design.shape === 'circular' ? <circle cx="160" cy="160" r="112" fill="none" stroke={realisticView ? isWood ? '#5c2203' : '#94a3b8' : '#059669'} strokeWidth="1" /> :
                   design.shape === 'rectangular' ? <rect x="32" y="42" width="256" height="236" rx="10" fill="none" stroke={realisticView ? isWood ? '#5c2203' : '#94a3b8' : '#059669'} strokeWidth="1" /> :
@@ -229,7 +228,7 @@ export default function PerfectLaserStudio() {
                   <path d="M 47 258 L 47 136 A 113 113 0 0 1 273 136 L 273 258 Z" fill="none" stroke={realisticView ? isWood ? '#5c2203' : '#94a3b8' : '#059669'} strokeWidth="1" />
                 )}
 
-                {/* Botanical Vines Flourish Frame */}
+                {/* Botanical Leaves Vector Passes */}
                 {design.graphicAccent === 'floral-frame' && (
                   <g stroke={realisticView ? isWood ? '#4a1d02' : '#64748b' : '#f59e0b'} fill="none" strokeWidth="1.2" strokeLinecap="round">
                     <path d="M 110 60 Q 160 45 210 60" />
@@ -239,12 +238,12 @@ export default function PerfectLaserStudio() {
                   </g>
                 )}
 
-                {/* Corner Art Deco Elements */}
+                {/* Geometric Corners */}
                 {design.graphicAccent === 'corner-accents' && (
                   <path d="M 28 52 L 28 42 L 38 42 M 292 52 L 292 42 L 282 42 M 28 268 L 28 278 L 38 278 M 292 268 L 292 278 L 282 278" fill="none" stroke={realisticView ? isWood ? '#5c2203' : '#64748b' : '#38bdf8'} strokeWidth="1.5" />
                 )}
 
-                {/* Symbol Asset Configurations */}
+                {/* Center Core Emblems */}
                 {design.symbolAsset === 'rings' && (
                   <g stroke={realisticView ? isWood ? '#3b1601' : '#475569' : '#e2e8f0'} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.7 : 0.4} transform="translate(132, 102)">
                     <circle cx="20" cy="20" r="16" />
@@ -258,7 +257,7 @@ export default function PerfectLaserStudio() {
                   <path d="M 160 124 C 160 124, 135 107, 135 95 C 135 95, 145 78, 153 83 C 160 87, 160 92, 160 92 C 160 92, 160 87, 167 83 C 175 78, 185 85, 185 95 C 185 107, 160 124, 160 124 Z" stroke={realisticView ? isWood ? '#3b1601' : '#475569' : '#e2e8f0'} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.7 : 0.35} transform="translate(0, 12)" />
                 )}
 
-                {/* TOP INSCRIPTION STRING PASSER */}
+                {/* TYPOGRAPHY OVERLAY TRACKS */}
                 <text
                   x="160"
                   y={design.shape === 'arched' ? '125' : '95'}
@@ -272,7 +271,6 @@ export default function PerfectLaserStudio() {
                   {design.topText}
                 </text>
 
-                {/* CENTER INSCRIPTION STRING PASSER */}
                 <text
                   x="160"
                   y={design.shape === 'arched' ? '172' : '162'}
@@ -287,7 +285,6 @@ export default function PerfectLaserStudio() {
                   {design.middleText}
                 </text>
 
-                {/* BOTTOM INSCRIPTION STRING PASSER */}
                 <text
                   x="160"
                   y={design.shape === 'arched' ? '215' : '225'}
@@ -303,7 +300,7 @@ export default function PerfectLaserStudio() {
               </svg>
             </div>
 
-            {/* SYNC ACTIONS BUTTON */}
+            {/* SYNC DISPATCH */}
             <div className="bg-white border p-6 rounded-2xl shadow-xs text-center" style={{ borderColor: 'var(--studio-border)' }}>
               <Link 
                 href={`/quote?desc=${encodeURIComponent(generatedBlueprintText)}`}
@@ -315,7 +312,7 @@ export default function PerfectLaserStudio() {
 
           </div>
 
-          {/* RIGHT VIEWPORT DETAIL INFOGRAPHIC */}
+          {/* IS REFERENCE LAYOUT METRICS */}
           <div className="lg:col-span-12 mt-6 p-6 bg-slate-50 border rounded-2xl text-xs text-slate-600 space-y-2">
             <h4 className="font-bold text-slate-800 uppercase tracking-wide">📐 Information Systems Panel Reference Note:</h4>
             <p>This customized environment bridges abstract customer requests directly with workspace laser capabilities. Selecting design combinations creates real-time math matrices and paths natively outputting scalable SVG blueprints.</p>
