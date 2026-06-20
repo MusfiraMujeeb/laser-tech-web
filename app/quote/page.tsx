@@ -17,6 +17,7 @@ export default function QuotePage() {
   const [file, setFile] = useState<File | null>(null);
   const [deliveryDistrict, setDeliveryDistrict] = useState('Store Pickup (Mawanella Workshop)');
   const [errorMessage, setErrorMessage] = useState('');
+  const [whatsappUrl, setWhatsappUrl] = useState(''); // Tracks the template link
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -46,7 +47,6 @@ export default function QuotePage() {
 
     if (selectedFile.size > maxLimit) {
       setFile(null);
-      setErrorMessage("This design file is heavy! Redirecting you to WhatsApp to send it instantly...");
       
       const parsedSize = formData.sizeOption === 'Custom Dimensions (Specify Below)' 
         ? `${formData.customWidth}x${formData.customHeight} inches` 
@@ -63,18 +63,27 @@ export default function QuotePage() {
         `I am attaching my large production file right below.`
       );
 
-      // ✅ FIX: Executed instantly upon event loop to completely bypass popup blockers
-      window.open(`https://wa.me/${WORKSHOP_WHATSAPP}?text=${textTemplate}`, '_blank');
+      // Save the generated URL link to state and prompt the user to click the button
+      setWhatsappUrl(`https://wa.me/${WORKSHOP_WHATSAPP}?text=${textTemplate}`);
+      setErrorMessage("This design file is too heavy for the browser! Please click the button below to send it via WhatsApp instantly.");
       
       e.target.value = ""; // Clear file selector state value
     } else {
       setErrorMessage('');
+      setWhatsappUrl('');
       setFile(selectedFile); // Verified path asset small size
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // If there is an unsaved large file error, block the database standard submission
+    if (whatsappUrl) {
+      alert("Please send your production file via the WhatsApp link button first!");
+      return;
+    }
+
     setSubmitting(true);
 
     const resolvedSize = formData.sizeOption === 'Custom Dimensions (Specify Below)'
@@ -253,18 +262,33 @@ export default function QuotePage() {
                 <div className="space-y-2">
                   <span className="text-3xl block">📤</span>
                   <p className="text-sm font-bold" style={{ color: 'var(--studio-moss)' }}>{file ? file.name : "Select or drag design artwork file"}</p>
-                  <p className="text-xs" style={{ color: 'var(--studio-muted)' }}>Supports DXF, SVG, AI, PDF, PNG up to 4.5MB (Larger production files auto-route to WhatsApp safely)</p>
+                  <p className="text-xs" style={{ color: 'var(--studio-muted)' }}>Supports DXF, SVG, AI, PDF, PNG up to 4.5MB</p>
                 </div>
               </div>
+              
+              {/* DYNAMIC WHATSAPP REDIRECT BUTTON BUNDLE */}
               {errorMessage && (
-                <div className="mt-4 p-4 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 text-xs font-bold flex items-center gap-2 animate-pulse">
-                  <span>⚠️</span> {errorMessage}
+                <div className="mt-4 p-5 rounded-2xl border border-amber-200 bg-amber-50 flex flex-col gap-3">
+                  <p className="text-xs text-amber-900 font-bold flex items-center gap-2">
+                    <span>⚠️</span> {errorMessage}
+                  </p>
+                  {whatsappUrl && (
+                    <a 
+                      href={whatsappUrl} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="inline-flex items-center justify-center text-center text-white text-xs font-black uppercase tracking-wider px-4 py-3 rounded-xl shadow-md transition-all hover:scale-[1.01]"
+                      style={{ backgroundColor: '#25D366' }}
+                    >
+                      💬 Send Heavy File via WhatsApp Now
+                    </a>
+                  )}
                 </div>
               )}
             </div>
 
             <div className="pt-4">
-              <button type="submit" disabled={submitting} className="w-full text-white font-black text-base py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50" style={{ backgroundColor: 'var(--studio-moss)' }}>
+              <button type="submit" disabled={submitting || !!whatsappUrl} className="w-full text-white font-black text-base py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50" style={{ backgroundColor: 'var(--studio-moss)' }}>
                 {submitting ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : "Submit Quote Metrics ⚡"}
               </button>
             </div>
