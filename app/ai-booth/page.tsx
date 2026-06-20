@@ -27,10 +27,10 @@ export default function PerfectLaserStudio() {
 
   const isWood = design.material.includes('Mahogany') || design.material.includes('MDF');
 
-  // Clean, premium texture assets to inject straight inside the SVG shape nodes dynamically
+  // 🟢 CLEAN FIXED ASSETS: High-resolution direct raw material texture streams containing ZERO background items
   const textureUrl = isWood
-    ? "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=600&q=80" // Pure, object-free wood grain texture
-    : "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80"; // Pure, seamless satin frosted acrylic look
+    ? "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=80" // Pure raw wooden grain texture board
+    : "https://images.unsplash.com/photo-1554034483-04fda0d3507b?auto=format&fit=crop&w=600&q=80"; // Seamless frosted acrylic minimalist finish
 
   return (
     <div className="min-h-screen py-10 px-4 md:px-8" style={{ backgroundColor: 'var(--studio-bg)' }}>
