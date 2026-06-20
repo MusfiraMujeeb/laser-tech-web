@@ -27,6 +27,27 @@ export default function PerfectLaserStudio() {
 
   const isWood = design.material.includes('Mahogany') || design.material.includes('MDF');
 
+  // Helper functions to safely handle condition extraction for the compiler
+  const getShapeFill = () => {
+    if (!realisticView) return 'none';
+    return isWood ? 'url(#mahoganyWood)' : 'url(#acrylicGlass)';
+  };
+
+  const getShapeStroke = () => {
+    if (!realisticView) return '#10b981';
+    return isWood ? '#1c0a00' : 'rgba(255, 255, 255, 0.7)';
+  };
+
+  const getAccentStroke = () => {
+    if (!realisticView) return '#059669';
+    return isWood ? '#260e01' : 'rgba(255, 255, 255, 0.5)';
+  };
+
+  const getDecorativeStroke = (defaultColor: string) => {
+    if (!realisticView) return defaultColor;
+    return isWood ? '#1c0a00' : 'rgba(255, 255, 255, 0.6)';
+  };
+
   return (
     <div className="min-h-screen py-10 px-4 md:px-8" style={{ backgroundColor: 'var(--studio-bg)' }}>
       <div className="max-w-7xl mx-auto">
@@ -171,7 +192,6 @@ export default function PerfectLaserStudio() {
               {/* DYNAMIC PURE GRADIENT SVG ENGINE CANVAS */}
               <svg width="320" height="320" className="relative z-10 transition-all duration-300 drop-shadow-[0_10px_25px_rgba(0,0,0,0.5)]">
                 
-                {/* 🟢 CACHE-PROOF GRADIENT MATRIX: No external images used */}
                 <defs>
                   {/* Rich Warm Mahogany Core Wood Representation */}
                   <linearGradient id="mahoganyWood" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -192,79 +212,79 @@ export default function PerfectLaserStudio() {
                   </filter>
                 </defs>
 
-                {/* Base Core Plate Geometry Layers */}
+                {/* Base Core Plate Geometry Layers - ✅ FIXED CONDITIONAL BINDINGS */}
                 {design.shape === 'circular' && (
                   <circle cx="160" cy="160" r="125" 
-                    fill={realisticView ? isWood ? "url(#mahoganyWood)" : "url(#acrylicGlass)" : "none"} 
-                    stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#10b981'} 
+                    fill={getShapeFill()} 
+                    stroke={getShapeStroke()} 
                     strokeWidth={realisticView ? '4' : '2'} 
                   />
                 )}
                 {design.shape === 'rectangular' && (
                   <rect x="20" y="30" width="280" height="260" rx="16" 
-                    fill={realisticView ? "url(#mahoganyWood)" : "url(#acrylicGlass)" : "none"} 
-                    stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#10b981'} 
+                    fill={getShapeFill()} 
+                    stroke={getShapeStroke()} 
                     strokeWidth={realisticView ? '4' : '2'} 
                   />
                 )}
                 {design.shape === 'arched' && (
                   <path d="M 35 270 L 35 130 A 125 125 0 0 1 285 130 L 285 270 Z" 
-                    fill={realisticView ? "url(#mahoganyWood)" : "url(#acrylicGlass)" : "none"} 
-                    stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#10b981'} 
+                    fill={getShapeFill()} 
+                    stroke={getShapeStroke()} 
                     strokeWidth={realisticView ? '4' : '2'} 
                   />
                 )}
                 {design.shape === 'hexagon' && (
                   <polygon points="160,20 275,85 275,235 160,300 45,235 45,85" 
-                    fill={realisticView ? "url(#mahoganyWood)" : "url(#acrylicGlass)" : "none"} 
-                    stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#10b981'} 
+                    fill={getShapeFill()} 
+                    stroke={getShapeStroke()} 
                     strokeWidth={realisticView ? '4' : '2'} 
                   />
                 )}
                 {design.shape === 'oval' && (
                   <ellipse cx="160" cy="160" rx="135" ry="100" 
-                    fill={realisticView ? "url(#mahoganyWood)" : "url(#acrylicGlass)" : "none"} 
-                    stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#10b981'} 
+                    fill={getShapeFill()} 
+                    stroke={getShapeStroke()} 
                     strokeWidth={realisticView ? '4' : '2'} 
                   />
                 )}
 
-                {/* Inner Border Outlines */}
+                {/* Inner Border Outlines - ✅ FIXED CONDITIONAL BINDINGS */}
                 {design.graphicAccent === 'solid-border' && (
-                  design.shape === 'circular' ? <circle cx="160" cy="160" r="112" fill="none" stroke={realisticView ? isWood ? '#260e01' : 'rgba(255,255,255,0.5)' : '#059669'} strokeWidth="1" /> :
-                  design.shape === 'rectangular' ? <rect x="32" y="42" width="256" height="236" rx="10" fill="none" stroke={realisticView ? isWood ? '#260e01' : 'rgba(255,255,255,0.5)' : '#059669'} strokeWidth="1" /> :
-                  design.shape === 'hexagon' ? <polygon points="160,33 263,92 263,228 160,287 57,228 57,92" fill="none" stroke={realisticView ? isWood ? '#260e01' : 'rgba(255,255,255,0.5)' : '#059669'} strokeWidth="1" /> :
-                  design.shape === 'oval' ? <ellipse cx="160" cy="160" rx="122" ry="87" fill="none" stroke={realisticView ? isWood ? '#260e01' : 'rgba(255,255,255,0.5)' : '#059669'} strokeWidth="1" /> :
-                  <path d="M 47 258 L 47 136 A 113 113 0 0 1 273 136 L 273 258 Z" fill="none" stroke={realisticView ? isWood ? '#260e01' : 'rgba(255,255,255,0.5)' : '#059669'} strokeWidth="1" />
+                  design.shape === 'circular' ? <circle cx="160" cy="160" r="112" fill="none" stroke={getAccentStroke()} strokeWidth="1" /> :
+                  design.shape === 'rectangular' ? <rect x="32" y="42" width="256" height="236" rx="10" fill="none" stroke={getAccentStroke()} strokeWidth="1" /> :
+                  design.shape === 'hexagon' ? <polygon points="160,33 263,92 263,228 160,287 57,228 57,92" fill="none" stroke={getAccentStroke()} strokeWidth="1" /> :
+                  design.shape === 'oval' ? <ellipse cx="160" cy="160" rx="122" ry="87" fill="none" stroke={getAccentStroke()} strokeWidth="1" /> :
+                  <path d="M 47 258 L 47 136 A 113 113 0 0 1 273 136 L 273 258 Z" fill="none" stroke={getAccentStroke()} strokeWidth="1" />
                 )}
 
-                {/* Botanical Vines Paths */}
+                {/* Botanical Vines Paths - ✅ FIXED CONDITIONAL BINDINGS */}
                 {design.graphicAccent === 'floral-frame' && (
-                  <g stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.6)' : '#f59e0b'} fill="none" strokeWidth="1.2" strokeLinecap="round" filter={realisticView ? "url(#carveEffect)" : ""}>
+                  <g stroke={getDecorativeStroke('#f59e0b')} fill="none" strokeWidth="1.2" strokeLinecap="round" filter={realisticView ? "url(#carveEffect)" : ""}>
                     <path d="M 110 60 Q 160 45 210 60" />
-                    <path d="M 135 52 Q 130 44 137 42 Q 143 46 140 52 Z M 180 52 Q 185 44 178 42 Q 172 46 175 52 Z" fill={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.4)' : '#f59e0b'} fillOpacity="0.2" />
+                    <path d="M 135 52 Q 130 44 137 42 Q 143 46 140 52 Z M 180 52 Q 185 44 178 42 Q 172 46 175 52 Z" fill={getDecorativeStroke('rgba(245, 158, 11, 0.4)')} fillOpacity="0.2" />
                     <path d="M 110 260 Q 160 275 210 260" />
-                    <path d="M 135 266 Q 130 273 138 276 Q 143 271 140 266 Z M 185 266 Q 190 273 182 276 Q 177 271 180 266 Z" fill={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.4)' : '#f59e0b'} fillOpacity="0.2" />
+                    <path d="M 135 266 Q 130 273 138 276 Q 143 271 140 266 Z M 185 266 Q 190 273 182 276 Q 177 271 180 266 Z" fill={getDecorativeStroke('rgba(245, 158, 11, 0.4)')} fillOpacity="0.2" />
                   </g>
                 )}
 
-                {/* Art Deco Angular Corners */}
+                {/* Art Deco Angular Corners - ✅ FIXED CONDITIONAL BINDINGS */}
                 {design.graphicAccent === 'corner-accents' && (
-                  <path d="M 28 52 L 28 42 L 38 42 M 292 52 L 292 42 L 282 42 M 28 268 L 28 278 L 38 278 M 292 268 L 292 278 L 282 278" fill="none" stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.6)' : '#38bdf8'} strokeWidth="1.5" filter={realisticView ? "url(#carveEffect)" : ""} />
+                  <path d="M 28 52 L 28 42 L 38 42 M 292 52 L 292 42 L 282 42 M 28 268 L 28 278 L 38 278 M 292 268 L 292 278 L 282 278" fill="none" stroke={getDecorativeStroke('#38bdf8')} strokeWidth="1.5" filter={realisticView ? "url(#carveEffect)" : ""} />
                 )}
 
-                {/* Core Center Icon Overlays */}
+                {/* Core Center Icon Overlays - ✅ FIXED CONDITIONAL BINDINGS */}
                 {design.symbolAsset === 'rings' && (
-                  <g stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#e2e8f0'} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.8 : 0.4} transform="translate(132, 102)" filter={realisticView ? "url(#carveEffect)" : ""}>
+                  <g stroke={getDecorativeStroke('#e2e8f0')} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.8 : 0.4} transform="translate(132, 102)" filter={realisticView ? "url(#carveEffect)" : ""}>
                     <circle cx="20" cy="20" r="16" />
                     <circle cx="36" cy="20" r="16" />
                   </g>
                 )}
                 {design.symbolAsset === 'grad-cap' && (
-                  <path d="M 160 102 L 188 112 L 160 122 L 132 112 Z M 142 116 L 142 126 C 142 132, 178 132, 178 126 L 178 116 M 180 113 L 180 130" stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#e2e8f0'} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.8 : 0.4} filter={realisticView ? "url(#carveEffect)" : ""} />
+                  <path d="M 160 102 L 188 112 L 160 122 L 132 112 Z M 142 116 L 142 126 C 142 132, 178 132, 178 126 L 178 116 M 180 113 L 180 130" stroke={getDecorativeStroke('#e2e8f0')} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.8 : 0.4} filter={realisticView ? "url(#carveEffect)" : ""} />
                 )}
-                {design.symbolAsset === '#heart' && (
-                  <path d="M 160 124 C 160 124, 135 107, 135 95 C 135 95, 145 78, 153 83 C 160 87, 160 92, 160 92 C 160 92, 160 87, 167 83 C 175 78, 185 85, 185 95 C 185 107, 160 124, 160 124 Z" stroke={realisticView ? isWood ? '#1c0a00' : 'rgba(255,255,255,0.7)' : '#e2e8f0'} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.8 : 0.35} transform="translate(0, 12)" filter={realisticView ? "url(#carveEffect)" : ""} />
+                {design.symbolAsset === 'heart' && (
+                  <path d="M 160 124 C 160 124, 135 107, 135 95 C 135 95, 145 78, 153 83 C 160 87, 160 92, 160 92 C 160 92, 160 87, 167 83 C 175 78, 185 85, 185 95 C 185 107, 160 124, 160 124 Z" stroke={getDecorativeStroke('#e2e8f0')} fill="none" strokeWidth="1.5" opacity={realisticView ? 0.8 : 0.35} transform="translate(0, 12)" filter={realisticView ? "url(#carveEffect)" : ""} />
                 )}
 
                 {/* TOP INSCRIPTION LINE */}
