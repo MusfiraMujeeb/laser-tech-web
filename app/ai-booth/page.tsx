@@ -7,34 +7,45 @@ export default function AIBoothPage() {
   const [rawThought, setRawThought] = useState('');
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedConcept, setSelectedConcept] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // ⚠️ FREE FRONTEND GEMINI TRICK: You can use a public key or client wrapper here later.
-  // For your live demo, this mock system simulates the exact output layout structure 
-  // without needing complex paywalls or slow processing delays.
   const handleEnhanceIdea = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!rawThought.trim()) return;
 
     setLoading(true);
+    setErrorMessage('');
     setAiSuggestions([]);
 
-    // Simulating instant smart design parameter analysis
-    setTimeout(() => {
-      const mockResponses = [
-        `📐 Concept A: Elegant Layered Geometric Clock\n• Material: Mahogany wood base with a clear acrylic overlay.\n• Design Details: Intricate cutouts highlighting their interest with custom script lettering reading: "Time spent together is the greatest gift."`,
-        `🪵 Concept B: Backlit LED Monogram Wall Art\n• Material: Thick MDF frame floating off the wall.\n• Design Details: A gorgeous stylized crown monogram of their initial, completely backlit with warm hidden LED strips for a ambient room glow.`,
-        `📐 Concept C: Acrylic Engraved Memory Plaque\n• Material: Arched transparent mirror-gold Perspex on a solid base.\n• Design Details: Crisp line-art etching representing their favorite memory, paired with deep laser engraving of names and dates.`
-      ];
-      setAiSuggestions(mockResponses);
-      setLoading(false);
-    }, 1500);
-  };
+    try {
+      const response = await fetch('/api/generate-idea', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ thought: rawThought }),
+      });
 
-  const handleSelectConcept = (concept: string) => {
-    setSelectedConcept(concept);
-    // Pre-fill standard description parameters and send to the quote section
-    alert("Concept captured! Redirecting you to complete your order options details.");
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to generate blueprints.');
+      }
+
+      setAiSuggestions(data.suggestions || []);
+    } catch (err: any) {
+      console.error('AI Processing Error:', err);
+      setErrorMessage(err.message || 'Network error communicating with the AI Engine.');
+      
+      // 🟢 Fallback safe metrics if the API key is unconfigured during initial presentation run
+      setAiSuggestions([
+        `📐 Concept A: Elegant Layered Geometric Clock\n• Material: Wood / MDF\n• Design Details: Intricate cutouts highlighting interests based on text inputs: "${rawThought.substring(0, 30)}..."`,
+        `🪵 Concept B: Backlit LED Monogram Wall Art\n• Material: Wood / MDF\n• Design Details: A stylized initial plate completely backlit with ambient LED structures.`,
+        `📐 Concept C: Acrylic Engraved Memory Plaque\n• Material: Acrylic (Perspex)\n• Design Details: Crisp line-art layout paired with structural base framing.`
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -84,6 +95,13 @@ export default function AIBoothPage() {
           </form>
         </div>
 
+        {/* ERROR BOX */}
+        {errorMessage && (
+          <p className="text-center text-xs font-bold text-amber-600 mb-4 bg-amber-50 py-2 rounded-lg border border-amber-200">
+            ⚠️ {errorMessage} (Running Fallback Mock System)
+          </p>
+        )}
+
         {/* AI OUTPUT SHOWCASE RESULTS */}
         {aiSuggestions.length > 0 && (
           <div className="space-y-4 animate-fadeIn">
@@ -105,7 +123,7 @@ export default function AIBoothPage() {
                   <div className="text-right">
                     <Link 
                       href={`/quote?desc=${encodeURIComponent(suggestion)}`}
-                      className="inline-block text-[11px] font-black uppercase tracking-wider text-white px-4 py-2 rounded-lg"
+                      className="inline-block text-[11px] font-black uppercase tracking-wider text-white px-4 py-2 rounded-lg transition-transform hover:scale-[1.02]"
                       style={{ backgroundColor: 'var(--studio-gold)' }}
                     >
                       Use This Blueprint Concept →
