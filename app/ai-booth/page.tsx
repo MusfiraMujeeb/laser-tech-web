@@ -8,7 +8,7 @@ function StudioContent() {
   const searchParams = useSearchParams();
   
   const [design, setDesign] = useState({
-    itemType: 'nikah-clock-frame', 
+    itemType: 'nikah-clock-frame',
     businessType: 'boutique', 
     shape: 'circular', 
     woodTone: 'mahogany', 
@@ -22,38 +22,42 @@ function StudioContent() {
 
   const [realisticView, setRealisticView] = useState(true);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [mobileTab, setMobileTab] = useState<'preview' | 'controls'>('preview'); // ✅ FIX 1: Active mobile viewport tab matrix
+  
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [shippingAddress, setShippingAddress] = useState('');
   const [checkoutComplete, setCheckoutComplete] = useState(false);
 
+  // Auto intercept url routing parameters passed from the product catalog page
   useEffect(() => {
     const itemParam = searchParams.get('item');
     if (itemParam) {
       if (itemParam === 'notebook') {
-        setDesign(prev => ({ ...prev, itemType: 'notebook', shape: 'rectangular', mountingStyle: 'spiral-bound', topText: 'PERSONAL DIARY', middleText: 'M. MUJEEB', bottomText: 'ESTABLISHED 2026' }));
+        setDesign(prev => ({ ...prev, itemType: 'notebook', shape: 'rectangular', mountingStyle: 'spiral-bound', acrylicFinish: 'none', topText: 'PERSONAL DIARY', middleText: 'M. MUJEEB', bottomText: 'ESTABLISHED 2026' }));
       } else if (itemParam === 'shop-signboard') {
-        setDesign(prev => ({ ...prev, itemType: 'shop-signboard', shape: 'rectangular', mountingStyle: 'metal-standoffs', topText: 'THREADIFY', middleText: 'COLLECTION', bottomText: 'ESTD // 2024' }));
+        setDesign(prev => ({ ...prev, itemType: 'shop-signboard', shape: 'rectangular', mountingStyle: 'metal-standoffs', acrylicFinish: 'gold-mirror', topText: 'THREADIFY', middleText: 'COLLECTION', bottomText: 'ESTD // 2024' }));
       } else if (itemParam === 'table-lamp') {
-        setDesign(prev => ({ ...prev, itemType: 'table-lamp', shape: 'arched', mountingStyle: 'stand', topText: 'NIGHT ILLUMINATION', middleText: 'WELCOME HOME', bottomText: '💫 COZY VIBES 💫' }));
+        setDesign(prev => ({ ...prev, itemType: 'table-lamp', shape: 'arched', mountingStyle: 'stand', acrylicFinish: 'frosted', topText: 'NIGHT ILLUMINATION', middleText: 'WELCOME HOME', bottomText: '💫 COZY VIBES 💫' }));
       } else if (itemParam === 'nikah-frame') {
-        setDesign(prev => ({ ...prev, itemType: 'nikah-clock-frame', shape: 'circular', mountingStyle: 'stand', topText: 'OUR WEDDING DAY', middleText: 'AMRAN & FATHIMA', bottomText: '2026.06.20' }));
+        setDesign(prev => ({ ...prev, itemType: 'nikah-clock-frame', shape: 'circular', mountingStyle: 'stand', acrylicFinish: 'gold-mirror', topText: 'OUR WEDDING DAY', middleText: 'AMRAN & FATHIMA', bottomText: '2026.06.20' }));
       }
     }
   }, [searchParams]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-
+    
+    // ✅ FIX 2: Smart Dependency Locking to avoid impossible structural configurations
     if (name === 'itemType') {
       if (value === 'notebook') {
-        setDesign(prev => ({ ...prev, itemType: value, shape: 'rectangular', mountingStyle: 'spiral-bound', topText: 'PERSONAL DIARY', middleText: 'M. MUJEEB', bottomText: 'ESTABLISHED 2026' }));
+        setDesign({ itemType: value, businessType: 'boutique', shape: 'rectangular', woodTone: 'mahogany', acrylicFinish: 'none', mountingStyle: 'spiral-bound', fontStyle: 'serif', topText: 'PERSONAL DIARY', middleText: 'M. MUJEEB', bottomText: 'ESTABLISHED 2026' });
       } else if (value === 'shop-signboard') {
-        setDesign(prev => ({ ...prev, itemType: value, businessType: 'boutique', shape: 'rectangular', mountingStyle: 'metal-standoffs', topText: 'THREADIFY', middleText: 'COLLECTION', bottomText: 'ESTD // 2024' }));
+        setDesign({ itemType: value, businessType: 'boutique', shape: 'rectangular', woodTone: 'mahogany', acrylicFinish: 'gold-mirror', mountingStyle: 'metal-standoffs', fontStyle: 'serif', topText: 'THREADIFY', middleText: 'COLLECTION', bottomText: 'ESTD // 2024' });
       } else if (value === 'table-lamp') {
-        setDesign(prev => ({ ...prev, itemType: value, shape: 'arched', mountingStyle: 'stand', topText: 'NIGHT ILLUMINATION', middleText: 'WELCOME HOME', bottomText: '💫 COZY VIBES 💫' }));
+        setDesign({ itemType: value, businessType: 'boutique', shape: 'arched', woodTone: 'oak-mdf', acrylicFinish: 'frosted', mountingStyle: 'stand', fontStyle: 'sans', topText: 'NIGHT ILLUMINATION', middleText: 'WELCOME HOME', bottomText: '💫 COZY VIBES 💫' });
       } else {
-        setDesign(prev => ({ ...prev, itemType: value, shape: 'circular', mountingStyle: 'stand', topText: 'OUR WEDDING DAY', middleText: 'AMRAN & FATHIMA', bottomText: '2026.06.20' }));
+        setDesign({ itemType: value, businessType: 'boutique', shape: 'circular', woodTone: 'mahogany', acrylicFinish: 'gold-mirror', mountingStyle: 'stand', fontStyle: 'script', topText: 'OUR WEDDING DAY', middleText: 'AMRAN & FATHIMA', bottomText: '2026.06.20' });
       }
       return;
     }
@@ -100,14 +104,14 @@ function StudioContent() {
 
   const getLabelText = (layer: 'top' | 'mid' | 'bot') => {
     if (design.itemType === 'shop-signboard') {
-      if (layer === 'top') return 'Business Type (e.g., Boutique, Cafe)';
+      if (layer === 'top') return 'Business Niche Tagline (Boutique, Cafe)';
       if (layer === 'mid') return 'Main Business/Shop Name';
-      return 'Established / Location Text';
+      return 'Established Info or Location';
     }
     if (design.itemType === 'notebook') {
-      if (layer === 'top') return 'Notebook Cover Title';
+      if (layer === 'top') return 'Notebook Cover Header Text';
       if (layer === 'mid') return 'Owner Wording / Initials';
-      return 'Year or Quote Subtext';
+      return 'Year or Personalized Quote';
     }
     if (layer === 'top') return 'Top Event Inscription Heading';
     if (layer === 'mid') return 'Center Core Monogram Names';
@@ -122,10 +126,12 @@ function StudioContent() {
     return 'from-amber-100 via-amber-200 to-yellow-200 border-amber-400 text-amber-950 shadow-lg';
   };
 
+  // ✅ FIX 3: Realistic Visual Depth styling layer injected dynamically for direct wood burning burns
   const getEngravingStyleClass = () => {
     if (!realisticView) return 'text-sky-400 font-mono tracking-wide drop-shadow-[0_0_3px_rgba(56,189,248,0.5)]';
     if (design.acrylicFinish === 'gold-mirror') return 'text-amber-300 font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]';
     if (design.acrylicFinish === 'rose-gold') return 'text-rose-300 font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]';
+    if (design.acrylicFinish === 'none') return 'text-orange-950/70 font-bold drop-shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)] bg-clip-text mix-blend-multiply opacity-80'; 
     return design.woodTone === 'oak-mdf' ? 'text-stone-800/90' : 'text-orange-950/40 mix-blend-multiply';
   };
 
@@ -135,32 +141,51 @@ function StudioContent() {
     <div className="min-h-screen py-6 md:py-12 px-4 md:px-8 bg-stone-50 text-stone-800 relative">
       <div className="max-w-7xl mx-auto">
         
-        {/* VIEWPORT HEADER */}
-        <div className="mb-6 md:mb-10 border-b border-stone-200 pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        {/* VIEWPORT HEADER TAB ENGINE */}
+        <div className="mb-6 border-b border-stone-200 pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <span className="text-amber-600 font-mono text-[10px] uppercase tracking-widest font-bold">Step-by-Step Gift Creator</span>
+            <span className="text-amber-600 font-mono text-[10px] uppercase tracking-widest font-bold">Studio Engine v7.0</span>
             <h1 className="text-2xl md:text-3xl font-black tracking-tight text-stone-900 mt-1">Design Your Custom Keepsake</h1>
           </div>
           
-          <div className="bg-white border p-1 rounded-xl shadow-xs inline-flex items-center gap-1 w-full sm:w-auto justify-center">
-            <button type="button" onClick={() => setRealisticView(false)} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all w-1/2 sm:w-auto ${!realisticView ? 'bg-stone-800 text-white shadow-sm' : 'text-stone-600 hover:bg-stone-50'}`}>
+          {/* Dual render buttons */}
+          <div className="bg-white border p-1 rounded-xl shadow-xs flex items-center gap-1 w-full sm:w-auto justify-center">
+            <button type="button" onClick={() => setRealisticView(false)} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all w-1/2 sm:w-auto ${!realisticView ? 'bg-stone-800 text-white shadow-sm' : 'text-stone-600'}`}>
               📐 Laser Paths
             </button>
-            <button type="button" onClick={() => setRealisticView(true)} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all w-1/2 sm:w-auto ${realisticView ? 'bg-amber-600 text-white shadow-sm' : 'text-slate-600 hover:bg-stone-50'}`}>
+            <button type="button" onClick={() => setRealisticView(true)} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all w-1/2 sm:w-auto ${realisticView ? 'bg-amber-600 text-white shadow-sm' : 'text-slate-600'}`}>
               ✨ Finished 3D View
             </button>
           </div>
         </div>
 
-        {/* RESPONSIVE LAYOUT MATRIX */}
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-10 items-start">
+        {/* ✅ MOBILE VIEW TOGGLE ROW TAB BAR (Hidden on large screens to resolve keyboard blindness) */}
+        <div className="flex lg:hidden bg-stone-200/80 p-1 rounded-xl mb-6 border border-stone-300/40">
+          <button
+            type="button"
+            onClick={() => setMobileTab('preview')}
+            className={`w-1/2 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all text-center ${mobileTab === 'preview' ? 'bg-stone-900 text-white shadow-xs' : 'text-stone-600'}`}
+          >
+            👁️ View Live Preview
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileTab('controls')}
+            className={`w-1/2 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all text-center ${mobileTab === 'controls' ? 'bg-stone-900 text-white shadow-xs' : 'text-stone-600'}`}
+          >
+            ⚙️ Adjust Options
+          </button>
+        </div>
+
+        {/* RESPONSIVE STRUCTURE ARRAY LAYOUT */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
           
-          {/* STICKY LIVE PREVIEW CANVAS */}
-          <div className="w-full lg:col-span-7 space-y-4 order-1 lg:order-2 lg:sticky lg:top-24">
-            <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block px-1 font-mono">🖥️ Live Product Mockup Preview</span>
+          {/* 🖼️ PREVIEW FRAMEWORK STAGE */}
+          <div className={`w-full lg:col-span-7 space-y-4 lg:sticky lg:top-24 ${mobileTab === 'preview' ? 'block' : 'hidden lg:block'}`}>
+            <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block px-1 font-mono">🖥️ Live Studio Monitor Canvas</span>
             
             <div className={`w-full aspect-square border rounded-2xl flex items-center justify-center p-4 md:p-6 relative overflow-hidden bg-[size:20px_20px] transition-all ${
-              !realisticView ? 'bg-slate-950 border-slate-800 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)]' : 'bg-stone-100 border-stone-200 shadow-inner bg-[linear-gradient(to_right,#e7e5e4_1px,transparent_1px),linear-gradient(to_bottom,#e7e5e4_1px,transparent_1px)]'
+              !realisticView ? 'bg-slate-950 border-slate-800' : 'bg-stone-100 border-stone-200 shadow-inner'
             }`}>
               
               <div className="relative flex items-center justify-center scale-90 sm:scale-100 max-w-full transition-transform">
@@ -237,16 +262,16 @@ function StudioContent() {
             </div>
           </div>
 
-          {/* LEFT COLUMN FORM TUNERS */}
-          <div className="w-full lg:col-span-5 space-y-4 order-2 lg:order-1">
+          {/* ⚙️ ADJUSTMENT OPTIONS CONSOLE FORM PANEL */}
+          <div className={`w-full lg:col-span-5 space-y-4 ${mobileTab === 'controls' ? 'block' : 'hidden lg:block'}`}>
             
-            {/* COMPONENT SELECTION */}
+            {/* ITEM SELECTOR SHELL */}
             <div className="bg-white border border-stone-200 p-4 md:p-6 rounded-2xl shadow-xs space-y-4">
               <h3 className="font-black text-xs uppercase tracking-wider text-amber-700 flex items-center gap-2 font-mono"><span>Step 1 //</span> Base Template</h3>
               <div className="grid grid-cols-1 gap-3">
                 <div>
                   <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1 font-mono">Product Line</label>
-                  <select name="itemType" value={design.itemType} onChange={handleInputChange} className="w-full px-3 py-2.5 rounded-xl border border-stone-200 text-xs bg-stone-50 text-stone-800 font-bold">
+                  <select name="itemType" value={design.itemType} onChange={handleInputChange} className="w-full px-3 py-2.5 rounded-xl border border-stone-200 text-xs bg-stone-50 text-stone-800 font-bold focus:outline-none focus:border-amber-600">
                     <option value="nikah-clock-frame">💝 Wedding Plaque Frame (with Clock)</option>
                     <option value="shop-signboard">🏬 Business / Shop Name Signboard</option>
                     <option value="notebook">📔 A5 Premium Wooden Notebook</option>
@@ -256,7 +281,7 @@ function StudioContent() {
                 {design.itemType === 'shop-signboard' && (
                   <div>
                     <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1 font-mono">Business Category</label>
-                    <select name="businessType" value={design.businessType} onChange={handleInputChange} className="w-full px-3 py-2.5 rounded-xl border border-stone-200 text-xs bg-stone-50 text-stone-800 font-bold">
+                    <select name="businessType" value={design.businessType} onChange={handleInputChange} className="w-full px-3 py-2.5 rounded-xl border border-stone-200 text-xs bg-stone-50 text-stone-800 font-bold focus:outline-none focus:border-amber-600">
                       <option value="boutique">👗 Clothing Boutique / Fashion</option>
                       <option value="salon">✂️ Beauty Salon & Luxury Spa</option>
                       <option value="cafe">☕ Cozy Cafe & Restaurant</option>
@@ -267,13 +292,13 @@ function StudioContent() {
               </div>
             </div>
 
-            {/* MATERIAL MATRIX PLUGINS */}
+            {/* MATERIALS ASSIGNMENT PANEL */}
             <div className="bg-white border border-stone-200 p-4 md:p-6 rounded-2xl shadow-xs space-y-4">
               <h3 className="font-black text-xs uppercase tracking-wider text-amber-700 flex items-center gap-2 font-mono"><span>Step 2 //</span> Materials Architecture</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1 font-mono">Background Wood Type</label>
-                  <select name="woodTone" disabled={!realisticView} value={design.woodTone} onChange={handleInputChange} className="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs bg-stone-50 focus:outline-none disabled:opacity-50 font-semibold">
+                  <select name="woodTone" disabled={!realisticView} value={design.woodTone} onChange={handleInputChange} className="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs bg-stone-50 focus:outline-none focus:border-amber-600 disabled:opacity-50 font-semibold">
                     <option value="mahogany">🪵 Dark Mahogany (Luxury Deep Red)</option>
                     <option value="oak-mdf">🍂 Warm Light Oak (Golden Grain)</option>
                     <option value="walnut">🪨 Exotic Dark Walnut (Deep Brown)</option>
@@ -282,7 +307,7 @@ function StudioContent() {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1 font-mono">Lettering Finish Effect</label>
-                  <select name="acrylicFinish" disabled={!realisticView} value={design.acrylicFinish} onChange={handleInputChange} className="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs bg-stone-50 focus:outline-none disabled:opacity-50 font-semibold">
+                  <select name="acrylicFinish" disabled={!realisticView || design.itemType === 'notebook'} value={design.acrylicFinish} onChange={handleInputChange} className="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs bg-stone-50 focus:outline-none focus:border-amber-600 disabled:opacity-50 font-semibold">
                     <option value="gold-mirror">✨ Luxury Shiny Mirror Gold Inlay</option>
                     <option value="rose-gold">🌹 Elegant Mirror Rose Gold Inlay</option>
                     <option value="frosted">❄️ Frosted Acrylic Panel Overlay</option>
@@ -293,7 +318,7 @@ function StudioContent() {
               <div className="grid grid-cols-3 gap-2 pt-1">
                 <div>
                   <label className="block text-[9px] font-bold text-stone-500 uppercase mb-1 font-mono">Shape</label>
-                  <select name="shape" disabled={design.itemType === 'notebook' || design.itemType === 'shop-signboard'} value={design.shape} onChange={handleInputChange} className="w-full px-2 py-2 rounded-xl border border-stone-200 text-[11px] bg-stone-50 disabled:opacity-50 font-medium">
+                  <select name="shape" disabled={design.itemType === 'notebook' || design.itemType === 'shop-signboard'} value={design.shape} onChange={handleInputChange} className="w-full px-2 py-2 rounded-xl border border-stone-200 text-[11px] bg-stone-50 disabled:opacity-50 font-medium focus:outline-none">
                     <option value="circular">Circle</option>
                     <option value="arched">Arched</option>
                     <option value="rectangular">Rectangle</option>
@@ -301,7 +326,7 @@ function StudioContent() {
                 </div>
                 <div>
                   <label className="block text-[9px] font-bold text-stone-500 uppercase mb-1 font-mono">Mounting</label>
-                  <select name="mountingStyle" disabled={design.itemType === 'notebook' || design.itemType === 'shop-signboard'} value={design.mountingStyle} onChange={handleInputChange} className="w-full px-2 py-2 rounded-xl border border-stone-200 text-[11px] bg-stone-50 disabled:opacity-50 font-medium">
+                  <select name="mountingStyle" disabled={design.itemType === 'notebook' || design.itemType === 'shop-signboard'} value={design.mountingStyle} onChange={handleInputChange} className="w-full px-2 py-2 rounded-xl border border-stone-200 text-[11px] bg-stone-50 disabled:opacity-50 font-medium focus:outline-none">
                     <option value="stand">Stand Base</option>
                     <option value="ribbon-holes">Hanger Slots</option>
                     <option value="metal-standoffs">Standoff Pins</option>
@@ -309,7 +334,7 @@ function StudioContent() {
                 </div>
                 <div>
                   <label className="block text-[9px] font-bold text-stone-500 uppercase mb-1 font-mono">Font Vibe</label>
-                  <select name="fontStyle" value={design.fontStyle} onChange={handleInputChange} className="w-full px-2 py-2 rounded-xl border border-stone-200 text-[11px] bg-stone-50 font-bold">
+                  <select name="fontStyle" value={design.fontStyle} onChange={handleInputChange} className="w-full px-2 py-2 rounded-xl border border-stone-200 text-[11px] bg-stone-50 font-bold focus:outline-none">
                     <option value="script">Calligraphy</option>
                     <option value="serif">Serif</option>
                     <option value="sans">Sans</option>
@@ -318,9 +343,9 @@ function StudioContent() {
               </div>
             </div>
 
-            {/* STEP 3 INSCRIPTION LAYERS */}
+            {/* INSCRIPTIONS STRINGS LOGS FIELDS */}
             <div className="bg-white border border-stone-200 p-4 md:p-6 rounded-2xl shadow-xs space-y-4">
-              <h3 className="font-black text-xs uppercase tracking-wider text-amber-700 flex items-center gap-2 font-mono"><span>Step 3 //</span> Custom Text</h3>
+              <h3 className="font-black text-xs uppercase tracking-wider text-amber-700 flex items-center gap-2 font-mono"><span>Step 3 //</span> Custom Text Inscription</h3>
               <div className="space-y-3">
                 <div>
                   <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">{getLabelText('top')}</label>
@@ -337,7 +362,7 @@ function StudioContent() {
               </div>
             </div>
 
-            {/* GUARANTEED PRICING MATRIX CARD CONTAINER */}
+            {/* TOTAL COST SUMMARY CARD */}
             <div className="bg-white border border-stone-200 p-4 md:p-6 rounded-2xl shadow-xs space-y-3">
               <h4 className="text-[10px] font-black tracking-wider uppercase text-stone-400 font-mono">Crafting Cost Breakdown</h4>
               <div className="text-xs space-y-2 font-medium border-b border-stone-100 pb-2.5 text-stone-600">
@@ -380,7 +405,7 @@ function StudioContent() {
 
       </div>
 
-      {/* CHECKOUT DRAW OVERLAY MODAL */}
+      {/* SECURE SIDE SHEET DRAWER OVERLAY */}
       {isCheckoutOpen && (
         <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-xs flex justify-end z-50 animate-fade-in">
           <div className="bg-white w-full max-w-md h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto animate-slide-left">
@@ -395,11 +420,18 @@ function StudioContent() {
                   <div className="w-16 h-16 bg-emerald-50 rounded-full text-emerald-600 flex items-center justify-center text-3xl mx-auto">✓</div>
                   <h3 className="text-base font-black text-stone-900">Order Locked Successfully!</h3>
                   <p className="text-xs text-stone-500 leading-relaxed">
-                    Our workshop queue has registered your bespoke parameters. Operators will contact your phone lines shortly to confirm delivery details.
+                    Our workshop queue has registered your bespoke parameters. Operators will contact your phone lines shortly to confirm logistics.
                   </p>
                 </div>
               ) : (
                 <form onSubmit={handleCustomOrderSubmit} className="space-y-5">
+                  
+                  {/* ✅ FIX 4: REAL-TIME LOGISTICS & DELIVERY TRANSPARENCY NOTIFICATION BOX */}
+                  <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl text-xs text-amber-900 space-y-1 font-medium leading-relaxed">
+                    <p className="font-bold flex items-center gap-1.5">🚚 Island-Wide Sri Lanka Delivery Info:</p>
+                    <p className="opacity-80"> Bids log processing takes **3 to 5 working days** directly inside our Mawanella workshop before dispatch.</p>
+                  </div>
+
                   <div className="space-y-3">
                     <div>
                       <label className="block text-[10px] font-bold text-stone-400 uppercase mb-1 tracking-wider font-mono">Recipient Full Name</label>
@@ -414,8 +446,8 @@ function StudioContent() {
                       <textarea required rows={3} placeholder="Provide full location address text precisely" value={shippingAddress} onChange={(e) => setShippingAddress(e.target.value)} className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-xs bg-stone-50 focus:outline-none focus:border-amber-600 font-medium resize-none leading-relaxed" />
                     </div>
                   </div>
-                  <button type="submit" className="w-full py-3.5 bg-stone-900 hover:bg-stone-800 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md mt-2 cursor-pointer">
-                    Confirm Order (LKR {getTotalPrice().toLocaleString()}) ➔
+                  <button type="submit" className="w-full py-3.5 bg-stone-900 hover:bg-stone-800 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md mt-2 cursor-pointer transition-all">
+                    Confirm Custom Order (LKR {getTotalPrice().toLocaleString()}) ➔
                   </button>
                 </form>
               )}
