@@ -18,15 +18,16 @@ export default function Home() {
             <p className="text-base mb-10 max-w-xl leading-relaxed" style={{ color: 'var(--studio-muted)' }}>
               Premium Laser Cutting, Custom Engraving, and Branding services in Mawanella. Advanced machine engineering execution blended with clean design studio artistry.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/quote" className="text-white font-extrabold px-8 py-4 rounded-xl text-center shadow-md transition-all text-sm tracking-wide hover:-translate-y-0.5 hover:shadow-lg" style={{ background: 'linear-gradient(135deg, #31433c 0%, #2a3631 100%)' }}>
-                Upload Design & Get Quote
+            <div className="flex flex-wrap gap-4">
+              {/* ✅ NEW HIGHLIGHTED ACTION LINK FOR NON-TECHNICAL CUSTOMERS */}
+              <Link href="/products" className="text-white font-black bg-amber-600 hover:bg-amber-700 px-8 py-4 rounded-xl text-center shadow-md transition-all text-sm tracking-wide hover:-translate-y-0.5 hover:shadow-lg">
+                🛍️ Shop Our Products & Deals
               </Link>
-              <Link href="#services" className="font-bold px-8 py-4 rounded-xl text-center transition-all text-sm shadow-sm hover:-translate-y-0.5 hover:shadow-md" style={{ backgroundColor: 'var(--studio-surface-light)', color: 'var(--studio-moss)', border: '1px solid var(--studio-border)' }}>
+              <Link href="/quote" className="text-white font-extrabold px-6 py-4 rounded-xl text-center shadow-md transition-all text-sm tracking-wide hover:-translate-y-0.5 hover:shadow-lg" style={{ background: 'linear-gradient(135deg, #31433c 0%, #2a3631 100%)' }}>
+                Upload Design
+              </Link>
+              <Link href="#services" className="font-bold px-6 py-4 rounded-xl text-center transition-all text-sm shadow-sm hover:-translate-y-0.5 hover:shadow-md" style={{ backgroundColor: 'var(--studio-surface-light)', color: 'var(--studio-moss)', border: '1px solid var(--studio-border)' }}>
                 Explore Services
-              </Link>
-              <Link href="/portfolio" className="font-bold px-8 py-4 rounded-xl text-center transition-all text-sm shadow-sm hover:-translate-y-0.5 hover:shadow-md" style={{ backgroundColor: 'var(--studio-surface-dark)', color: '#fffaf6', border: '1px solid rgba(255,255,255,0.12)' }}>
-                See Our Work
               </Link>
             </div>
           </div>
@@ -66,6 +67,22 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ✅ NEW PROMOTIONAL INTERACTION BANNER ROADBLOCK FOR INSTANT VISIBILITY */}
+      <section className="py-6 px-6" style={{ backgroundColor: '#fff7ed', borderBottom: '1px solid #ffedd5' }}>
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🔥</span>
+            <div>
+              <h4 className="text-sm font-black text-amber-900 tracking-tight">Special Limited Time Discount Offers Active!</h4>
+              <p className="text-xs text-amber-700 font-medium">Save up to 20% on custom 3D Nikah frames, shop signboards, and personalized gifts.</p>
+            </div>
+          </div>
+          <Link href="/products" className="px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xs shrink-0">
+            Don't Miss Out ➔
+          </Link>
+        </div>
+      </section>
+
       {/* 2. SERVICES SECTION */}
       <section id="services" className="py-24 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
@@ -87,8 +104,8 @@ export default function Home() {
               </p>
             </div>
             <div className="pt-4 border-t border-dashed mt-auto" style={{ borderColor: 'var(--studio-border)' }}>
-              <Link href="/quote?type=laser" className="font-bold text-xs uppercase tracking-wider hover:underline inline-block" style={{ color: 'var(--studio-gold)' }}>
-                Request Craft Quote →
+              <Link href="/products?category=Wedding" className="font-bold text-xs uppercase tracking-wider hover:underline inline-block" style={{ color: 'var(--studio-gold)' }}>
+                View Catalog Items →
               </Link>
             </div>
           </div>
@@ -104,8 +121,8 @@ export default function Home() {
               </p>
             </div>
             <div className="pt-4 border-t border-dashed mt-auto" style={{ borderColor: 'var(--studio-border)' }}>
-              <Link href="/quote?type=branding" className="font-bold text-xs uppercase tracking-wider hover:underline inline-block" style={{ color: 'var(--studio-moss)' }}>
-                Consult Setup →
+              <Link href="/products?category=Commercial" className="font-bold text-xs uppercase tracking-wider hover:underline inline-block" style={{ color: 'var(--studio-moss)' }}>
+                Explore Signboards →
               </Link>
             </div>
           </div>
@@ -121,8 +138,8 @@ export default function Home() {
               </p>
             </div>
             <div className="pt-4 border-t border-dashed mt-auto" style={{ borderColor: 'var(--studio-border)' }}>
-              <Link href="/quote?type=print" className="font-bold text-xs uppercase tracking-wider hover:underline inline-block" style={{ color: 'var(--studio-moss)' }}>
-                Place Print Order →
+              <Link href="/products?category=Stationery" className="font-bold text-xs uppercase tracking-wider hover:underline inline-block" style={{ color: 'var(--studio-moss)' }}>
+                Browse Notebooks & Accessories →
               </Link>
             </div>
           </div>
