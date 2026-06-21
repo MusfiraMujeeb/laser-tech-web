@@ -64,7 +64,7 @@ export default function AdminDashboard() {
     } catch (err) {
       console.error('Auth Pipeline Failure:', err);
       setAuthError('System authorization failure.');
-    } finaly {
+    } finally {
       setLoading(false);
     }
   };
