@@ -27,7 +27,7 @@ function StudioContent() {
   const [shippingAddress, setShippingAddress] = useState('');
   const [checkoutComplete, setCheckoutComplete] = useState(false);
 
-  // ✅ POV FIX 1: Auto load selection passed from the e-commerce catalog page link parameters
+  // Auto load selection passed from the e-commerce catalog page link parameters
   useEffect(() => {
     const itemParam = searchParams.get('item');
     if (itemParam) {
@@ -73,10 +73,22 @@ function StudioContent() {
     setDesign(prev => ({ ...prev, [name]: value }));
   };
 
+  // Dynamic blueprint spec manifest compiler text string generation
+  const generatedBlueprintText = `[LASER TECH MASTER PRODUCTION BLUEPRINT]
+• Project Category Model: ${design.itemType.toUpperCase()}
+• Shape Geometry Profile: ${design.shape.toUpperCase()}
+• Base Wood Selection: ${design.woodTone.toUpperCase()}
+• Acrylic Treatment Mode: ${design.acrylicFinish.toUpperCase()}
+• Hardware Mounting Style: ${design.mountingStyle.toUpperCase()}
+• Selected Typography Engine: ${design.fontStyle.toUpperCase()}
+• Layer 01 (Header Inscription): "${design.topText}"
+• Layer 02 (Core Subject Text): "${design.middleText}"
+• Layer 03 (Footer Info Text): "${design.bottomText}"`;
+
   // Pricing matrix estimation based on product catalog baselines
   const estimateCustomPrice = () => {
     let price = 4000;
-    if (design.itemType === 'nikah-clock-frame') price = 6600; // discounted base
+    if (design.itemType === 'nikah-clock-frame') price = 6600;
     if (design.itemType === 'shop-signboard') price = 12325;
     if (design.itemType === 'notebook') price = 2800;
     if (design.acrylicFinish === 'gold-mirror' || design.acrylicFinish === 'rose-gold') price += 850;
@@ -112,7 +124,6 @@ function StudioContent() {
     }, 3000);
   };
 
-  // ✅ POV FIX 2: Dynamic input labeling based on item types context
   const getLabelText = (layer: 'top' | 'mid' | 'bot') => {
     if (design.itemType === 'shop-signboard') {
       if (layer === 'top') return 'Business Type Tagline (e.g., Boutique, Cafe)';
@@ -273,7 +284,7 @@ function StudioContent() {
             <span className="text-[11px] font-black uppercase tracking-wider text-stone-400 block px-1 font-mono">🖥️ Live Studio Monitor Canvas</span>
             
             <div className={`w-full aspect-square border rounded-3xl flex items-center justify-center p-6 relative overflow-hidden bg-[size:24px_24px] transition-all duration-300 ${
-              !realisticView ? 'bg-slate-950 border-slate-800 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] shadow-inner' : 'bg-stone-100 border-stone-200 bg-[linear-gradient(to_right,#e7e5e4_1px,transparent_1px),linear-gradient(to_bottom,#e7e5e4_1px,transparent_1px)] shadow-inner'
+              !realisticView ? 'bg-slate-950 border-slate-800 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] shadow-inner' : 'bg-stone-100 border-stone-200 bg-[linear-gradient(to_right,#e7e5e4_1px,transparent_1px),linear-gradient(to_bottom,#e7e5e4_1px,transparent_1px)] shadow-inner'
             }`}>
               
               <div className="relative flex items-center justify-center">
@@ -319,6 +330,7 @@ function StudioContent() {
                             <div className={`w-11 h-11 rounded-full border flex items-center justify-center relative bg-black/5 ${!realisticView ? 'border-sky-400/60' : 'border-dashed border-current/40 shadow-inner'}`}>
                               <div className={`w-1 h-1 rounded-full ${!realisticView ? 'bg-sky-400' : 'bg-current'}`}></div>
                               <div className={`absolute top-1.5 left-1/2 -translate-x-1/2 h-3.5 w-0.5 origin-bottom rotate-45 ${!realisticView ? 'bg-sky-400' : 'bg-current'}`}></div>
+                              <span className="absolute top-0.5 text-[5px] font-mono font-bold">XII</span>
                             </div>
                           </div>
                           <div className="col-span-4">
@@ -348,7 +360,7 @@ function StudioContent() {
               </div>
             </div>
 
-            {/* ✅ POV FIX 3: INTEGRATED INSTANT CUSTOM CHECKOUT BUTTON CHANNELS */}
+            {/* INTEGRATED INSTANT CUSTOM CHECKOUT BUTTON CHANNELS */}
             <div className="bg-white border border-stone-200 p-6 rounded-2xl shadow-xs text-center space-y-3">
               <div className="flex justify-between items-center bg-stone-50 p-3 rounded-xl border">
                 <span className="text-xs text-stone-500 font-bold">Estimated Configuration Cost:</span>
@@ -376,7 +388,7 @@ function StudioContent() {
 
       </div>
 
-      {/* 🛍️ CUSTOM ORDER SUDO SIDE-SHEET OVERLAY MODAL */}
+      {/* CUSTOM ORDER SUDO SIDE-SHEET OVERLAY MODAL */}
       {isCheckoutOpen && (
         <div className="fixed inset-0 bg-stone-900/30 backdrop-blur-xs flex justify-end z-50">
           <div className="bg-white w-full max-w-md h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto">
