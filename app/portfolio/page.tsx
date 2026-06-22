@@ -46,7 +46,7 @@ export default function CompleteCleanPortfolio() {
                 <p className="text-[10px] font-mono font-bold text-stone-400 pt-1">Material Base Profile: {card.material}</p>
               </div>
               
-              {/* FIXED LINK REDIRECT ARCHITECTURE LAYER */}
+              {/* FIXED LINK REDIRECT LINK LAYER ROUTING STRINGS */}
               <Link href={`/ai-booth?item=${card.id}`} className="mt-5 w-full text-center py-2.5 bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-2xs block transition-colors">
                 Configure Interactive Layout Specification ➔
               </Link>

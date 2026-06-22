@@ -8,7 +8,7 @@ export default function StreamlinedAboutPage() {
   return (
     <div className="min-h-screen py-12 px-4 bg-stone-50 text-stone-800 space-y-16">
       
-      {/* HUMAN ARTISAN VERIFICATION MODULE */}
+      {/* HUMAN VERIFICATION PORTRAIT CARD: CEO CORNER */}
       <section className="max-w-4xl mx-auto bg-white border border-stone-200 rounded-3xl p-6 md:p-8 shadow-xs grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
         <div className="md:col-span-4 text-center md:text-left space-y-2">
           <div className="w-28 h-28 bg-stone-900 border-2 border-amber-500 rounded-2xl mx-auto md:mx-0 flex items-center justify-center text-amber-400 font-mono font-black text-3xl shadow-md">MA</div>
@@ -26,7 +26,7 @@ export default function StreamlinedAboutPage() {
         </div>
       </section>
 
-      {/* COMPACT TIMELINE HORIZON CARD */}
+      {/* COMPRESSED SEAMLESS ROADMAP TIMELINE */}
       <section className="max-w-2xl mx-auto space-y-6 bg-white border p-6 rounded-2xl shadow-2xs">
         <h4 className="text-xs font-black font-mono uppercase text-stone-400 tracking-wider text-center">Our Core Journey Milestones</h4>
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center text-xs font-medium divide-y sm:divide-y-0 sm:divide-x divide-stone-100">
@@ -37,7 +37,7 @@ export default function StreamlinedAboutPage() {
         </div>
       </section>
 
-      {/* FREQUENTLY ASKED PRODUCTION QUESTIONS */}
+      {/* EXPANDABLE ACCORDION FAQ BLOCK */}
       <section className="max-w-2xl mx-auto space-y-3">
         <h4 className="text-base font-black text-stone-900 tracking-tight text-center pb-2">Frequently Asked Production Questions</h4>
         {[
