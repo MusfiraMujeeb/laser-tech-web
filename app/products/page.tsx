@@ -1,278 +1,188 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 
-const LASER_TECH_PRODUCTS = [
-  {
-    id: 'nikah-frame',
-    title: '3D Luxury Royal Nikah Frame',
-    category: 'Wedding',
-    description: 'Double-layered premium mahogany base with a floating clear acrylic panel, built-in analog clock, crown monogram, and custom calendar date grid.',
-    originalPrice: 7500,
-    discountPercent: 12,
-    isDiscountActive: true,
-    image: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=500&q=80',
-    tag: 'Best Seller'
-  },
-  {
-    id: 'shop-signboard',
-    title: 'Commercial Business Signboard',
-    category: 'Commercial',
-    description: 'High-impact outdoor/indoor shop display plate with heavy wood composite backing and 3D mirror gold acrylic lettering. Includes wall standoff spacers.',
-    originalPrice: 14500,
-    discountPercent: 15,
-    isDiscountActive: true,
-    image: 'https://images.unsplash.com/photo-1541123437800-1bb1317badc2?auto=format&fit=crop&w=500&q=80',
-    tag: 'Trending'
-  },
-  {
-    id: 'notebook',
-    title: 'A5 Premium Engraved Notebook',
-    category: 'Stationery',
-    description: '100 high-grade lined pages bound securely between a lightweight 3mm raw mahogany wooden cover, laser-etched with intricate detailing.',
-    originalPrice: 2800,
-    discountPercent: 10,
-    isDiscountActive: false,
-    image: 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=500&q=80',
-    tag: 'Gift Favorite'
-  },
-  {
-    id: 'table-lamp',
-    title: 'Glowing LED Acrylic Status Trophy',
-    category: 'Gifts',
-    description: 'Polished transparent acrylic display sheet slotted into a solid wooden base block embedded with multi-color switchable LED strip lights.',
-    originalPrice: 5200,
-    discountPercent: 10,
-    isDiscountActive: true,
-    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=500&q=80',
-    tag: 'New Arrival'
-  }
-];
+export default function PerfectedHomepage() {
+  const [activePortfolio, setActivePortfolio] = useState('All');
 
-const CATEGORIES = ['All Products', 'Wedding', 'Commercial', 'Stationery', 'Gifts'];
+  const portfolioItems = [
+    { category: 'Industrial', title: 'Fiber Laser Metal Serialization Tagging', img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=400&q=80' },
+    { category: 'Sign Boards', title: '3D Mirror Gold Floating Acrylic Signboard', img: 'https://images.unsplash.com/photo-1541123437800-1bb1317badc2?auto=format&fit=crop&w=400&q=80' },
+    { category: 'Wedding', title: 'Royal Layered Mahogany Nikah Plaque', img: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=400&q=80' },
+    { category: 'Corporate', title: 'Precision CNC Router Decorative Wood Panels', img: 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=400&q=80' }
+  ];
 
-export default function PerfectedMarketplace() {
-  const [selectedCategory, setSelectedCategory] = useState('All Products');
-  const [showPromoPopup, setShowPromoPopup] = useState(false);
-  const [activeCheckoutItem, setActiveCheckoutItem] = useState<any>(null);
-  
-  const [customerName, setCustomerName] = useState('');
-  const [customerPhone, setCustomerPhone] = useState('');
-  const [shippingAddress, setShippingAddress] = useState('');
-  const [checkoutComplete, setCheckoutComplete] = useState(false);
-
-  useEffect(() => {
-    const hasActivePromotions = LASER_TECH_PRODUCTS.some(p => p.isDiscountActive && p.discountPercent > 0);
-    if (hasActivePromotions) {
-      const timer = setTimeout(() => setShowPromoPopup(true), 800);
-      return () => clearTimeout(timer);
-    }
-  }, []);
-
-  const filteredProducts = selectedCategory === 'All Products'
-    ? LASER_TECH_PRODUCTS
-    : LASER_TECH_PRODUCTS.filter(p => p.category === selectedCategory);
-
-  const calculateDisplayPrice = (original: number, discount: number, isActive: boolean) => {
-    if (!isActive || discount <= 0) return original;
-    return Math.round(original * (1 - discount / 100));
-  };
-
-  const handleCheckoutSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!customerName || !customerPhone || !shippingAddress) return;
-    
-    const finalPrice = calculateDisplayPrice(
-      activeCheckoutItem.originalPrice, 
-      activeCheckoutItem.discountPercent, 
-      activeCheckoutItem.isDiscountActive
-    );
-
-    const newOrder = {
-      orderId: 'LT-' + Math.floor(1000 + Math.random() * 9000),
-      createdAt: new Date().toISOString(),
-      customerName,
-      customerPhone,
-      shippingAddress,
-      productTitle: activeCheckoutItem.title,
-      totalAmount: finalPrice,
-      status: 'Pending Production'
-    };
-
-    const existingOrders = JSON.parse(localStorage.getItem('laser_tech_orders') || '[]');
-    existingOrders.push(newOrder);
-    localStorage.setItem('laser_tech_orders', JSON.stringify(existingOrders));
-
-    setCheckoutComplete(true);
-    setTimeout(() => {
-      setActiveCheckoutItem(null);
-      setCheckoutComplete(false);
-      setCustomerName('');
-      setCustomerPhone('');
-      setShippingAddress('');
-    }, 3000);
-  };
+  const filteredPortfolio = activePortfolio === 'All' 
+    ? portfolioItems 
+    : portfolioItems.filter(item => item.category === activePortfolio);
 
   return (
-    <div className="min-h-screen py-12 px-4 md:px-8 bg-stone-50 text-stone-800 relative">
-      <div className="max-w-7xl mx-auto">
-        
-        <div className="mb-12 border-b border-stone-200 pb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-          <div>
-            <span className="text-amber-600 font-mono text-[10px] uppercase tracking-widest font-bold block">Laser Tech Marketplace</span>
-            <h1 className="text-4xl font-black tracking-tight text-stone-900 mt-1">Our Product Catalog</h1>
-            <p className="text-sm text-stone-500 mt-2 max-w-2xl">
-              Explore our selection of laser-crafted pieces. Choose to directly purchase an authentic baseline model, or open it inside our customization booth studio.
+    <div className="min-h-screen text-stone-800 bg-stone-50">
+      
+      {/* 1. HERO CONVERSION CORE (Priority 1 & 20) */}
+      <section className="relative py-20 px-4 md:px-12 bg-gradient-to-br from-stone-100 via-stone-50 to-amber-50/40 border-b border-stone-200">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <div className="lg:col-span-7 space-y-6">
+            <div className="flex flex-wrap gap-2">
+              <span className="bg-stone-900 text-amber-400 font-mono text-[10px] font-black tracking-widest uppercase px-3 py-1.5 rounded-lg shadow-xs">
+                🛡️ ESTABLISHED SINCE 2019
+              </span>
+              <span className="bg-amber-100/70 text-amber-900 font-mono text-[10px] font-bold tracking-wider uppercase px-3 py-1.5 rounded-lg border border-amber-200">
+                🚀 FIRST LASER PLANT IN MAWANELLA
+              </span>
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-none text-stone-900">
+              Sri Lanka&apos;s Trusted <br />
+              <span className="text-amber-600">Precision Manufacturing</span> Partner
+            </h1>
+            
+            <p className="text-sm md:text-base text-stone-600 max-w-xl leading-relaxed">
+              Pioneering custom laser fabrication across the island since 2019. We operate synchronized heavy-duty CNC routing, fiber metal engraving, and high-end corporate gift production pipelines with total precision.
             </p>
-          </div>
-        </div>
 
-        <div className="flex flex-wrap gap-2 mb-10">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-5 py-2.5 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
-                selectedCategory === cat
-                  ? 'bg-stone-900 text-white border-stone-900 shadow-md'
-                  : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-100 hover:border-stone-300'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+            {/* Value Proposition Tick Cross Checklist */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-bold text-stone-700 font-mono">
+              <p className="flex items-center gap-1.5 text-emerald-700">✓ 2019 Pioneer Status</p>
+              <p className="flex items-center gap-1.5 text-emerald-700">✓ Heavy-Duty Machinery</p>
+              <p className="flex items-center gap-1.5 text-emerald-700">✓ Island-wide Delivery</p>
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProducts.map((product) => {
-            const displaySale = product.isDiscountActive && product.discountPercent > 0;
-            const finalPrice = calculateDisplayPrice(product.originalPrice, product.discountPercent, product.isDiscountActive);
-
-            return (
-              <div key={product.id} className="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group">
-                <div className="relative aspect-video w-full bg-stone-100 overflow-hidden border-b border-stone-100">
-                  <img src={product.image} alt={product.title} className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500" />
-                  <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-                    <span className="bg-stone-900/90 text-white text-[9px] font-black tracking-wider uppercase px-2.5 py-1 rounded-md">{product.tag}</span>
-                    {displaySale && (
-                      <span className="bg-red-600 text-white text-[9px] font-black tracking-wider uppercase px-2.5 py-1 rounded-md shadow-xs font-bold animate-pulse">
-                        🔥 Save {product.discountPercent}%
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-mono font-bold text-amber-600 uppercase tracking-widest block">{product.category}</span>
-                    <h3 className="text-lg font-black tracking-tight text-stone-900 group-hover:text-amber-600 transition-colors">{product.title}</h3>
-                    <p className="text-xs text-stone-500 leading-relaxed line-clamp-3">{product.description}</p>
-                  </div>
-
-                  <div className="pt-3 border-t border-stone-100 flex flex-col space-y-3">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-xl font-black text-stone-900 font-mono">LKR {finalPrice.toLocaleString()}</span>
-                      {displaySale && <span className="text-xs font-mono font-medium text-stone-400 line-through">LKR {product.originalPrice.toLocaleString()}</span>}
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-2 pt-1">
-                      <button
-                        type="button"
-                        onClick={() => setActiveCheckoutItem(product)}
-                        className="py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs tracking-wide text-center transition-all cursor-pointer shadow-xs"
-                      >
-                        🛍️ Instant Buy
-                      </button>
-                      <Link 
-                        href={`/ai-booth?item=${product.id}`}
-                        className="py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/40 font-bold text-xs tracking-wide text-center transition-all"
-                      >
-                        🎨 Customize
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {showPromoPopup && (
-          <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-            <div className="bg-white max-w-md w-full rounded-2xl border border-stone-200 shadow-2xl p-6 text-center space-y-4 relative transform scale-100 transition-transform">
-              <button type="button" onClick={() => setShowPromoPopup(false)} className="absolute top-4 right-4 text-stone-400 hover:text-stone-600 text-lg font-bold cursor-pointer">✕</button>
-              <div className="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mx-auto text-2xl">🔥</div>
-              <div>
-                <h2 className="text-xl font-black text-stone-900 tracking-tight">Limited Promotional Offer Active!</h2>
-                <p className="text-xs text-stone-500 leading-relaxed px-2 mt-1">
-                  Special price drops are currently active across our handcrafted catalog modules. Complete your booking today and unlock automatic savings!
-                </p>
-              </div>
-              <button type="button" onClick={() => { setShowPromoPopup(false); setSelectedCategory('All Products'); }} className="w-full py-3 bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md">
-                Explore Discounted Items ➔
-              </button>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Link href="/products" className="px-6 py-3.5 bg-stone-900 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md hover:bg-stone-800 transition-all text-center">
+                🛍️ Browse Catalog Products
+              </Link>
+              <Link href="/ai-booth" className="px-6 py-3.5 bg-amber-600 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md hover:bg-amber-700 transition-all text-center">
+                🎨 Enter Creative Design Booth
+              </Link>
             </div>
           </div>
-        )}
 
-        {activeCheckoutItem && (
-          <div className="fixed inset-0 bg-stone-900/30 backdrop-blur-xs flex justify-end z-50">
-            <div className="bg-white w-full max-w-md h-full shadow-2xl border-l border-stone-200 p-6 flex flex-col justify-between overflow-y-auto relative">
-              <div className="space-y-6">
-                <div className="flex justify-between items-center border-b pb-4">
-                  <h2 className="text-lg font-black tracking-tight text-stone-900">Secure Order Verification</h2>
-                  <button type="button" onClick={() => setActiveCheckoutItem(null)} className="text-stone-400 hover:text-stone-700 text-sm font-bold">✕ Close</button>
-                </div>
-
-                {checkoutComplete ? (
-                  <div className="py-12 text-center space-y-3">
-                    <div className="w-16 h-16 bg-emerald-50 rounded-full text-emerald-600 flex items-center justify-center text-3xl mx-auto">✓</div>
-                    <h3 className="text-base font-black text-stone-900">Order Dispatched Successfully!</h3>
-                    <p className="text-xs text-stone-500 leading-relaxed">
-                      Our manufacturing queue has logged your order code. Laser Tech workshop operators will contact your phone shortly to verify custom logistics.
-                    </p>
-                  </div>
-                ) : (
-                  <form onSubmit={handleCheckoutSubmit} className="space-y-5">
-                    <div className="p-3 bg-stone-50 border rounded-xl flex items-center gap-3">
-                      <img src={activeCheckoutItem.image} className="w-12 h-12 object-cover rounded-lg" alt="" />
-                      <div>
-                        <h4 className="text-xs font-black text-stone-900">{activeCheckoutItem.title}</h4>
-                        <p className="text-[11px] font-mono font-bold text-amber-700 mt-0.5">
-                          LKR {calculateDisplayPrice(activeCheckoutItem.originalPrice, activeCheckoutItem.discountPercent, activeCheckoutItem.isDiscountActive).toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-400 uppercase mb-1 tracking-wider font-mono">Recipient Full Name</label>
-                        <input type="text" required placeholder="Ex: Muhammad Mujeeb" value={customerName} onChange={(e) => setCustomerName(e.target.value)} className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-xs bg-stone-50 focus:outline-none focus:border-amber-600 font-medium" />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-400 uppercase mb-1 tracking-wider font-mono">Contact Phone Number</label>
-                        <input type="tel" required placeholder="Ex: +94 77 123 4567" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-xs bg-stone-50 focus:outline-none focus:border-amber-600 font-medium font-mono" />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-400 uppercase mb-1 tracking-wider font-mono">Delivery Shipping Address</label>
-                        <textarea required rows={3} placeholder="Provide your full house number, street address, and city location code precisely" value={shippingAddress} onChange={(e) => setShippingAddress(e.target.value)} className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-xs bg-stone-50 focus:outline-none focus:border-amber-600 font-medium resize-none leading-relaxed" />
-                      </div>
-                    </div>
-
-                    <button type="submit" className="w-full py-3.5 bg-stone-900 hover:bg-stone-800 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md mt-2">
-                      Confirm and Place Cash-on-Delivery Order ➔
-                    </button>
-                  </form>
-                )}
-              </div>
-              <div className="text-[10px] text-stone-400 font-mono text-center border-t pt-4 mt-4">🔒 Secured Verification Pipeline // Laser Tech LK</div>
+          {/* NUMERICAL STATISTICS ENGINE (Priority 20) */}
+          <div className="lg:col-span-5 bg-white border border-stone-200 p-6 rounded-3xl shadow-xl grid grid-cols-2 gap-4 relative">
+            <div className="p-4 bg-stone-50 rounded-xl border">
+              <p className="text-2xl font-black text-stone-900 font-mono">2019</p>
+              <p className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wide mt-1">Founded Core</p>
+            </div>
+            <div className="p-4 bg-stone-50 rounded-xl border">
+              <p className="text-2xl font-black text-amber-600 font-mono">500+</p>
+              <p className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wide mt-1">Projects Shipped</p>
+            </div>
+            <div className="p-4 bg-stone-50 rounded-xl border">
+              <p className="text-2xl font-black text-stone-900 font-mono">100+</p>
+              <p className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wide mt-1">B2B Corporate Clients</p>
+            </div>
+            <div className="p-4 bg-stone-50 rounded-xl border">
+              <p className="text-2xl font-black text-emerald-600 font-mono">100%</p>
+              <p className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wide mt-1">Sri Lankan Owned</p>
             </div>
           </div>
-        )}
 
-      </div>
+        </div>
+      </section>
+
+      {/* 2. OPERATIONAL DIVISION BI-FURCATION (Priority 3) */}
+      <section className="py-20 px-4 max-w-7xl mx-auto space-y-12">
+        <div className="text-center space-y-2">
+          <h2 className="text-3xl font-black tracking-tight text-stone-900">Dual Industrial &amp; Creative Capabilities</h2>
+          <p className="text-xs text-stone-500 max-w-md mx-auto">We explicitly segregate our manufacturing pipelines to address both volume corporate routing and artisan individual configurations smoothly.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* DIV A: INDUSTRIAL MACHINE PATHWAYS */}
+          <div className="bg-white border border-stone-200 p-6 md:p-8 rounded-3xl flex flex-col justify-between shadow-xs hover:shadow-lg transition-all">
+            <div className="space-y-4">
+              <span className="text-3xl">🏭</span>
+              <h3 className="text-xl font-black text-stone-900">Commercial &amp; Industrial Solutions</h3>
+              <p className="text-xs text-stone-500 leading-relaxed">High-capacity structural setups designed for structural engineering specs, architecture firms, and high-output branding marking matrices.</p>
+              <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-stone-600 bg-stone-50 p-3 rounded-xl border border-dashed">
+                <div>• CNC Routing &amp; Carpentry</div>
+                <div>• Fiber Metal Nameplates</div>
+                <div>• Serial Number Tagging</div>
+                <div>• QR Code Marking</div>
+              </div>
+            </div>
+            <Link href="/quote?division=industrial" className="mt-6 w-full text-center py-3 bg-stone-900 text-white font-bold text-xs uppercase tracking-wider rounded-xl">Request Industrial Quotation ➔</Link>
+          </div>
+
+          {/* DIV B: CREATIVE ARTISAN SERVICES */}
+          <div className="bg-white border border-stone-200 p-6 md:p-8 rounded-3xl flex flex-col justify-between shadow-xs hover:shadow-lg transition-all">
+            <div className="space-y-4">
+              <span className="text-3xl">🎁</span>
+              <h3 className="text-xl font-black text-stone-900">Creative &amp; Personalized Keepsakes</h3>
+              <p className="text-xs text-stone-500 leading-relaxed">Bespoke luxury configurations engineered for milestone celebrations, events, interior name boards, and customized presentation gifts.</p>
+              <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-stone-600 bg-stone-50 p-3 rounded-xl border border-dashed">
+                <div>• Royal Wedding Invites</div>
+                <div>• Custom Awards &amp; Trophies</div>
+                <div>• 3D Acrylic Letter Boards</div>
+                <div>• Premium Mahogany Diaries</div>
+              </div>
+            </div>
+            <Link href="/products" className="mt-6 w-full text-center py-3 bg-amber-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl">Explore Creative Catalog ➔</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. DYNAMIC PORTFOLIO MATRIX LOG SHOWCASE (Priority 6 & 8) */}
+      <section className="py-16 bg-stone-100 border-y border-stone-200 px-4">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b border-stone-200 pb-4">
+            <div>
+              <h3 className="text-2xl font-black tracking-tight text-stone-900">Completed Projects Portfolio</h3>
+              <p className="text-xs text-stone-500">Real, authentic workshop output items manufactured inside our local plant parameters.</p>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {['All', 'Industrial', 'Sign Boards', 'Wedding', 'Corporate'].map(tab => (
+                <button key={tab} type="button" onClick={() => setActivePortfolio(tab)} className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${activePortfolio === tab ? 'bg-stone-900 text-white' : 'bg-white text-stone-500 border border-stone-200'}`}>
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredPortfolio.map((item, idx) => (
+              <div key={idx} className="bg-white border rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all group">
+                <div className="w-full aspect-video bg-stone-200 overflow-hidden relative">
+                  <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="p-4 space-y-1">
+                  <span className="text-[9px] font-mono font-bold bg-amber-50 text-amber-800 border px-2 py-0.5 rounded uppercase">{item.category}</span>
+                  <h4 className="text-xs font-black text-stone-900 tracking-tight leading-snug pt-1">{item.title}</h4>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. HEAVY MACHINERY INFRASTRUCTURE TECH SPEC SHEET (Priority 5) */}
+      <section className="py-20 px-4 max-w-4xl mx-auto space-y-8">
+        <div className="text-center space-y-1">
+          <h3 className="text-2xl font-black tracking-tight text-stone-900">Our Production Technology Plant Capacity</h3>
+          <p className="text-xs text-stone-500">We display our raw machine dimensions so industrial procurement agents can verify operational capability limits instantly.</p>
+        </div>
+
+        <div className="bg-white border border-stone-200 rounded-2xl shadow-xs overflow-hidden">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="bg-stone-900 text-amber-400 font-mono font-bold uppercase tracking-wider text-[10px] border-b">
+                <th className="p-4">Machine Instrumentation Profile</th>
+                <th className="p-4">Maximum Work Bed Dimensions</th>
+                <th className="p-4">Primary Application Processing Range</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-stone-100 font-medium text-stone-700">
+              <tr className="hover:bg-stone-50/60"><td className="p-4 font-bold text-stone-900">🔧 Heavy Industrial CNC Router</td><td className="p-4 font-mono font-bold">8.0 × 4.0 Feet</td><td className="p-4">Thick Timber Carvings, MDF Boards, Alucobond Facades</td></tr>
+              <tr className="hover:bg-stone-50/60"><td className="p-4 font-bold text-stone-900">⚡ Precision CO2 Laser Cutter</td><td className="p-4 font-mono font-bold">8.0 × 4.0 Feet</td><td className="p-4">Acrylic Floating Sheets, Display Letters, Wedding Card Stencils</td></tr>
+              <tr className="hover:bg-stone-50/60"><td className="p-4 font-bold text-stone-900">🔬 Fiber High-Speed Metal Marker</td><td className="p-4 font-mono font-bold">2.0 × 2.0 Feet</td><td className="p-4">Stainless Steel Nameplates, Brass Tool IDs, QR Serialization</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
     </div>
   );
 }
