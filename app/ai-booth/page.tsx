@@ -57,8 +57,9 @@ function StudioContent() {
     setDesign(prev => ({ ...prev, [name]: value }));
   };
 
+  // Fixed standard logical evaluation operators
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files &amp;&amp; e.target.files[0]) {
+    if (e.target.files && e.target.files[0]) {
       setUploadedFileName(e.target.files[0].name);
     }
   };
@@ -113,7 +114,7 @@ function StudioContent() {
     }
     if (layer === 'top') return 'Top Event Inscription Heading';
     if (layer === 'mid') return 'Center Core Monogram Wording';
-    return 'Bottom Anniversary Date Block';
+    return 'Bottom Anniversary Date Box';
   };
 
   const getCanvasLayoutClass = () => {
@@ -141,15 +142,15 @@ function StudioContent() {
         {/* VIEWPORT CONTROLS BAR */}
         <div className="mb-6 border-b border-stone-200 pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <span className="text-amber-600 font-mono text-[10px] uppercase tracking-widest font-bold">Option B Vector Engine Studio</span>
+            <span className="text-amber-600 font-mono text-[10px] uppercase tracking-widest font-bold">Studio Design Module Core</span>
             <h1 className="text-2xl md:text-3xl font-black tracking-tight text-stone-900 mt-1">Industrial &amp; Retail Blueprint Booth</h1>
           </div>
           
           <div className="bg-white border p-1 rounded-xl shadow-xs flex items-center gap-1 w-full sm:w-auto justify-center">
-            <button type="button" onClick={() => setRealisticView(false)} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all w-1/2 sm:w-auto ${!realisticView ? 'bg-stone-800 text-white' : 'text-stone-600'}`}>
+            <button type="button" onClick={() => setRealisticView(false)} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all w-1/2 sm:w-auto ${!realisticView ? 'bg-stone-800 text-white shadow-sm' : 'text-stone-600'}`}>
               📐 Laser Paths
             </button>
-            <button type="button" onClick={() => setRealisticView(true)} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all w-1/2 sm:w-auto ${realisticView ? 'bg-amber-600 text-white' : 'text-slate-600'}`}>
+            <button type="button" onClick={() => setRealisticView(true)} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all w-1/2 sm:w-auto ${realisticView ? 'bg-amber-600 text-white shadow-sm' : 'text-slate-600'}`}>
               ✨ 3D Finished View
             </button>
           </div>
@@ -157,8 +158,8 @@ function StudioContent() {
 
         {/* MOBILE LAYOUT SPLIT SELECTOR ROW */}
         <div className="flex lg:hidden bg-stone-200 p-1 rounded-xl mb-6 border border-stone-300/60">
-          <button type="button" onClick={() => setMobileTab('preview')} className={`w-1/2 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider text-center transition-all ${mobileTab === 'preview' ? 'bg-stone-900 text-white' : 'text-stone-600'}`}>👁️ View Live Preview</button>
-          <button type="button" onClick={() => setMobileTab('controls')} className={`w-1/2 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider text-center transition-all ${mobileTab === 'controls' ? 'bg-stone-900 text-white' : 'text-stone-600'}`}>⚙️ Adjust Controls</button>
+          <button type="button" onClick={() => setMobileTab('preview')} className={`w-1/2 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider text-center transition-all ${mobileTab === 'preview' ? 'bg-stone-900 text-white shadow-xs' : 'text-stone-600'}`}>👁️ View Live Preview</button>
+          <button type="button" onClick={() => setMobileTab('controls')} className={`w-1/2 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider text-center transition-all ${mobileTab === 'controls' ? 'bg-stone-900 text-white shadow-xs' : 'text-stone-600'}`}>⚙️ Adjust Controls</button>
         </div>
 
         {/* CORE WORKSPACE SYSTEM SPLIT GRID */}
@@ -241,7 +242,7 @@ function StudioContent() {
           {/* THE ADJUSTMENT FORM TUNERS BLOCK */}
           <div className={`w-full lg:col-span-5 space-y-4 ${mobileTab === 'controls' ? 'block' : 'hidden lg:block'}`}>
             
-            {/* 🆕 THE OPTION B AI VECTOR FILE DROP ZONE */}
+            {/* AI VECTOR FILE DROP ZONE */}
             <div className="bg-white border border-stone-200 p-4 md:p-6 rounded-2xl shadow-xs space-y-3">
               <h3 className="font-black text-xs uppercase tracking-wider text-amber-700 flex items-center gap-2 font-mono"><span>AI Tool //</span> Industrial Blueprint Dropzone</h3>
               <div className="border-2 border-dashed border-stone-200 bg-stone-50 hover:bg-stone-100/50 p-4 rounded-xl text-center relative transition-all">
