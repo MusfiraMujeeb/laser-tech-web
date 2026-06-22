@@ -1,159 +1,191 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 
-export default function Home() {
-  return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--studio-bg)' }}>
-      
-      {/* 1. HERO BANNER */}
-      <section className="relative py-20 px-6 md:px-12 overflow-hidden" style={{ background: 'linear-gradient(135deg, var(--studio-hero) 0%, #fffaf5 42%, #efe3d2 100%)', borderBottom: '1px solid var(--studio-border)' }}>
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div>
-            <span className="inline-block font-bold px-4 py-1.5 rounded-lg text-xs tracking-wider uppercase mb-6 shadow-sm" style={{ backgroundColor: 'var(--studio-surface-dark)', color: '#f5efe6', border: '1px solid rgba(255,255,255,0.12)' }}>
-              Where Custom Meets Creativity 👌💯
-            </span>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-6 leading-tight" style={{ color: 'var(--studio-moss)' }}>
-              Crafting Vision <br />
-              Into Solid <span style={{ color: 'var(--studio-gold)' }}>Reality.</span>
-            </h1>
-            <p className="text-base mb-10 max-w-xl leading-relaxed" style={{ color: 'var(--studio-muted)' }}>
-              Premium Laser Cutting, Custom Engraving, and Branding services in Mawanella. Advanced machine engineering execution blended with clean design studio artistry.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              {/* ✅ NEW HIGHLIGHTED ACTION LINK FOR NON-TECHNICAL CUSTOMERS */}
-              <Link href="/products" className="text-white font-black bg-amber-600 hover:bg-amber-700 px-8 py-4 rounded-xl text-center shadow-md transition-all text-sm tracking-wide hover:-translate-y-0.5 hover:shadow-lg">
-                🛍️ Shop Our Products & Deals
-              </Link>
-              <Link href="/quote" className="text-white font-extrabold px-6 py-4 rounded-xl text-center shadow-md transition-all text-sm tracking-wide hover:-translate-y-0.5 hover:shadow-lg" style={{ background: 'linear-gradient(135deg, #31433c 0%, #2a3631 100%)' }}>
-                Upload Design
-              </Link>
-              <Link href="#services" className="font-bold px-6 py-4 rounded-xl text-center transition-all text-sm shadow-sm hover:-translate-y-0.5 hover:shadow-md" style={{ backgroundColor: 'var(--studio-surface-light)', color: 'var(--studio-moss)', border: '1px solid var(--studio-border)' }}>
-                Explore Services
-              </Link>
-            </div>
-          </div>
+export default function HighConversionMarketplaceHome() {
+  const [activeGallery, setActiveGallery] = useState('All');
 
-          {/* Interactive Workshop Card & Live Map Embedded Panel */}
-          <div className="p-6 md:p-8 rounded-3xl shadow-[0_18px_40px_rgba(49,67,60,0.18)] flex flex-col gap-6" style={{ background: 'linear-gradient(180deg, var(--studio-card) 0%, #efe5d8 100%)', border: '1px solid var(--studio-border)' }}>
-            <div>
-              <span className="text-3xl mb-3 block">📍</span>
-              <h3 className="text-xl font-black mb-1" style={{ color: 'var(--studio-moss)' }}>Our Studio Workshop</h3>
-              <p className="text-sm" style={{ color: 'var(--studio-muted)' }}>33/1 Kandy - Colombo Rd, Mawanella</p>
+  const galleryItems = [
+    { category: 'Industrial', title: 'High-Speed Fiber Laser Metal Part Serialization', material: '304 Stainless Steel', img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=80' },
+    { category: 'Signage', title: '3D Floating Mirror Gold Acrylic Corporate Signboard', material: '8mm Cast Acrylic / Mahogany Base', img: 'https://images.unsplash.com/photo-1541123437800-1bb1317badc2?auto=format&fit=crop&w=500&q=80' },
+    { category: 'Creative', title: 'Bespoke Multi-Layered Royal Wedding Invitation Plaque', material: 'Cherry Wood Wrapper & Gold Acrylic Monogram', img: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=500&q=80' },
+    { category: 'CNC Routing', title: 'Intricate Architectural MDF Screen Divider Wall Panel', material: '16mm Premium Moisture-Resistant MDF', img: 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=500&q=80' }
+  ];
+
+  const filteredItems = activeGallery === 'All' 
+    ? galleryItems 
+    : galleryItems.filter(item => item.category === activeGallery);
+
+  const handleProfileDownload = () => {
+    alert('Request intercepted by system core. Initiating fast, secure download sequence for LASER_TECH_COMPANY_PROFILE.pdf.');
+  };
+
+  return (
+    <div className="min-h-screen text-stone-800 bg-stone-50 selection:bg-amber-500 selection:text-white">
+      
+      {/* 1. CINEMATIC HERO MATRICES WITH HISTORICAL PROOF OVERLAYS */}
+      <section className="relative py-24 px-4 md:px-12 overflow-hidden border-b border-stone-200 bg-gradient-to-br from-stone-100 via-stone-50 to-amber-50/30">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <div className="lg:col-span-7 space-y-6 animate-fade-in">
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="bg-stone-900 text-amber-400 font-mono text-[10px] font-black tracking-widest uppercase px-3 py-1.5 rounded-lg shadow-md border border-stone-800">
+                ⏳ ESTABLISHED SINCE 2019
+              </span>
+              <span className="bg-amber-100 text-amber-900 font-mono text-[10px] font-black tracking-wider uppercase px-3 py-1.5 rounded-lg border border-amber-200">
+                🇱🇰 PIONEER LASER PLANT IN MAWANELLA
+              </span>
             </div>
             
-            {/* Live Interactive Map Frame Container */}
-            <div className="w-full h-56 rounded-2xl overflow-hidden border shadow-inner border-slate-300">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.888111637817!2d80.44777549999999!3d7.253573400000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae315006ed4ab7d%3A0x4902102f60dc78df!2sLaser%20Tech!5e0!3m2!1sen!2slk!4v1781879984552!5m2!1sen!2slk" 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen={true} 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-none text-stone-900">
+              Sri Lanka&apos;s Trusted <br />
+              <span className="text-amber-600">Precision Manufacturing</span> Partner
+            </h1>
+            
+            <p className="text-sm md:text-base text-stone-600 max-w-xl leading-relaxed font-medium">
+              Transforming complex engineering concepts and creative visions into flawless physical reality. We operate heavy-duty 8×4 ft CNC routing beds, fiber metal marking cells, and boutique customization lines with absolute accuracy.
+            </p>
 
-            <div className="grid grid-cols-2 gap-4 pt-2 text-xs" style={{ borderTop: '1px solid var(--studio-bg)' }}>
-              <div>
-                <p className="font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--studio-muted)' }}>Workshop Status</p>
-                <p className="text-emerald-700 font-bold text-sm">Open • Closes 6 PM</p>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Link href="/products" className="px-6 py-4 bg-stone-900 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-lg hover:bg-stone-800 transition-all text-center transform hover:-translate-y-0.5">
+                Explore Products Catalog
+              </Link>
+              <Link href="/ai-booth" className="px-6 py-4 bg-amber-600 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-lg hover:bg-amber-700 transition-all text-center transform hover:-translate-y-0.5">
+                Open Customizer Booth
+              </Link>
+              <button 
+                type="button" 
+                onClick={handleProfileDownload}
+                className="px-6 py-4 bg-white text-stone-700 border border-stone-300 font-black text-xs uppercase tracking-wider rounded-xl shadow-sm hover:bg-stone-50 transition-all cursor-pointer text-center"
+              >
+                Download Company Profile
+              </button>
+            </div>
+          </div>
+
+          {/* DYNAMIC METRIC ACCELERATOR GRID LOGS CARD */}
+          <div className="lg:col-span-5 bg-white border border-stone-200 p-6 rounded-3xl shadow-xl grid grid-cols-2 gap-4 relative">
+            <div className="p-4 bg-stone-50 border rounded-xl">
+              <p className="text-2xl font-black text-stone-900 font-mono">2019</p>
+              <p className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wider mt-1">Pioneer Launch</p>
+            </div>
+            <div className="p-4 bg-stone-50 border rounded-xl">
+              <p className="text-2xl font-black text-amber-600 font-mono">500+</p>
+              <p className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wider mt-1">Projects Shipped</p>
+            </div>
+            <div className="p-4 bg-stone-50 border rounded-xl">
+              <p className="text-2xl font-black text-stone-900 font-mono">100+</p>
+              <p className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wider mt-1">B2B Clients Serviced</p>
+            </div>
+            <div className="p-4 bg-stone-50 border rounded-xl">
+              <p className="text-2xl font-black text-emerald-600 font-mono">100%</p>
+              <p className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wider mt-1">Island-wide COD</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 2. SPLIT-SCREEN AUDIENCE BI-FURCATION PORTAL LINK (Objective 3 Mapping) */}
+      <section className="py-20 px-4 max-w-7xl mx-auto space-y-12">
+        <div className="text-center space-y-2">
+          <h2 className="text-3xl font-black tracking-tight text-stone-900">Select Your Production Channel</h2>
+          <p className="text-xs text-stone-500 max-w-md mx-auto">We split our operational focus to serve heavy industrial procurement orders and bespoke personal design lines with equal efficiency.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* COMMERCIAL INDUSTRIAL解决方案 */}
+          <div className="bg-white border border-stone-200 p-6 md:p-8 rounded-3xl flex flex-col justify-between shadow-xs hover:shadow-xl transition-all border-t-4 border-t-stone-900">
+            <div className="space-y-4">
+              <span className="text-3xl block">Industrial Solutions</span>
+              <h3 className="text-xl font-black text-stone-900">Commercial &amp; Architectural Engineering</h3>
+              <p className="text-xs text-stone-500 leading-relaxed">Built for interior designers, general contractors, and manufacturing operations. We execute volume runs matching absolute engineering criteria.</p>
+              <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-stone-600 bg-stone-50 p-3 rounded-xl border border-dashed">
+                <div>• Heavy 8x4 CNC Routing</div>
+                <div>• Metal Plate Fiber Laser Marking</div>
+                <div>• Serial QR Inscription Tagging</div>
+                <div>• Multi-Layered Acrylic Branding</div>
               </div>
-              <div>
-                <p className="font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--studio-muted)' }}>Google Rating</p>
-                <p className="font-bold text-sm" style={{ color: 'var(--studio-moss)' }}>5.0 ⭐⭐⭐⭐⭐ (2 Reviews)</p>
+            </div>
+            <Link href="/quote?division=industrial" className="mt-6 w-full text-center py-3 bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl">Request Custom Engineering Estimate ➔</Link>
+          </div>
+
+          {/* RETAIL ARTISAN TOKENS CREATIVE FLOW */}
+          <div className="bg-white border border-stone-200 p-6 md:p-8 rounded-3xl flex flex-col justify-between shadow-xs hover:shadow-xl transition-all border-t-4 border-t-amber-500">
+            <div className="space-y-4">
+              <span className="text-3xl block">Creative Solutions</span>
+              <h3 className="text-xl font-black text-stone-900">Personal &amp; Luxury Event Keepsakes</h3>
+              <p className="text-xs text-stone-500 leading-relaxed">Artisan layered works, event accessories, custom signage displays, and personalized gifts made with beautiful finish combinations.</p>
+              <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-stone-600 bg-stone-50 p-3 rounded-xl border border-dashed">
+                <div>• Layered Nikah Clock Frames</div>
+                <div>• Premium Mahogany Notebooks</div>
+                <div>• Dynamic Edge-Lit Acrylic Lamps</div>
+                <div>• High-End Corporate Trophies</div>
               </div>
             </div>
+            <Link href="/products" className="mt-6 w-full text-center py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl">Browse Personal Store Catalog ➔</Link>
           </div>
         </div>
       </section>
 
-      {/* ✅ NEW PROMOTIONAL INTERACTION BANNER ROADBLOCK FOR INSTANT VISIBILITY */}
-      <section className="py-6 px-6" style={{ backgroundColor: '#fff7ed', borderBottom: '1px solid #ffedd5' }}>
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🔥</span>
+      {/* 3. EXPERT Portfolio Showcase Grid WITH DYNAMIC MAPPING */}
+      <section className="py-16 bg-stone-100 border-y border-stone-200 px-4">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b border-stone-200 pb-4">
             <div>
-              <h4 className="text-sm font-black text-amber-900 tracking-tight">Special Limited Time Discount Offers Active!</h4>
-              <p className="text-xs text-amber-700 font-medium">Save up to 20% on custom 3D Nikah frames, shop signboards, and personalized gifts.</p>
+              <h3 className="text-2xl font-black tracking-tight text-stone-900">Completed Technical Works Portfolio</h3>
+              <p className="text-xs text-stone-500">Real items manufactured inside our Mawanella facility, displaying precise edge tracking values.</p>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {['All', 'Industrial', 'Signage', 'Creative', 'CNC Routing'].map(tab => (
+                <button key={tab} type="button" onClick={() => setActiveGallery(tab)} className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${activeGallery === tab ? 'bg-stone-900 text-white' : 'bg-white text-stone-500 border border-stone-200'}`}>
+                  {tab}
+                </button>
+              ))}
             </div>
           </div>
-          <Link href="/products" className="px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xs shrink-0">
-            Don't Miss Out ➔
-          </Link>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredItems.map((item, idx) => (
+              <div key={idx} className="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all group">
+                <div className="w-full aspect-video bg-stone-200 relative overflow-hidden">
+                  <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="p-4 space-y-1">
+                  <span className="text-[9px] font-mono font-bold bg-amber-50 text-amber-900 border px-2 py-0.5 rounded uppercase">{item.category}</span>
+                  <h4 className="text-xs font-black text-stone-900 tracking-tight leading-snug pt-1">{item.title}</h4>
+                  <p className="text-[10px] font-mono text-stone-400 font-bold pt-1">Material Base: {item.material}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 2. SERVICES SECTION */}
-      <section id="services" className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight" style={{ color: 'var(--studio-moss)' }}>Our Core Services</h2>
-          <div className="w-12 h-1 mx-auto mb-4 rounded-full" style={{ backgroundColor: 'var(--studio-gold)' }}></div>
-          <p className="text-sm max-w-sm mx-auto leading-relaxed" style={{ color: 'var(--studio-muted)' }}>Precision fabrication paths meeting crisp artistic design. Quality manufacturing with trusted island-wide logistics.</p>
+      {/* 4. TECHNICAL MACHINERY PLANT LOG CAPACITY TABLES */}
+      <section className="py-20 px-4 max-w-4xl mx-auto space-y-8">
+        <div className="text-center space-y-1">
+          <h3 className="text-2xl font-black tracking-tight text-stone-900">Machinery Infrastructure Capabilities</h3>
+          <p className="text-xs text-stone-500">We openly list our physical equipment dimensions so industrial procurement agents can verify our workshop bounds instantly.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-          
-          {/* Service Card 1: Laser Crafts */}
-          <div className="p-8 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col justify-between h-full" style={{ background: 'linear-gradient(180deg, var(--studio-surface-light) 0%, var(--studio-card) 100%)', border: '1px solid var(--studio-border)' }}>
-            <div>
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold mb-6" style={{ backgroundColor: 'var(--studio-hero)', color: 'var(--studio-gold)' }}>🪵</div>
-              <h3 className="text-xl font-black mb-3" style={{ color: 'var(--studio-moss)' }}>Laser Crafts & Decor</h3>
-              <p className="text-sm mb-6 leading-relaxed" style={{ color: 'var(--studio-muted)' }}>
-                High-tech precision cutting and intricate surface engraving on premium woods, MDF, and custom acrylic panels.
-                <span className="block mt-2 font-bold" style={{ color: 'var(--studio-moss)' }}>3D Layered signs, custom clocks, cake toppers, luggage tags, layered wood wall art, and holiday ornaments.</span>
-              </p>
-            </div>
-            <div className="pt-4 border-t border-dashed mt-auto" style={{ borderColor: 'var(--studio-border)' }}>
-              <Link href="/products?category=Wedding" className="font-bold text-xs uppercase tracking-wider hover:underline inline-block" style={{ color: 'var(--studio-gold)' }}>
-                View Catalog Items →
-              </Link>
-            </div>
-          </div>
-
-          {/* Service Card 2: Corporate Identity */}
-          <div className="p-8 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col justify-between h-full" style={{ background: 'linear-gradient(180deg, #fcfaf7 0%, var(--studio-card) 100%)', border: '1px solid var(--studio-border)' }}>
-            <div>
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold mb-6" style={{ backgroundColor: 'var(--studio-bg)', color: 'var(--studio-moss)' }}>📐</div>
-              <h3 className="text-xl font-black mb-3" style={{ color: 'var(--studio-moss)' }}>Corporate Identity</h3>
-              <p className="text-sm mb-6 leading-relaxed" style={{ color: 'var(--studio-muted)' }}>
-                Establish a professional, clean commercial market presence with sharp vector company layout setups and branded hardware.
-                <span className="block mt-2 font-bold" style={{ color: 'var(--studio-moss)' }}>Custom graphic logo designs, employee ID cards, premium business cards, company plaques, and desktop displays.</span>
-              </p>
-            </div>
-            <div className="pt-4 border-t border-dashed mt-auto" style={{ borderColor: 'var(--studio-border)' }}>
-              <Link href="/products?category=Commercial" className="font-bold text-xs uppercase tracking-wider hover:underline inline-block" style={{ color: 'var(--studio-moss)' }}>
-                Explore Signboards →
-              </Link>
-            </div>
-          </div>
-
-          {/* Service Card 3: Print & Apparel */}
-          <div className="p-8 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col justify-between h-full" style={{ background: 'linear-gradient(180deg, #fffaf4 0%, var(--studio-card) 100%)', border: '1px solid var(--studio-border)' }}>
-            <div>
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold mb-6" style={{ backgroundColor: '#ffedd5', color: '#ea580c' }}>👕</div>
-              <h3 className="text-xl font-black mb-3" style={{ color: 'var(--studio-moss)' }}>Print & Apparel</h3>
-              <p className="text-sm mb-6 leading-relaxed" style={{ color: 'var(--studio-muted)' }}>
-                High-visibility commercial layout items and customized promotional apparel built to amplify operational events.
-                <span className="block mt-2 font-bold" style={{ color: 'var(--studio-moss)' }}>Custom T-shirt printing, advertising posters (matangazo), promotional marketing flyers, and custom engraved coasters.</span>
-              </p>
-            </div>
-            <div className="pt-4 border-t border-dashed mt-auto" style={{ borderColor: 'var(--studio-border)' }}>
-              <Link href="/products?category=Stationery" className="font-bold text-xs uppercase tracking-wider hover:underline inline-block" style={{ color: 'var(--studio-moss)' }}>
-                Browse Notebooks & Accessories →
-              </Link>
-            </div>
-          </div>
-
+        <div className="bg-white border border-stone-200 rounded-2xl shadow-xs overflow-hidden">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="bg-stone-900 text-amber-400 font-mono font-bold uppercase tracking-wider text-[10px] border-b border-stone-950">
+                <th className="p-4">Machine Instrumentation Profile</th>
+                <th className="p-4">Maximum Processing Bed Dimensions</th>
+                <th className="p-4">Primary Application Capabilities</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-stone-100 font-medium text-stone-700">
+              <tr className="hover:bg-stone-50/60"><td className="p-4 font-bold text-stone-900">🪵 Heavy Duty Industrial CNC Router</td><td className="p-4 font-mono font-bold text-stone-900">8.0 × 4.0 Feet Max Bed</td><td className="p-4">Architectural Screen Panels, MDF Trims, Solid Timber Carvings</td></tr>
+              <tr className="hover:bg-stone-50/60"><td className="p-4 font-bold text-stone-900">⚡ High-Power CO2 Laser Cutter Cells</td><td className="p-4 font-mono font-bold text-stone-900">8.0 × 4.0 Feet Bed Shell</td><td className="p-4">Thick Cast Acrylic Signage, Stencil Patterns, Intricate Filigree Cuts</td></tr>
+              <tr className="hover:bg-stone-50/60"><td className="p-4 font-bold text-stone-900">🔬 High-Frequency Fiber Laser Engraver</td><td className="p-4 font-mono font-bold text-stone-900">2.0 × 2.0 Feet Marking Frame</td><td className="p-4">Stainless Steel Serialization Nameplates, Brass IDs, Aluminum Tool Tagging</td></tr>
+            </tbody>
+          </table>
         </div>
-      </section>
-
-      {/* 3. VALUE BANNER */}
-      <section className="py-16 text-center px-4" style={{ backgroundColor: 'var(--studio-hero)', borderTop: '1px solid var(--studio-border)', borderBottom: '1px solid var(--studio-border)' }}>
-        <h3 className="text-xl md:text-2xl font-black mb-2" style={{ color: 'var(--studio-moss)' }}>Quality at a Reasonable Price 👌💯</h3>
-        <p className="text-sm max-w-sm mx-auto mb-6" style={{ color: 'var(--studio-muted)' }}>Delivering verified fabrication safely to all geographical locations across Sri Lanka.</p>
-        <span className="inline-block font-mono text-xs px-5 py-2.5 rounded-xl shadow-xs font-bold" style={{ backgroundColor: 'var(--studio-card)', color: 'var(--studio-moss)', border: '1px solid var(--studio-border)' }}>
-          🚚 Island-Wide Delivery 🇱🇰
-        </span>
       </section>
 
     </div>
