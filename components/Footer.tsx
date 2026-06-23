@@ -15,7 +15,7 @@ export default function Footer() {
     <footer className="border-t border-[#F1ECE4] bg-white">
       <div className="fixed bottom-6 right-6 z-50">
         <a
-          href={`https://wa.me/${contactInfo.whatsapp}`}
+          href={`https://wa.me/${contactInfo.whatsapp.replace(/\D/g, '')}`}
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-widest px-4 py-3 rounded-xl shadow-2xl transition-colors"

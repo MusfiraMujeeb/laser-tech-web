@@ -15,7 +15,7 @@ export default function ContactPage() {
       `Hello Laser Tech, my name is ${name || 'Customer'}. My phone number is ${phone || 'N/A'}. ${message || 'I would like to know more about your services.'}`,
     );
 
-    window.open(`https://wa.me/${contactInfo.whatsapp}?text=${text}`, '_blank', 'noopener,noreferrer');
+    window.open(`https://wa.me/${contactInfo.whatsapp.replace(/\D/g, '')}?text=${text}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -34,7 +34,7 @@ export default function ContactPage() {
             {[
               ['Phone', contactInfo.phone],
               ['Email', contactInfo.email],
-              ['WhatsApp', `+${contactInfo.whatsapp}`],
+              ['WhatsApp', contactInfo.whatsapp],
               ['Address', contactInfo.address],
             ].map(([label, value]) => (
               <div key={label} className="rounded-3xl border border-[#F1ECE4] bg-white p-5">

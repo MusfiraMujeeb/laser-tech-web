@@ -20,7 +20,7 @@ export default function AboutPage() {
 
         <div className="grid gap-6 lg:grid-cols-12">
           <article className="lg:col-span-5 rounded-[2rem] border border-[#F1ECE4] bg-white p-8 shadow-sm">
-            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#C08A3E]">CEO&apos;s Statement</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#C08A3E]">CEO's Statement</p>
             <h2 className="mt-3 text-2xl font-black">{companyProfile.ceoName}</h2>
             <p className="mt-1 text-xs font-black uppercase tracking-[0.24em] text-stone-400">
               {companyProfile.ceoTitle}
@@ -76,7 +76,7 @@ export default function AboutPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 lg:pb-24">
         <div className="rounded-[2rem] border border-[#F1ECE4] bg-[#26322E] p-8 text-white flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="space-y-2">
-            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#E8D4A2]">Let&apos;s build something</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#E8D4A2]">Let's build something</p>
             <h2 className="text-3xl font-black tracking-tight">Need branding, awards, or industrial parts?</h2>
           </div>
           <div className="flex flex-wrap gap-3">

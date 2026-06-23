@@ -340,6 +340,6 @@ export const contactInfo = {
   email: "lasertech0024@gmail.com",
   website: "www.lasertech.lk",
   address: "33/1 Kandy - Colombo Rd, Mawanella, Sri Lanka",
-  whatsapp: "94757991141",
+  whatsapp: "+94757991141",
   hours: ["Mon - Fri: 8:30 AM - 6:00 PM", "Sat: 9:00 AM - 4:00 PM", "Sun: By appointment"],
 };
