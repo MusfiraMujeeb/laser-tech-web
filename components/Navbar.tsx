@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Navbar() {
   return (
@@ -9,13 +10,15 @@ export default function Navbar() {
           {/* Logo Entity */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-full overflow-hidden shadow-md flex items-center justify-center ring-1 ring-amber-200" style={{ border: '1px solid var(--studio-gold)', backgroundColor: 'var(--studio-bg)' }}>
-                <img 
-                  src="/brand/logo.png" 
-                  alt="Laser Tech Logo" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
+              <div className="w-12 h-12 shadow-md flex items-center justify-center ring-1 ring-amber-200" style={{ border: '1px solid var(--studio-gold)', backgroundColor: 'var(--studio-bg)' }}>
+                    <Image
+                      src="/brand/logo.png"
+                      alt="Laser Tech Logo"
+                      width={48}
+                      height={48}
+                      className="object-contain"
+                    />
+                  </div>
               <div className="flex flex-col">
                 <span className="text-lg font-black tracking-tight leading-tight" style={{ color: 'var(--studio-moss)' }}>LASER TECH</span>
                 <span className="text-xs font-bold tracking-wider uppercase" style={{ color: 'var(--studio-gold)' }}>Mawanella</span>
@@ -25,9 +28,9 @@ export default function Navbar() {
 
           {/* Navigation Links */}
           <div className="hidden md:flex space-x-8 font-bold text-sm tracking-wide">
-            <Link href="/" className="transition-colors" style={{ color: 'var(--studio-muted)' }}>Home</Link>
-            <Link href="#services" className="transition-colors" style={{ color: 'var(--studio-muted)' }}>Our Services</Link>
-            <Link href="/portfolio" className="transition-colors" style={{ color: 'var(--studio-muted)' }}>Our Work</Link>
+            <Link href="/" className="transition-colors" style={{ color: 'var(--studio-muted)', textDecoration: 'none' }}>Home</Link>
+            <Link href="#services" className="transition-colors" style={{ color: 'var(--studio-muted)', textDecoration: 'none' }}>Our Services</Link>
+            <Link href="/portfolio" className="transition-colors" style={{ color: 'var(--studio-muted)', textDecoration: 'none' }}>Our Work</Link>
           </div>
 
           {/* Call to Action Actions Wrapper */}
