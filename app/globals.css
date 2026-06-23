@@ -1,9 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
-  /* Pastel Luxury Industrial UI Token System */
   --surface-ivory: #F8F6F2;
   --surface-beige: #F1ECE4;
   --brand-forest: #26322E;
@@ -13,15 +10,18 @@
   --text-olive-dark: #26322E;
   --text-muted-gold: #7C5A28;
   --border-brass-light: #D5BC8D;
-  --pastel-sage: #A8B5A2;
-  --pastel-rose: #D8B8B0;
-  
-  /* Fallback Backward Compatibility Remapping */
   --studio-bg: #F8F6F2;
   --studio-border: #F1ECE4;
+  --studio-card: #FFFFFF;
+  --studio-hero: #FBF8F2;
   --studio-moss: #26322E;
   --studio-gold: #C08A3E;
   --studio-muted: #7C5A28;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--surface-ivory);
 }
 
 body {
@@ -32,15 +32,14 @@ body {
   box-sizing: border-box;
 }
 
-/* 🛡️ DEFENSIVE ACCESSIBILITY ANCHOR OVERRIDES - KILLS BROWSER DEFAULTS */
-a, 
-a:visited, 
+a,
+a:visited,
 .nav-link {
   text-decoration: none !important;
   color: inherit;
 }
 
-nav a, 
+nav a,
 nav a:visited {
   text-decoration: none !important;
   color: var(--brand-forest) !important;

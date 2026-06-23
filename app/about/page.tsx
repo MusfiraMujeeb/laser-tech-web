@@ -1,63 +1,94 @@
-'use client';
+import Link from 'next/link';
+import { companyProfile, mission, timeline } from '@/app/data/site';
 
-import { useState } from 'react';
+const principles = [
+  'Precision craftsmanship on every project',
+  'Reliable turnaround times and transparent communication',
+  'Flexible production for one-off items and bulk runs',
+  'Modern equipment paired with skilled finishing',
+];
 
-export default function StreamlinedAboutPage() {
-  const [activeFaq, setActiveFaq] = useState<number | null>(null);
-
+export default function AboutPage() {
   return (
-    <div className="min-h-screen py-12 px-4 space-y-16" style={{ backgroundColor: '#F8F6F2', color: '#26322E' }}>
-      <div className="max-w-4xl mx-auto space-y-16">
-        
-        <section className="bg-white border border-[#F1ECE4] rounded-3xl p-6 md:p-8 shadow-xs grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-          <div className="md:col-span-4 text-center md:text-left space-y-2">
-            <div className="w-28 h-28 bg-[#26322E] border-2 border-[#C08A3E] rounded-2xl mx-auto md:mx-0 flex items-center justify-center text-[#E8D4A2] font-mono font-black text-3xl shadow-md">MA</div>
-            <div>
-              <h3 className="text-base font-black tracking-tight text-[#26322E] leading-tight">Mohamed Afraz</h3>
-              <p className="text-[10px] font-mono font-bold text-[#C08A3E] uppercase tracking-widest">Chief Executive Officer</p>
-              <p className="text-[11px] font-mono text-stone-400 mt-0.5">Laser Tech Sri Lanka</p>
-            </div>
-          </div>
-          <div className="md:col-span-8 border-t md:border-t-0 md:border-l border-stone-100 pt-4 md:pt-0 md:pl-6 relative">
-            <span className="text-5xl font-serif text-stone-200 absolute top-[-16px] left-1 select-none pointer-events-none">&ldquo;</span>
-            <p className="text-xs sm:text-sm text-stone-600 font-medium leading-relaxed italic relative z-10">
-              &ldquo;Since 2019, our mission has been simple: combine high-end craftsmanship with custom precision technology to deliver hardware engineering solutions and retail items our customers across Sri Lanka can trust implicitly.&rdquo;
+    <div className="bg-[#F8F6F2] text-[#26322E]">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 lg:py-24 space-y-10">
+        <div className="space-y-4">
+          <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#C08A3E]">Company Profile</p>
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight">About Laser Tech</h1>
+          <p className="max-w-3xl text-lg leading-relaxed text-stone-600">{companyProfile.about}</p>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-12">
+          <article className="lg:col-span-5 rounded-[2rem] border border-[#F1ECE4] bg-white p-8 shadow-sm">
+            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#C08A3E]">CEO&apos;s Statement</p>
+            <h2 className="mt-3 text-2xl font-black">{companyProfile.ceoName}</h2>
+            <p className="mt-1 text-xs font-black uppercase tracking-[0.24em] text-stone-400">
+              {companyProfile.ceoTitle}
             </p>
-          </div>
-        </section>
+            <p className="mt-5 text-stone-600 leading-relaxed">
+              {companyProfile.ceo}
+            </p>
+          </article>
 
-        <section className="bg-white border border-[#F1ECE4] p-6 rounded-2xl space-y-6">
-          <h4 className="text-xs font-black font-mono uppercase text-[#7C5A28] tracking-wider text-center">Our Core Journey Milestones</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center text-xs font-medium divide-y sm:divide-y-0 sm:divide-x divide-stone-100">
-            <div className="pt-2 sm:pt-0"><p className="font-mono font-black text-[#26322E] text-sm">2019</p><p className="text-stone-500 mt-0.5">Pioneer Founded</p></div>
-            <div className="pt-2 sm:pt-0 sm:pl-2"><p className="font-mono font-black text-[#C08A3E] text-sm">2023</p><p className="text-stone-500 mt-0.5">Heavy CNC Router Addition</p></div>
-            <div className="pt-2 sm:pt-0 sm:pl-2"><p className="font-mono font-black text-[#26322E] text-sm">2024</p><p className="text-stone-500 mt-0.5">Fiber Laser Integration</p></div>
-            <div className="pt-2 sm:pt-0 sm:pl-2"><p className="font-mono font-black text-emerald-700 text-sm">Today</p><p className="text-stone-500 mt-0.5">Serving Enterprise Islandwide</p></div>
-          </div>
-        </section>
-
-        <section className="space-y-3">
-          <h4 className="text-base font-black text-[#26322E] tracking-tight text-center pb-2">Frequently Asked Production Questions</h4>
-          {[
-            { q: "What vector file formats do your engineering estimators accept?", a: "Our data routing controllers parse all industry standard schemas: Adobe Illustrator (.AI), CorelDraw (.CDR), vector PDFs, AutoCAD exchange formats (.DXF), and scaleable standard vectors (.SVG)." },
-            { q: "What is your standard production processing turnaround window?", a: "Standard baseline stock items take 1 to 2 working days within our Mawanella facility. Complex multi-tier B2B custom routing components or volume contract sheets typically take 3 to 5 working days before logistics dispatch." },
-            { q: "Do you provide certified delivery coverage across Sri Lanka?", a: "Yes, absolutely. We provide insured island-wide shipping channels running on automated Cash-on-Delivery (COD) loops, removing all buyer verification anxiety parameters." }
-          ].map((faq, index) => (
-            <div key={index} className="bg-white border border-[#F1ECE4] rounded-xl overflow-hidden shadow-2xs">
-              <button type="button" onClick={() => setActiveFaq(activeFaq === index ? null : index)} className="w-full text-left px-5 py-4 font-bold text-xs sm:text-sm text-[#26322E] flex justify-between items-center bg-stone-50/40 hover:bg-stone-50 cursor-pointer">
-                <span>{faq.q}</span>
-                <span className="text-[#C08A3E] font-mono text-xs">{activeFaq === index ? '▲' : '▼'}</span>
-              </button>
-              {activeFaq === index && (
-                <div className="px-5 py-4 border-t border-[#F1ECE4] text-xs text-stone-500 leading-relaxed font-medium bg-white">
-                  {faq.a}
+          <article className="lg:col-span-7 rounded-[2rem] border border-[#F1ECE4] bg-[#26322E] p-8 text-white shadow-sm">
+            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#E8D4A2]">Why Laser Tech</p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {principles.map((principle) => (
+                <div key={principle} className="rounded-2xl bg-white/5 border border-white/10 p-4">
+                  <p className="font-semibold leading-relaxed">{principle}</p>
                 </div>
-              )}
+              ))}
             </div>
-          ))}
-        </section>
+          </article>
+        </div>
+      </section>
 
-      </div>
+      <section className="bg-white border-y border-[#F1ECE4]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 lg:py-20 grid gap-8">
+          <div className="flex flex-col gap-3">
+            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#C08A3E]">Company History</p>
+            <h2 className="text-3xl font-black tracking-tight">Our journey from a local workshop to a multi-service manufacturer.</h2>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {timeline.map((item) => (
+              <article key={item.year} className="rounded-3xl border border-[#F1ECE4] bg-[#F8F6F2] p-6">
+                <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#C08A3E]">{item.year}</p>
+                <h3 className="mt-3 text-xl font-black">{item.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-stone-600">{item.detail}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 lg:py-20 grid gap-6 lg:grid-cols-2">
+        <article className="rounded-[2rem] border border-[#F1ECE4] bg-white p-8">
+          <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#C08A3E]">Mission</p>
+          <p className="mt-4 text-lg leading-relaxed text-stone-600">{mission.mission}</p>
+        </article>
+        <article className="rounded-[2rem] border border-[#F1ECE4] bg-white p-8">
+          <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#C08A3E]">Vision</p>
+          <p className="mt-4 text-lg leading-relaxed text-stone-600">{mission.vision}</p>
+        </article>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 lg:pb-24">
+        <div className="rounded-[2rem] border border-[#F1ECE4] bg-[#26322E] p-8 text-white flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-2">
+            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#E8D4A2]">Let&apos;s build something</p>
+            <h2 className="text-3xl font-black tracking-tight">Need branding, awards, or industrial parts?</h2>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/services" className="px-5 py-3 rounded-xl bg-white text-[#26322E] font-black text-xs uppercase tracking-[0.22em]">
+              Services
+            </Link>
+            <Link href="/contact" className="px-5 py-3 rounded-xl bg-[#C08A3E] text-white font-black text-xs uppercase tracking-[0.22em]">
+              Contact
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
