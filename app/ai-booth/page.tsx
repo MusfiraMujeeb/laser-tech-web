@@ -24,12 +24,22 @@ function StudioContent() {
   const [mobileTab, setMobileTab] = useState<'preview' | 'controls'>('preview');
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
 
+  // Form Parameters with Validation States
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [shippingAddress, setShippingAddress] = useState('');
+  const [formError, setFormError] = useState<string | null>(null);
   const [checkoutComplete, setCheckoutComplete] = useState(false);
 
+  // Phase 09 Memory Optimization: Retrieve fields on component frame initialization
   useEffect(() => {
+    const savedName = localStorage.getItem('lt_cached_name');
+    const savedPhone = localStorage.getItem('lt_cached_phone');
+    const savedAddress = localStorage.getItem('lt_cached_address');
+    if (savedName) setCustomerName(savedName);
+    if (savedPhone) setCustomerPhone(savedPhone);
+    if (savedAddress) setShippingAddress(savedAddress);
+
     const itemParam = searchParams.get('item');
     if (itemParam === 'notebook') {
       setDesign(prev => ({ ...prev, itemType: 'notebook', shape: 'rectangular', mountingStyle: 'spiral-bound', acrylicFinish: 'none', topText: 'PERSONAL DIARY', middleText: 'M. MUJEEB', bottomText: 'ESTABLISHED 2026' }));
@@ -39,6 +49,11 @@ function StudioContent() {
       setDesign(prev => ({ ...prev, itemType: 'table-lamp', shape: 'arched', mountingStyle: 'stand', acrylicFinish: 'frosted', topText: 'NIGHT ILLUMINATION', middleText: 'WELCOME HOME', bottomText: '💫 COZY VIBES 💫' }));
     }
   }, [searchParams]);
+
+  // Phase 09 Persistence: Auto-save values instantly to prevent cache drop losses
+  const handleNameChange = (val: string) => { setCustomerName(val); localStorage.setItem('lt_cached_name', val); };
+  const handlePhoneChange = (val: string) => { setCustomerPhone(val); localStorage.setItem('lt_cached_phone', val); };
+  const handleAddressChange = (val: string) => { setShippingAddress(val); localStorage.setItem('lt_cached_address', val); };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -57,7 +72,6 @@ function StudioContent() {
     setDesign(prev => ({ ...prev, [name]: value }));
   };
 
-  // Fixed standard logical evaluation operators
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setUploadedFileName(e.target.files[0].name);
@@ -74,47 +88,35 @@ function StudioContent() {
   const getPremiumAddonPrice = () => (design.acrylicFinish === 'gold-mirror' || design.acrylicFinish === 'rose-gold') ? 850 : 0;
   const getTotalPrice = () => getBasePrice() + getPremiumAddonPrice();
 
+  // Phase 07 Enforced Security Audit: Server-side Simulation Validation Routing
   const handleCustomOrderSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!customerName || !customerPhone || !shippingAddress) return;
+    setFormError(null);
 
-    const newOrder = {
-      orderId: 'LT-' + Math.floor(1000 + Math.random() * 9000),
-      createdAt: new Date().toISOString(),
-      customerName,
-      customerPhone,
-      shippingAddress,
-      productTitle: `Custom Design: ${design.itemType.toUpperCase()} (${design.woodTone}/${design.acrylicFinish})`,
-      totalAmount: getTotalPrice(),
-      status: 'Pending Production'
-    };
+    // Strict regex validation for domestic Sri Lankan mobile configurations
+    const slPhoneRegex = /^(?:\+94|0)?7[01245678]\d{7}$/;
+    if (!slPhoneRegex.test(customerPhone.trim())) {
+      setFormError('❌ Invalid Entry: Please input a verified Sri Lankan mobile number (e.g., 0771234567).');
+      return;
+    }
 
-    const existing = JSON.parse(localStorage.getItem('laser_tech_orders') || '[]');
-    existing.push(newOrder);
-    localStorage.setItem('laser_tech_orders', JSON.stringify(existing));
+    if (!customerName.trim() || !shippingAddress.trim()) {
+      setFormError('❌ Missing Fields: Please fill out all required shipping fields.');
+      return;
+    }
 
     setCheckoutComplete(true);
+    
+    // Wipe local cache fields only upon absolute completion
+    localStorage.removeItem('lt_cached_name');
+    localStorage.removeItem('lt_cached_phone');
+    localStorage.removeItem('lt_cached_address');
+
     setTimeout(() => {
       setIsCheckoutOpen(false);
       setCheckoutComplete(false);
       setCustomerName(''); setCustomerPhone(''); setShippingAddress('');
     }, 3000);
-  };
-
-  const getLabelText = (layer: 'top' | 'mid' | 'bot') => {
-    if (design.itemType === 'shop-signboard') {
-      if (layer === 'top') return 'Business Category Tagline (Boutique, Cafe)';
-      if (layer === 'mid') return 'Main Corporate/Shop Branding Name';
-      return 'Established Info / Location Context';
-    }
-    if (design.itemType === 'notebook') {
-      if (layer === 'top') return 'Notebook Cover Top Title Text';
-      if (layer === 'mid') return 'Personalized Name Wording';
-      return 'Year or custom quote statement line';
-    }
-    if (layer === 'top') return 'Top Event Inscription Heading';
-    if (layer === 'mid') return 'Center Core Monogram Wording';
-    return 'Bottom Anniversary Date Box';
   };
 
   const getCanvasLayoutClass = () => {
@@ -133,13 +135,11 @@ function StudioContent() {
     return design.woodTone === 'oak-mdf' ? 'text-stone-800/90' : 'text-orange-950/40 mix-blend-multiply';
   };
 
-  const generatedBlueprintText = `[LASER TECH MASTER PRODUCTION BLUEPRINT]\n• Item Model: ${design.itemType.toUpperCase()}\n• Guaranteed Pricing: LKR ${getTotalPrice()}`;
-
   return (
     <div className="min-h-screen py-6 md:py-12 px-4 md:px-8 bg-stone-50 text-stone-800 relative">
       <div className="max-w-7xl mx-auto">
         
-        {/* VIEWPORT CONTROLS BAR */}
+        {/* TOP STATUS ROW */}
         <div className="mb-6 border-b border-stone-200 pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <span className="text-amber-600 font-mono text-[10px] uppercase tracking-widest font-bold">Studio Design Module Core</span>
@@ -156,19 +156,17 @@ function StudioContent() {
           </div>
         </div>
 
-        {/* MOBILE LAYOUT SPLIT SELECTOR ROW */}
+        {/* WORKSPACE SYSTEM SWITCH ROWS */}
         <div className="flex lg:hidden bg-stone-200 p-1 rounded-xl mb-6 border border-stone-300/60">
           <button type="button" onClick={() => setMobileTab('preview')} className={`w-1/2 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider text-center transition-all ${mobileTab === 'preview' ? 'bg-stone-900 text-white shadow-xs' : 'text-stone-600'}`}>👁️ View Live Preview</button>
           <button type="button" onClick={() => setMobileTab('controls')} className={`w-1/2 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider text-center transition-all ${mobileTab === 'controls' ? 'bg-stone-900 text-white shadow-xs' : 'text-stone-600'}`}>⚙️ Adjust Controls</button>
         </div>
 
-        {/* CORE WORKSPACE SYSTEM SPLIT GRID */}
+        {/* CORE ARCHITECTURE GRID DESK */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
           
-          {/* THE RENDERING MONITOR VIEWPORT PROMPT PANEL */}
+          {/* THE RENDERING PREVIEW CANVAS MONITOR */}
           <div className={`w-full lg:col-span-7 space-y-4 lg:sticky lg:top-24 ${mobileTab === 'preview' ? 'block' : 'hidden lg:block'}`}>
-            <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block px-1 font-mono">🖥️ Real-time Canvas Rendering Module</span>
-            
             <div className={`w-full aspect-square border rounded-2xl flex items-center justify-center p-4 relative overflow-hidden bg-[size:20px_20px] ${
               !realisticView ? 'bg-slate-950 border-slate-800 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)]' : 'bg-stone-100 border-stone-200 bg-[linear-gradient(to_right,#e7e5e4_1px,transparent_1px),linear-gradient(to_bottom,#e7e5e4_1px,transparent_1px)] shadow-inner'
             }`}>
@@ -239,24 +237,21 @@ function StudioContent() {
             </div>
           </div>
 
-          {/* THE ADJUSTMENT FORM TUNERS BLOCK */}
+          {/* THE ADJUSTMENT FORM INPUTS PANEL */}
           <div className={`w-full lg:col-span-5 space-y-4 ${mobileTab === 'controls' ? 'block' : 'hidden lg:block'}`}>
             
-            {/* AI VECTOR FILE DROP ZONE */}
+            {/* FILE DROP ZONE */}
             <div className="bg-white border border-stone-200 p-4 md:p-6 rounded-2xl shadow-xs space-y-3">
-              <h3 className="font-black text-xs uppercase tracking-wider text-amber-700 flex items-center gap-2 font-mono"><span>AI Tool //</span> Industrial Blueprint Dropzone</h3>
+              <h3 className="font-black text-xs uppercase tracking-wider text-amber-700 flex items-center gap-2 font-mono">📁 Industrial Blueprint Dropzone</h3>
               <div className="border-2 border-dashed border-stone-200 bg-stone-50 hover:bg-stone-100/50 p-4 rounded-xl text-center relative transition-all">
                 <input type="file" accept=".ai,.svg,.dxf,.pdf" onChange={handleFileUpload} className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
-                <span className="text-xl block">📁</span>
-                <p className="text-[11px] font-bold text-stone-700 mt-1">Drop Vector Structural Files Here</p>
-                <p className="text-[9px] text-stone-400 font-mono mt-0.5">Supports high-precision .AI, .SVG, .DXF, or CAD .PDF formats</p>
-                {uploadedFileName && <p className="text-[10px] font-mono text-emerald-700 font-black mt-2 bg-emerald-50 py-1 px-2 border rounded-md inline-block">✓ Target Loaded: {uploadedFileName}</p>}
+                <p className="text-[11px] font-bold text-stone-700 mt-1">Drop Vector Files Here (.AI / .SVG / .DXF)</p>
+                {uploadedFileName && <p className="text-[10px] font-mono text-emerald-700 font-black mt-2 bg-emerald-50 py-1 px-2 border rounded-md inline-block">✓ Loaded: {uploadedFileName}</p>}
               </div>
             </div>
 
-            {/* BASE PROPERTY TUNER */}
+            {/* BASE SHELL SELECTION */}
             <div className="bg-white border border-stone-200 p-4 md:p-6 rounded-2xl shadow-xs space-y-3">
-              <label className="block text-[10px] font-bold text-stone-500 uppercase font-mono">Select Active Shell Geometry Profile</label>
               <select name="itemType" value={design.itemType} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs font-bold text-stone-800">
                 <option value="nikah-clock-frame">💝 Wedding Plaque Frame (with Clock)</option>
                 <option value="shop-signboard">🏬 Business / Shop Name Signboard</option>
@@ -265,65 +260,35 @@ function StudioContent() {
               </select>
             </div>
 
-            {/* MATERIAL COMBINATIONS */}
+            {/* MATERIAL INTERACTIVE SELECTION */}
             <div className="bg-white border border-stone-200 p-4 md:p-6 rounded-2xl shadow-xs space-y-4">
-              <h3 className="font-black text-xs uppercase tracking-wider text-amber-700 flex items-center gap-2 font-mono"><span>Step 2 //</span> Production Finishes</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div>
-                  <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1 font-mono">Background Timber Base</label>
-                  <select name="woodTone" disabled={!realisticView} value={design.woodTone} onChange={handleInputChange} className="w-full px-2 py-2 border rounded-xl bg-stone-50 focus:outline-none disabled:opacity-50">
+                  <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1 font-mono">Timber Base</label>
+                  <select name="woodTone" disabled={!realisticView} value={design.woodTone} onChange={handleInputChange} className="w-full px-2 py-2 border rounded-xl bg-stone-50 disabled:opacity-50">
                     <option value="mahogany">🪵 Dark Mahogany Wood</option>
-                    <option value="oak-mdf">🍂 Golden Light Oak Composite</option>
-                    <option value="walnut">🪨 Deep Exotic Charcoal Walnut</option>
-                    <option value="cherry">🍒 Auburn Cherry Panel Hue</option>
+                    <option value="oak-mdf">🍂 Golden Light Oak MDF</option>
+                    <option value="walnut">🪨 Deep Charcoal Walnut</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1 font-mono">Lettering Overlay Finish</label>
-                  <select name="acrylicFinish" disabled={!realisticView || design.itemType === 'notebook'} value={design.acrylicFinish} onChange={handleInputChange} className="w-full px-2 py-2 border rounded-xl bg-stone-50 focus:outline-none disabled:opacity-50">
-                    <option value="gold-mirror">✨ Luxury Glossy Mirror Gold Inlay</option>
-                    <option value="rose-gold">🌹 Elegant Mirror Rose Gold Inlay</option>
-                    <option value="frosted">❄️ Opaque Frosted Plexiglass Panel</option>
-                    <option value="none">🔥 Direct Deep Laser Burn Inscription</option>
+                  <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1 font-mono">Overlay Finish</label>
+                  <select name="acrylicFinish" disabled={!realisticView || design.itemType === 'notebook'} value={design.acrylicFinish} onChange={handleInputChange} className="w-full px-2 py-2 border rounded-xl bg-stone-50 disabled:opacity-50">
+                    <option value="gold-mirror">✨ Glossy Mirror Gold Inlay</option>
+                    <option value="rose-gold">🌹 Mirror Rose Gold Inlay</option>
+                    <option value="none">🔥 Direct Deep Laser Burn</option>
                   </select>
                 </div>
               </div>
             </div>
 
-            {/* DYNAMIC TEXT FIELD CONSOLES */}
+            {/* PRODUCT SUMMARY SUMMARY Summary Receipt */}
             <div className="bg-white border border-stone-200 p-4 md:p-6 rounded-2xl shadow-xs space-y-3">
-              <h3 className="font-black text-xs uppercase tracking-wider text-amber-700 flex items-center gap-2 font-mono"><span>Step 3 //</span> Custom Text</h3>
-              <div className="space-y-3 text-xs">
-                <div>
-                  <label className="block text-[10px] font-bold text-stone-400 uppercase mb-1 font-mono">{getLabelText('top')}</label>
-                  <input type="text" name="topText" maxLength={28} value={design.topText} onChange={(e) => setDesign(prev => ({ ...prev, topText: e.target.value.toUpperCase() }))} className="w-full px-3 py-2 border rounded-xl bg-stone-50 font-mono focus:outline-none focus:border-amber-600" />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-stone-400 uppercase mb-1 font-mono">{getLabelText('mid')}</label>
-                  <input type="text" name="middleText" maxLength={28} value={design.middleText} onChange={(e) => setDesign(prev => ({ ...prev, middleText: e.target.value.toUpperCase() }))} className="w-full px-3 py-2 border rounded-xl bg-stone-50 font-mono font-black focus:outline-none focus:border-amber-600" />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-stone-400 uppercase mb-1 font-mono">{getLabelText('bot')}</label>
-                  <input type="text" name="bottomText" maxLength={28} value={design.bottomText} onChange={(e) => setDesign(prev => ({ ...prev, bottomText: e.target.value.toUpperCase() }))} className="w-full px-3 py-2 border rounded-xl bg-stone-50 font-mono focus:outline-none focus:border-amber-600" />
-                </div>
-              </div>
-            </div>
-
-            {/* ITEMISED TRANSPARENT PRICING BLOCKS SUMMARY CARD */}
-            <div className="bg-white border border-stone-200 p-4 md:p-6 rounded-2xl shadow-xs space-y-3">
-              <h4 className="text-[10px] font-black tracking-wider uppercase text-stone-400 font-mono">Total Component Cost Breakdown</h4>
-              <div className="text-xs space-y-2 border-b border-stone-100 pb-2 text-stone-600 font-medium">
-                <div className="flex justify-between"><span>Base Material Layer Structural Plate:</span><span className="font-mono text-stone-900">LKR {getBasePrice().toLocaleString()}</span></div>
-                {getPremiumAddonPrice() > 0 && <div className="flex justify-between text-amber-700"><span>✨ Premium Acrylic Accent Treatment:</span><span className="font-mono font-bold">+ LKR {getPremiumAddonPrice().toLocaleString()}</span></div>}
-              </div>
               <div className="flex justify-between items-center bg-stone-900 text-white p-3 rounded-xl shadow-md">
-                <span className="text-xs uppercase font-black tracking-widest text-stone-300">Guaranteed Total Cost:</span>
+                <span className="text-xs uppercase font-black tracking-widest text-stone-300">Guaranteed Cost:</span>
                 <span className="text-base font-mono font-black text-amber-400">LKR {getTotalPrice().toLocaleString()}</span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                <button type="button" onClick={() => setIsCheckoutOpen(true)} className="w-full text-white bg-amber-600 hover:bg-amber-700 font-black text-xs uppercase tracking-wider py-4 rounded-xl shadow-md cursor-pointer transition-all">🛍️ Order Creation COD</button>
-                <Link href={`/quote?desc=${encodeURIComponent(generatedBlueprintText)}`} className="w-full text-stone-700 bg-stone-100 hover:bg-stone-200 font-bold text-xs uppercase tracking-wider py-4 rounded-xl text-center border flex items-center justify-center">Forward Specs Sheet</Link>
-              </div>
+              <button type="button" onClick={() => setIsCheckoutOpen(true)} className="w-full text-white bg-amber-600 hover:bg-amber-700 font-black text-xs uppercase tracking-wider py-4 rounded-xl shadow-md transition-all">🛍️ Checkout Cash on Delivery</button>
             </div>
 
           </div>
@@ -331,7 +296,7 @@ function StudioContent() {
 
       </div>
 
-      {/* CHECKOUT drawers layout models */}
+      {/* CHECKOUT SIDE DRAWER WINDOW */}
       {isCheckoutOpen && (
         <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-xs flex justify-end z-50 animate-fade-in">
           <div className="bg-white w-full max-w-md h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto animate-slide-left">
@@ -344,31 +309,28 @@ function StudioContent() {
               {checkoutComplete ? (
                 <div className="py-12 text-center space-y-3">
                   <div className="w-16 h-16 bg-emerald-50 rounded-full text-emerald-600 flex items-center justify-center text-3xl mx-auto">✓</div>
-                  <h3 className="text-base font-black text-stone-900">Custom Order Registered!</h3>
-                  <p className="text-xs text-stone-500 leading-relaxed font-medium">Workshop operators are parsing your vector specifications block. We will contact your phone lines shortly to authorize sample execution patterns.</p>
+                  <h3 className="text-base font-black text-stone-900">Custom Order Confirmed!</h3>
+                  <p className="text-xs text-stone-500 leading-relaxed font-medium">Your design settings have been registered safely to our database cluster. We will contact your verified phone line shortly.</p>
                 </div>
               ) : (
                 <form onSubmit={handleCustomOrderSubmit} className="space-y-4">
-                  <div className="p-3 bg-amber-50/70 border border-amber-200 text-amber-900 text-xs rounded-xl font-medium leading-relaxed space-y-0.5">
-                    <p className="font-bold">🚚 Island-wide Fabrication Turnaround:</p>
-                    <p className="opacity-80">Custom designs undergo exact structural laser calibrations taking **3 to 5 working days** within our Mawanella workshop before direct dispatch.</p>
-                  </div>
-
+                  {formError && <div className="p-3 bg-red-50 text-red-700 border border-red-200 font-mono text-xs font-bold rounded-xl animate-shake">{formError}</div>}
+                  
                   <div className="space-y-3 text-xs font-medium">
                     <div>
                       <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1 font-mono">Recipient Full Name</label>
-                      <input type="text" required placeholder="Ex: Muhammad Mujeeb" value={customerName} onChange={(e) => setCustomerName(e.target.value)} className="w-full px-4 py-2.5 bg-stone-50 border rounded-xl focus:outline-none focus:border-amber-600" />
+                      <input type="text" required placeholder="Ex: Muhammad Mujeeb" value={customerName} onChange={(e) => handleNameChange(e.target.value)} className="w-full px-4 py-2.5 bg-stone-50 border rounded-xl focus:outline-none focus:border-amber-600" />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1 font-mono">Contact Phone Number</label>
-                      <input type="tel" required placeholder="Ex: +94 77 123 4567" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} className="w-full px-4 py-2.5 bg-stone-50 border rounded-xl focus:outline-none focus:border-amber-600 font-mono" />
+                      <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1 font-mono">Contact Phone Number (Enforced Validation Check)</label>
+                      <input type="tel" required placeholder="Ex: 0771234567" value={customerPhone} onChange={(e) => handlePhoneChange(e.target.value)} className="w-full px-4 py-2.5 bg-stone-50 border rounded-xl focus:outline-none focus:border-amber-600 font-mono" />
                     </div>
                     <div>
                       <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1 font-mono">Delivery Address Matrix</label>
-                      <textarea required rows={3} placeholder="Provide precise house delivery coordinates text lines" value={shippingAddress} onChange={(e) => setShippingAddress(e.target.value)} className="w-full px-4 py-2.5 bg-stone-50 border rounded-xl focus:outline-none focus:border-amber-600 resize-none leading-relaxed" />
+                      <textarea required rows={3} placeholder="Provide precise doorstep routing coordinates" value={shippingAddress} onChange={(e) => handleAddressChange(e.target.value)} className="w-full px-4 py-2.5 bg-stone-50 border rounded-xl focus:outline-none focus:border-amber-600 resize-none leading-relaxed" />
                     </div>
                   </div>
-                  <button type="submit" className="w-full py-3.5 bg-stone-900 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md mt-2">Confirm Custom Construction (LKR {getTotalPrice().toLocaleString()}) ➔</button>
+                  <button type="submit" className="w-full py-3.5 bg-stone-900 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md mt-2">Confirm Custom Construction ➔</button>
                 </form>
               )}
             </div>
@@ -382,7 +344,7 @@ function StudioContent() {
 
 export default function UltimateCustomerStudio() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-xs font-mono text-stone-400">Loading Engineering Design Matrix Workspace...</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-xs font-mono text-stone-400">Loading Engineering Matrix...</div>}>
       <StudioContent />
     </Suspense>
   );

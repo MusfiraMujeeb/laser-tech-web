@@ -15,8 +15,17 @@ export default function BalancedEnterpriseHome() {
 
   const handleFileDrop = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setCadFile(e.target.files[0].name);
-      triggerToast(`⚡ Blueprint [ ${e.target.files[0].name} ] synced to engineering queue.`);
+      const file = e.target.files[0];
+      const validExtensions = ['.pdf', '.dwg', '.dxf', '.svg', '.ai'];
+      const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+      
+      if (!validExtensions.includes(fileExtension)) {
+        triggerToast(`❌ Error: Invalid file format. Please upload a valid CAD blueprint.`);
+        return;
+      }
+      
+      setCadFile(file.name);
+      triggerToast(`⚡ Blueprint [ ${file.name} ] synced to engineering queue.`);
     }
   };
 
@@ -27,19 +36,19 @@ export default function BalancedEnterpriseHome() {
   return (
     <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: '#F8F6F2', color: '#26322E' }}>
       
-      {/* GLOBAL TOAST NOTIFICATION WINDOW */}
+      {/* GLOBAL TOAST NOTIFICATION CONTAINER */}
       {toastMessage && (
         <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-[#26322E] text-[#F8F6F2] font-mono text-xs font-bold px-5 py-3 rounded-xl shadow-xl border border-[#3C4A44] flex items-center gap-2 animate-fade-in">
           <span>⚙️</span> {toastMessage}
         </div>
       )}
 
-      {/* HERO SECTION WITH UNIFIED COMPACT SYSTEM BADGES */}
+      {/* HERO WORKSPACE WITH UNIFIED COMPACT BADGES SYSTEM */}
       <section className="relative pt-12 pb-20 px-4 md:px-12 border-b border-[#F1ECE4] bg-gradient-to-br from-[#F8F6F2] via-[#F1ECE4]/40 to-[#D8B8B0]/10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           
           <div className="lg:col-span-7 space-y-5">
-            {/* UNIFIED LUXURY BADGES CONTAINER - FIXES SPACING OVERFLOW */}
+            {/* UNIFIED DESIGN SYSTEM BADGES CONTAINER ROW */}
             <div className="flex flex-wrap gap-2 items-center">
               <div className="px-3 py-1.5 rounded-lg text-[10px] font-mono font-black tracking-widest uppercase shadow-xs border bg-[#26322E] text-[#E8D4A2] border-[#3C4A44]">
                 ⏳ ESTABLISHED SINCE 2019
@@ -64,7 +73,7 @@ export default function BalancedEnterpriseHome() {
               Mawanella&apos;s pioneer laser manufacturing plant. We integrate high-capacity 8×4 ft CNC routers, precise fiber metal marking stencils, and interactive client design booth canvases to serve volume B2B operations and premium custom gifting lines with absolute execution accuracy.
             </p>
 
-            {/* Premium 70-20-10 Button Ratio Layout Actions */}
+            {/* Strategic Button Actions */}
             <div className="flex flex-wrap gap-3 pt-2">
               <Link href="/portfolio" className="px-6 py-3.5 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md transition-all text-center transform hover:-translate-y-0.5 bg-[#26322E] hover:bg-[#33423D]">
                 Explore Industrial Solutions
@@ -82,7 +91,7 @@ export default function BalancedEnterpriseHome() {
             </div>
           </div>
 
-          {/* MACHINERY CAPACITY TRUST METRICS PANEL */}
+          {/* MACHINERY CAPACITY GRID NODES PANEL */}
           <div className="lg:col-span-5 bg-white border border-[#F1ECE4] p-6 rounded-3xl shadow-[0_20px_40px_rgba(38,50,46,0.06)] space-y-4">
             <h3 className="text-xs font-black tracking-widest text-stone-400 font-mono uppercase">⚙️ Plant Equipment Tolerances</h3>
             <div className="divide-y divide-stone-100 text-xs space-y-3 font-semibold text-stone-600">
@@ -108,14 +117,13 @@ export default function BalancedEnterpriseHome() {
         </div>
       </section>
 
-      {/* SEGMENTED PORTAL WORKSPACE SWITCHER */}
+      {/* TAB SEGMENTED B2B VS B2C OPERATIONAL CHANNELS */}
       <section className="py-20 px-4 max-w-7xl mx-auto space-y-8">
         <div className="text-center space-y-2">
           <h2 className="text-2xl md:text-3xl font-black tracking-tight text-[#26322E]">Choose Your Operational Channel</h2>
           <p className="text-xs text-stone-400 max-w-md mx-auto">Toggle between industrial high-volume corporate manufacturing specs and artisan customized gifting routes instantly.</p>
         </div>
 
-        {/* Tab Selection Switch */}
         <div className="flex bg-[#F1ECE4] max-w-sm mx-auto p-1 rounded-xl border border-stone-300/30">
           <button type="button" onClick={() => setActiveTab('industrial')} className={`w-1/2 py-2 rounded-lg text-[11px] font-black uppercase tracking-wider text-center transition-all ${activeTab === 'industrial' ? 'bg-[#26322E] text-[#F8F6F2] shadow-xs' : 'text-stone-600'}`}>🏭 Industrial Projects</button>
           <button type="button" onClick={() => setActiveTab('creative')} className={`w-1/2 py-2 rounded-lg text-[11px] font-black uppercase tracking-wider text-center transition-all ${activeTab === 'creative' ? 'bg-[#26322E] text-[#F8F6F2] shadow-xs' : 'text-stone-600'}`}>🎁 Custom Gifts Shop</button>
@@ -138,7 +146,7 @@ export default function BalancedEnterpriseHome() {
                 </div>
               </div>
               
-              {/* ASYNCHRONOUS INDUSTRIAL BLUEPRINT PORTAL UPLOAD CAD DRAWINGS CONTAINER */}
+              {/* B2B BLUEPRINT UPLOAD DISPATCH */}
               <div className="md:col-span-5 bg-[#F8F6F2] border-2 border-dashed border-stone-300 hover:border-[#C08A3E] p-6 rounded-2xl text-center relative transition-all group">
                 <input type="file" accept=".pdf,.dwg,.dxf,.svg,.ai" onChange={handleFileDrop} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
                 <span className="text-3xl block transform group-hover:scale-105 transition-transform">📁</span>
