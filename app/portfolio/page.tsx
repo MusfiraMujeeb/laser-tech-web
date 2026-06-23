@@ -15,7 +15,6 @@ export default function CompleteCleanPortfolio() {
     <div className="min-h-screen py-12 px-4 md:px-8" style={{ backgroundColor: '#F8F6F2', color: '#26322E' }}>
       <div className="max-w-6xl mx-auto space-y-10">
         
-        {/* SECTION HEADER BAR NODES */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b pb-4 border-[#F1ECE4]">
           <div>
             <span className="text-xs font-mono uppercase tracking-widest text-[#C08A3E] font-bold">Production Log Catalog</span>
@@ -38,12 +37,10 @@ export default function CompleteCleanPortfolio() {
           </div>
         </div>
 
-        {/* RESPONSIVE CARD DISPLAY MATRIX GRID (Fixes Unscaled Image Stacking) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((card) => (
             <div key={card.id} className="bg-white border border-[#F1ECE4] rounded-2xl overflow-hidden flex flex-col justify-between p-5 hover:shadow-lg transition-all group shadow-2xs">
               <div className="space-y-3">
-                {/* Fixed Container Frame for Images */}
                 <div className="w-full aspect-video bg-[#F8F6F2] rounded-xl overflow-hidden relative border border-[#F1ECE4]">
                   <img 
                     src={card.img} 
@@ -62,7 +59,6 @@ export default function CompleteCleanPortfolio() {
                 </p>
               </div>
               
-              {/* CLEAN INTERACTIVE DESIGN REDIRECT LINK LAYER BUTTON */}
               <Link 
                 href={`/ai-booth?item=${card.id}`} 
                 className="mt-5 w-full text-center py-3 bg-[#26322E] hover:bg-[#33423D] text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-2xs block transition-colors"

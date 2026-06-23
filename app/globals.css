@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  /* Pastel Luxury Industrial Design System Tokens */
+  /* Pastel Luxury Industrial UI Token System */
   --surface-ivory: #F8F6F2;
   --surface-beige: #F1ECE4;
   --brand-forest: #26322E;
@@ -15,33 +15,50 @@
   --border-brass-light: #D5BC8D;
   --pastel-sage: #A8B5A2;
   --pastel-rose: #D8B8B0;
+  
+  /* Fallback Backward Compatibility Remapping */
+  --studio-bg: #F8F6F2;
+  --studio-border: #F1ECE4;
+  --studio-moss: #26322E;
+  --studio-gold: #C08A3E;
+  --studio-muted: #7C5A28;
 }
 
 body {
-  background-color: var(--surface-ivory);
-  color: var(--brand-forest);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--surface-ivory) !important;
+  color: var(--brand-forest) !important;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-/* 🛡️ DEFENSIVE ACCESSIBILITY & LAYOUT OVERRIDES */
-nav a, 
+/* 🛡️ DEFENSIVE ACCESSIBILITY ANCHOR OVERRIDES - KILLS BROWSER DEFAULTS */
+a, 
+a:visited, 
 .nav-link {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+nav a, 
+nav a:visited {
   text-decoration: none !important;
   color: var(--brand-forest) !important;
   transition: color 0.2s ease-in-out;
 }
 
-nav a:hover, 
-.nav-link:hover {
+nav a:hover {
   color: var(--accent-brass) !important;
   text-decoration: none !important;
 }
 
-/* Ensure the navbar brand image wrapper never causes layout shifts */
-.nav-logo-container img {
-  max-height: 48px !important;
-  width: auto !important;
-  object-fit: contain !important;
+/* Shake Animation Loop for Form Validation Errors */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
 }

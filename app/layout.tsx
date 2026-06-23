@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-// Use your clean TypeScript @/ alias pointing straight to your root components folder
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -17,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Laser Tech | Where Custom Meets Creativity",
-  description: "Premium laser cutting, custom engraving, and corporate branding services based in Mawanella, Sri Lanka.",
+  title: "Laser Tech | Precision Manufacturing & Creative Studio",
+  description: "Sri Lanka's pioneering precision laser engineering facility since 2019. High-capacity 8x4 industrial wood/metal CNC routing and luxury keepsakes.",
 };
 
 export default function RootLayout({
@@ -30,13 +28,12 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      style={{ backgroundColor: '#F8F6F2' }}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col" style={{ backgroundColor: '#F8F6F2', color: '#26322E' }}>
+        <div className="w-full h-1 bg-[#C08A3E]" />
         <Navbar />
-        
-        {/* Main layout container expands dynamically */}
         <main className="flex-grow">{children}</main>
-        
         <Footer />
       </body>
     </html>
