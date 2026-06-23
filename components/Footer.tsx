@@ -68,7 +68,7 @@ export default function SecurityFooter() {
 
       {/* LEGAL DRAWER DRAWER DRAWERdrawer LIGHTBOXES */}
       {activeModal && (
-        <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
+        <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-white border border-[#F1ECE4] rounded-2xl max-w-md w-full p-6 text-xs text-stone-500 space-y-3 relative shadow-2xl">
             <button type="button" onClick={() => setActiveModal(null)} className="absolute top-4 right-4 font-bold text-stone-400 hover:text-stone-700">✕ Close</button>
             {activeModal === 'privacy' && (

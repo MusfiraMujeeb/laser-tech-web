@@ -43,7 +43,7 @@ export default function StreamlinedAboutPage() {
             { q: "What is your standard production processing turnaround window?", a: "Standard baseline stock items take 1 to 2 working days within our Mawanella facility. Complex multi-tier B2B custom routing components or volume contract sheets typically take 3 to 5 working days before logistics dispatch." },
             { q: "Do you provide certified delivery coverage across Sri Lanka?", a: "Yes, absolutely. We provide insured island-wide shipping channels running on automated Cash-on-Delivery (COD) loops, removing all buyer verification anxiety parameters." }
           ].map((faq, index) => (
-            <div key={index} className="bg-white border border-[#F1ECE4] rounded-xl overflow-hidden shadow-2xs">
+            <div key={index} className="bg-white border border-[#F1ECE4] rounded-xl overflow-hidden shadow-sm">
               <button type="button" onClick={() => setActiveFaq(activeFaq === index ? null : index)} className="w-full text-left px-5 py-4 font-bold text-xs sm:text-sm text-[#26322E] flex justify-between items-center bg-stone-50/40 hover:bg-stone-50 cursor-pointer">
                 <span>{faq.q}</span>
                 <span className="text-[#C08A3E] font-mono text-xs">{activeFaq === index ? '▲' : '▼'}</span>

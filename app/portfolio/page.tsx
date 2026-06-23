@@ -39,7 +39,7 @@ export default function CompleteCleanPortfolio() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((card) => (
-            <div key={card.id} className="bg-white border border-[#F1ECE4] rounded-2xl overflow-hidden flex flex-col justify-between p-5 hover:shadow-lg transition-all group shadow-2xs">
+            <div key={card.id} className="bg-white border border-[#F1ECE4] rounded-2xl overflow-hidden flex flex-col justify-between p-5 hover:shadow-lg transition-all group shadow-sm">
               <div className="space-y-3">
                 <div className="w-full aspect-video bg-[#F8F6F2] rounded-xl overflow-hidden relative border border-[#F1ECE4]">
                   <img 
@@ -61,7 +61,7 @@ export default function CompleteCleanPortfolio() {
               
               <Link 
                 href={`/ai-booth?item=${card.id}`} 
-                className="mt-5 w-full text-center py-3 bg-[#26322E] hover:bg-[#33423D] text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-2xs block transition-colors"
+                className="mt-5 w-full text-center py-3 bg-[#26322E] hover:bg-[#33423D] text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-sm block transition-colors"
               >
                 Configure Design Blueprint ➔
               </Link>
