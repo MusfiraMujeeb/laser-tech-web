@@ -18,7 +18,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <Link href="/" className="flex items-center gap-3 shrink-0">
           <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border border-[#D5BC8D] shadow-sm">
-            <Image src="/brand/logo.png" alt="Laser Tech logo" width={32} height={32} className="object-contain" priority />
+            <Image src="/brand/logo.png" alt="Laser Tech company logo" width={32} height={32} className="object-contain" priority />
           </div>
           <div className="flex flex-col leading-none">
             <span className="text-sm font-black text-[#26322E] tracking-[0.24em] uppercase">Laser Tech</span>

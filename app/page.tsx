@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import {
   companyProfile,
+  contactInfo,
   featuredProducts,
   keyStats,
   machineCapabilities,
@@ -150,7 +151,7 @@ export default function HomePage() {
               Contact Us
             </Link>
             <a
-              href={`https://wa.me/94757991141?text=${encodeURIComponent('Hello Laser Tech, I would like a quote for a custom project.')}`}
+              href={`https://wa.me/${contactInfo.whatsapp}?text=${encodeURIComponent('Hello Laser Tech, I would like a quote for a custom project.')}`}
               target="_blank"
               rel="noreferrer"
               className="px-6 py-3.5 rounded-xl bg-[#C08A3E] text-white font-black text-xs uppercase tracking-[0.24em] hover:bg-[#B17C33] transition-colors"

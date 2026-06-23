@@ -193,7 +193,7 @@ function StudioContent() {
                     design.acrylicFinish === 'none' ? 'bg-transparent border-none' :
                     design.acrylicFinish === 'gold-mirror' ? 'bg-gradient-to-tr from-amber-300/20 via-amber-100/5 to-amber-400/20 rounded-xl border-white/20' :
                     design.acrylicFinish === 'rose-gold' ? 'bg-gradient-to-tr from-rose-300/20 via-rose-100/5 to-rose-400/20 rounded-xl border-white/20' :
-                    'bg-white/10 backdrop-blur-xs rounded-xl border-white/20 shadow-xs'
+                    'bg-white/10 backdrop-blur-sm rounded-xl border-white/20 shadow-xs'
                   }`}>
                     
                     {design.itemType === 'nikah-clock-frame' ? (
@@ -298,7 +298,7 @@ function StudioContent() {
 
       {/* CHECKOUT SIDE DRAWER WINDOW */}
       {isCheckoutOpen && (
-        <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-xs flex justify-end z-50 animate-fade-in">
+        <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-sm flex justify-end z-50 animate-fade-in">
           <div className="bg-white w-full max-w-md h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto animate-slide-left">
             <div className="space-y-6">
               <div className="flex justify-between items-center border-b pb-4">
