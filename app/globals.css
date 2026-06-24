@@ -8,8 +8,8 @@
   --surface-muted: #f1ece4;
 
   /* Brand colors */
-  --forest: #26322e;
-  --forest-2: #33423d;
+  --forest: #706578;
+  --forest-2: #755b6b;
   --brass: #c7923b;
   --brass-2: #b9822d;
 
@@ -20,8 +20,8 @@
   --line: #e4d7c4;
 
   /* Text */
-  --text: #26322e;
-  --text-soft: #66706c;
+  --text: #6d9789;
+  --text-soft: #68746f;
 }
 
 html {
