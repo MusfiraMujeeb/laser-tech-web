@@ -42,9 +42,9 @@ export default function Navbar() {
           ))}
           <Link
             href="/quote"
-            className="hidden sm:block px-4 py-2 rounded-xl bg-[#F3EDE3] text-[#26322E] font-black text-xs uppercase tracking-widest border border-[#E4D7C4] hover:bg-[#EFE4D2] transition-colors"
+            className="hidden sm:block px-4 py-2 rounded-xl bg-[#26322E] text-white font-black text-xs uppercase tracking-widest hover:bg-[#33423D] transition-colors"
           >
-            Studio
+            Customize
           </Link>
         </div>
       </div>

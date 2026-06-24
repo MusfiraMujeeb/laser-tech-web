@@ -38,8 +38,8 @@ export default function ProductsPage({
           <h1 className="text-3xl md:text-5xl font-black tracking-tight">
             Our Products
           </h1>
-          <p className="max-w-2xl text-sm md:text-base text-[#66706C]">
-            Browse our signage, illuminated signs, awards, personalized gifts, and custom-made products.
+          <p className="max-w-2xl text-sm md:text-base text-[#66706C] leading-relaxed">
+            Browse our products and custom items. Prices, discounts, and availability can be managed later from admin.
           </p>
         </section>
 
@@ -98,6 +98,15 @@ export default function ProductsPage({
 
                 <div className="text-xs font-mono text-[#7C5A28] bg-[#F8F6F2] rounded-lg px-3 py-2">
                   Material: {product.material}
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-[#F3EDE3] text-[#26322E] border border-[#E4D7C4]">
+                    Price: On request
+                  </span>
+                  <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-[#F3EDE3] text-[#26322E] border border-[#E4D7C4]">
+                    Availability: Available
+                  </span>
                 </div>
 
                 <div className="mt-auto pt-3 flex gap-3">

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Footer() {
   const [activeModal, setActiveModal] = useState<"privacy" | "terms" | "refund" | null>(null);
 
   return (
-    <footer className="w-full border-t border-[#E4D7C4] pt-12 pb-6 px-4 md:px-12 relative bg-white">
+    <footer className="w-full border-t border-[#E4D7C4] pt-12 pb-6 px-4 md:px-12 relative bg-[#F8F6F2]">
       <a
         href="https://wa.me/94776632244"
         target="_blank"
@@ -23,7 +24,7 @@ export default function Footer() {
             LASER<span className="text-[#C7923B]">TECH</span>
           </div>
           <p className="leading-relaxed">
-            Sri Lanka&apos;s laser engraving and high-capacity industrial fabrication partner.
+            Sri Lanka&apos;s laser engraving and custom fabrication partner for signage, gifts, awards, and branding.
           </p>
           <div className="text-[11px] font-mono text-stone-400 space-y-1 border-t pt-3">
             <p className="font-bold text-stone-600">📍 Physical Address:</p>
@@ -35,25 +36,13 @@ export default function Footer() {
 
         <div className="md:col-span-4 space-y-3">
           <h4 className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-widest">
-            Base Cost Estimates
+            Quick Links
           </h4>
-          <div className="divide-y divide-stone-100 font-mono text-[11px] font-bold text-stone-600 space-y-2">
-            <div className="pt-1 flex justify-between">
-              <span>Wedding Card Cuts:</span>
-              <span className="text-stone-900">LKR 150 - 250 / Unit</span>
-            </div>
-            <div className="pt-2 flex justify-between">
-              <span>Bespoke Event Trophies:</span>
-              <span className="text-stone-900">From LKR 2,000 / Piece</span>
-            </div>
-            <div className="pt-2 flex justify-between">
-              <span>3D Commercial Boards:</span>
-              <span className="text-stone-900">Starting LKR 5,000 / Unit</span>
-            </div>
-            <div className="pt-2 flex justify-between">
-              <span>Industrial Marking:</span>
-              <span className="text-[#C7923B] font-black">Volume Contract Tenders</span>
-            </div>
+          <div className="flex flex-col gap-2 text-sm font-bold text-[#26322E]">
+            <Link href="/products" className="hover:text-[#C7923B]">Products</Link>
+            <Link href="/portfolio" className="hover:text-[#C7923B]">Work</Link>
+            <Link href="/quote" className="hover:text-[#C7923B]">Quote</Link>
+            <Link href="/about" className="hover:text-[#C7923B]">About</Link>
           </div>
         </div>
 
@@ -61,30 +50,30 @@ export default function Footer() {
           <h4 className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-widest">
             Client Testimonials
           </h4>
-          <div className="bg-stone-50 p-3 rounded-xl border border-dashed text-stone-600 space-y-2 text-[11px] leading-relaxed">
+          <div className="bg-white p-3 rounded-xl border border-dashed text-stone-600 space-y-2 text-[11px] leading-relaxed">
             <p className="italic font-medium">
-              “Flawless precision router cuttings on our heavy mahogany architectural board segments.”
+              “Flawless precision and professional finish on our custom signage work.”
             </p>
             <p className="font-mono font-bold text-[10px] text-stone-400 uppercase tracking-wider text-right">
-              — Nimal Perera, Project Engineer
+              — Laser Tech Client
             </p>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-mono text-stone-400">
-        <p>© {new Date().getFullYear()} Laser Tech LK Inc. All Rights Reserved.</p>
+        <p>© {new Date().getFullYear()} Laser Tech. All Rights Reserved.</p>
         <div className="flex flex-wrap gap-3 font-bold text-stone-500">
           <button type="button" onClick={() => setActiveModal("privacy")} className="hover:underline cursor-pointer">
-            Privacy Framework
+            Privacy
           </button>
           <span>//</span>
           <button type="button" onClick={() => setActiveModal("terms")} className="hover:underline cursor-pointer">
-            Terms of Service
+            Terms
           </button>
           <span>//</span>
           <button type="button" onClick={() => setActiveModal("refund")} className="hover:underline cursor-pointer">
-            Cancellation Rules
+            Cancellation
           </button>
         </div>
       </div>
@@ -114,7 +103,7 @@ export default function Footer() {
             {activeModal === "terms" && (
               <>
                 <h4 className="text-sm font-black text-stone-900 font-mono uppercase tracking-wide">
-                  Terms of Custom Processing Engagement
+                  Terms of Service
                 </h4>
                 <p className="leading-relaxed font-medium">
                   Custom work may require approval before production. Final pricing depends on material and complexity.
@@ -125,10 +114,10 @@ export default function Footer() {
             {activeModal === "refund" && (
               <>
                 <h4 className="text-sm font-black text-stone-900 font-mono uppercase tracking-wide">
-                  Bespoke Return Rules Matrix
+                  Cancellation Rules
                 </h4>
                 <p className="leading-relaxed font-medium">
-                  Standard products may be eligible for return review. Custom-made items are non-returnable unless defective.
+                  Standard products may be reviewed for cancellation. Custom-made items are non-returnable unless defective.
                 </p>
               </>
             )}
