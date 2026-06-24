@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { productItems } from "@/app/data/products";
+import { productItems } from "../../data/products";
 
 export function generateStaticParams() {
   return productItems.map((product) => ({
@@ -61,10 +61,20 @@ export default function ProductDetailPage({
               <p className="text-sm">
                 <span className="font-bold">Material:</span> {product.material}
               </p>
-              {product.price && (
+              <p className="text-sm">
+                <span className="font-bold">Price:</span>{" "}
+                <span className="text-[#C7923B] font-bold">{product.price ?? "On request"}</span>
+              </p>
+              <p className="text-sm">
+                <span className="font-bold">Availability:</span>{" "}
+                <span className={product.available ? "text-emerald-600 font-bold" : "text-red-600 font-bold"}>
+                  {product.available ? "Available" : "Unavailable"}
+                </span>
+              </p>
+              {product.discountPercent && product.discountPercent > 0 && (
                 <p className="text-sm">
-                  <span className="font-bold">Price:</span>{" "}
-                  <span className="text-[#C7923B] font-bold">{product.price}</span>
+                  <span className="font-bold">Discount:</span>{" "}
+                  <span className="text-[#C7923B] font-bold">{product.discountPercent}%</span>
                 </p>
               )}
             </div>

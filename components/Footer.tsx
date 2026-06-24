@@ -48,9 +48,9 @@ export default function Footer() {
 
         <div className="md:col-span-4 space-y-3">
           <h4 className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-widest">
-            Client Testimonials
+            Customer Testimonial
           </h4>
-          <div className="bg-white p-3 rounded-xl border border-dashed text-stone-600 space-y-2 text-[11px] leading-relaxed">
+          <div className="bg-white p-4 rounded-xl border border-dashed text-stone-600 space-y-2 text-[11px] leading-relaxed">
             <p className="italic font-medium">
               “Flawless precision and professional finish on our custom signage work.”
             </p>

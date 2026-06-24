@@ -1,12 +1,24 @@
 ﻿import Link from "next/link";
 
-const services = [
-  "CNC Routing",
-  "Laser Cutting",
-  "Laser Engraving",
-  "Fiber Marking",
-  "Signage",
-  "Custom Gifts",
+const highlights = [
+  {
+    title: "Precision",
+    text: "Accurate CNC and laser work for clean, premium finishes.",
+  },
+  {
+    title: "Customization",
+    text: "Fully custom signage, awards, gifts, and display products.",
+  },
+  {
+    title: "Fast Delivery",
+    text: "Built for demo-ready speed and future production scaling.",
+  },
+];
+
+const featuredLinks = [
+  { label: "View Products", href: "/products" },
+  { label: "See Work", href: "/portfolio" },
+  { label: "Request Quote", href: "/quote" },
 ];
 
 export default function Home() {
@@ -15,7 +27,7 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="space-y-6">
           <div className="flex gap-2 flex-wrap">
-            <span className="px-3 py-1 text-[10px] font-black uppercase bg-[#26322E] text-[#E8D4A2] rounded-md tracking-widest">
+            <span className="px-3 py-1 text-[10px] font-black uppercase bg-[#26322E] text-white rounded-md tracking-widest">
               Est. 2019
             </span>
             <span className="px-3 py-1 text-[10px] font-black uppercase bg-[#F3EDE3] text-[#7C5A28] rounded-md tracking-widest border border-[#E4D7C4]">
@@ -70,16 +82,38 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 pb-16">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {services.map((service) => (
-            <div
-              key={service}
-              className="bg-white border border-[#E4D7C4] rounded-xl px-4 py-3 text-sm font-semibold"
-            >
-              {service}
+      <section className="max-w-7xl mx-auto px-4 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {highlights.map((item) => (
+            <div key={item.title} className="bg-white border border-[#E4D7C4] rounded-2xl p-5 shadow-sm">
+              <h3 className="text-lg font-black mb-2">{item.title}</h3>
+              <p className="text-sm text-[#66706C] leading-relaxed">{item.text}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 pb-16">
+        <div className="bg-[#26322E] rounded-3xl p-8 md:p-10 text-white flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="max-w-2xl space-y-3">
+            <h2 className="text-2xl md:text-3xl font-black">
+              Explore custom products, then send us your brief.
+            </h2>
+            <p className="text-white/75 text-sm md:text-base leading-relaxed">
+              The demo should feel like a polished starting point for the owner’s next requirements.
+            </p>
+          </div>
+          <div className="flex gap-3 flex-wrap">
+            {featuredLinks.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="px-5 py-3 rounded-xl bg-white text-[#26322E] text-xs font-black uppercase tracking-wider hover:bg-[#F3EDE3] transition-colors"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
     </div>

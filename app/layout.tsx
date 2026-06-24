@@ -10,11 +10,11 @@ export const metadata: Metadata = {
     template: "%s | Laser Tech",
   },
   description:
-    "Laser Tech provides CNC routing, laser cutting, engraving, signage, and custom manufacturing in Sri Lanka.",
+    "Laser Tech provides CNC routing, laser cutting, engraving, signage, custom products, and creative fabrication in Sri Lanka.",
   openGraph: {
     title: "Laser Tech | Precision Manufacturing & Creative Studio",
     description:
-      "CNC routing, laser cutting, engraving, signage, and custom manufacturing in Sri Lanka.",
+      "CNC routing, laser cutting, engraving, signage, custom products, and creative fabrication in Sri Lanka.",
     url: "https://laser-tech-mw.vercel.app",
     siteName: "Laser Tech",
     type: "website",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Laser Tech | Precision Manufacturing & Creative Studio",
     description:
-      "CNC routing, laser cutting, engraving, signage, and custom manufacturing in Sri Lanka.",
+      "CNC routing, laser cutting, engraving, signage, custom products, and creative fabrication in Sri Lanka.",
   },
 };
 

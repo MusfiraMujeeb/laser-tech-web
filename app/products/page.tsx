@@ -39,7 +39,7 @@ export default function ProductsPage({
             Our Products
           </h1>
           <p className="max-w-2xl text-sm md:text-base text-[#66706C] leading-relaxed">
-            Browse our products and custom items. Prices, discounts, and availability can be managed later from admin.
+            Shop-style product pages for the demo. Prices, discounts, featured items, and availability can later be edited from admin.
           </p>
         </section>
 
@@ -80,8 +80,13 @@ export default function ProductsPage({
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
                 {product.featured && (
-                  <span className="absolute top-3 left-3 px-2 py-1 rounded-md text-[10px] font-black uppercase bg-[#26322E] text-[#E8D4A2]">
+                  <span className="absolute top-3 left-3 px-2 py-1 rounded-md text-[10px] font-black uppercase bg-[#26322E] text-white">
                     Featured
+                  </span>
+                )}
+                {product.discountPercent && product.discountPercent > 0 && (
+                  <span className="absolute top-3 right-3 px-2 py-1 rounded-md text-[10px] font-black uppercase bg-[#C7923B] text-white">
+                    {product.discountPercent}% Off
                   </span>
                 )}
               </div>
@@ -102,10 +107,10 @@ export default function ProductsPage({
 
                 <div className="flex flex-wrap gap-2">
                   <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-[#F3EDE3] text-[#26322E] border border-[#E4D7C4]">
-                    Price: On request
+                    Price: {product.price ?? "On request"}
                   </span>
                   <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-[#F3EDE3] text-[#26322E] border border-[#E4D7C4]">
-                    Availability: Available
+                    {product.available ? "Available" : "Unavailable"}
                   </span>
                 </div>
 

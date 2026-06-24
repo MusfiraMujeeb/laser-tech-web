@@ -3,9 +3,20 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { productItems } from "../data/products";
+import { portfolioItems } from "../data/portfolio";
 
-const categories = ["All", "Signage", "Illuminated Signs", "Decorative Panels", "Awards", "Personalized Gifts", "Keychains", "Name Plates", "Brand Display"] as const;
+const categories = [
+  "All",
+  "Signage",
+  "Illuminated Signs",
+  "Decorative Panels",
+  "Awards",
+  "Personalized Gifts",
+  "Keychains",
+  "Name Plates",
+  "Brand Display",
+  "Other",
+] as const;
 
 type Category = (typeof categories)[number];
 
@@ -14,8 +25,8 @@ export default function PortfolioPage() {
 
   const filteredItems =
     activeTab === "All"
-      ? productItems
-      : productItems.filter((item) => item.category === activeTab);
+      ? portfolioItems
+      : portfolioItems.filter((item) => item.category === activeTab);
 
   return (
     <div className="min-h-screen bg-[#F8F6F2] text-[#26322E] px-4 py-12">
@@ -35,7 +46,6 @@ export default function PortfolioPage() {
         <section className="flex flex-wrap gap-2">
           {categories.map((category) => {
             const active = activeTab === category;
-
             return (
               <button
                 key={category}
@@ -67,6 +77,11 @@ export default function PortfolioPage() {
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
+                {item.featured && (
+                  <span className="absolute top-3 left-3 px-2 py-1 rounded-md text-[10px] font-black uppercase bg-[#26322E] text-white">
+                    Featured
+                  </span>
+                )}
               </div>
 
               <div className="p-5 space-y-3 flex-1 flex flex-col">
@@ -88,13 +103,13 @@ export default function PortfolioPage() {
                     href={`/products/${item.slug}`}
                     className="flex-1 text-center px-4 py-3 rounded-xl bg-[#26322E] text-white text-xs font-black uppercase tracking-wider hover:bg-[#33423D] transition-colors"
                   >
-                    View Product
+                    View Detail
                   </Link>
                   <Link
                     href={`/quote?product=${item.slug}`}
                     className="flex-1 text-center px-4 py-3 rounded-xl bg-[#C7923B] text-white text-xs font-black uppercase tracking-wider hover:bg-[#B9822D] transition-colors"
                   >
-                    Quote
+                    Request Quote
                   </Link>
                 </div>
               </div>
