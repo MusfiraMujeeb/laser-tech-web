@@ -7,25 +7,31 @@
   --surface-soft: #f3ede3;
   --surface-muted: #f1ece4;
 
-  /* Brand colors */
-  --forest: #706578;
-  --forest-2: #755b6b;
+  /* Brand */
+  --forest: #26322e;
+  --forest-2: #33423d;
   --brass: #c7923b;
   --brass-2: #b9822d;
 
-  /* Supporting accents */
+  /* Supporting */
   --sand: #efe4d2;
   --sage: #b2b9a6;
   --rose: #d9b7ae;
   --line: #e4d7c4;
 
   /* Text */
-  --text: #6d9789;
-  --text-soft: #68746f;
+  --text: #26322e;
+  --text-soft: #66706c;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
@@ -33,7 +39,6 @@ body {
   padding: 0;
   background: var(--bg);
   color: var(--text);
-  box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -58,6 +63,7 @@ textarea {
   background: rgba(199, 146, 59, 0.2);
 }
 
+/* Reusable UI helpers */
 .card-soft {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -68,7 +74,6 @@ textarea {
   background: var(--forest);
   color: #ffffff;
 }
-
 .btn-dark:hover {
   background: var(--forest-2);
   color: #ffffff;
@@ -78,7 +83,6 @@ textarea {
   background: var(--brass);
   color: #ffffff;
 }
-
 .btn-gold:hover {
   background: var(--brass-2);
   color: #ffffff;
@@ -89,7 +93,6 @@ textarea {
   color: var(--forest);
   border: 1px solid var(--line);
 }
-
 .btn-soft:hover {
   background: var(--sand);
 }

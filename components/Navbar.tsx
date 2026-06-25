@@ -34,7 +34,7 @@ export default function Navbar() {
           </div>
         </Link>
 
-        <div className="flex items-center gap-6 text-xs font-black uppercase tracking-widest text-[#26322E]">
+        <div className="flex items-center gap-5 text-xs font-black uppercase tracking-widest text-[#26322E]">
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-[#C7923B]">
               {item.label}
@@ -42,7 +42,7 @@ export default function Navbar() {
           ))}
           <Link
             href="/quote"
-            className="hidden sm:block px-4 py-2 rounded-xl bg-[#26322E] text-white font-black text-xs uppercase tracking-widest hover:bg-[#33423D] transition-colors"
+            className="hidden sm:block px-4 py-2 rounded-xl bg-[#26322E] text-white hover:bg-[#33423D] transition-colors"
           >
             Customize
           </Link>

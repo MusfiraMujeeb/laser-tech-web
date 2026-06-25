@@ -6,15 +6,15 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   metadataBase: new URL("https://laser-tech-mw.vercel.app"),
   title: {
-    default: "Laser Tech | Precision Manufacturing & Creative Studio",
+    default: "Laser Tech | Precision Manufacturing & Custom Products",
     template: "%s | Laser Tech",
   },
   description:
-    "Laser Tech provides CNC routing, laser cutting, engraving, signage, custom products, and creative fabrication in Sri Lanka.",
+    "Laser Tech provides CNC routing, laser cutting, engraving, signage, awards, gifts, and custom fabrication in Sri Lanka.",
   openGraph: {
-    title: "Laser Tech | Precision Manufacturing & Creative Studio",
+    title: "Laser Tech | Precision Manufacturing & Custom Products",
     description:
-      "CNC routing, laser cutting, engraving, signage, custom products, and creative fabrication in Sri Lanka.",
+      "CNC routing, laser cutting, engraving, signage, awards, gifts, and custom fabrication in Sri Lanka.",
     url: "https://laser-tech-mw.vercel.app",
     siteName: "Laser Tech",
     type: "website",
@@ -22,9 +22,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Laser Tech | Precision Manufacturing & Creative Studio",
+    title: "Laser Tech | Precision Manufacturing & Custom Products",
     description:
-      "CNC routing, laser cutting, engraving, signage, custom products, and creative fabrication in Sri Lanka.",
+      "CNC routing, laser cutting, engraving, signage, awards, gifts, and custom fabrication in Sri Lanka.",
   },
 };
 
@@ -35,9 +35,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col antialiased bg-[#F8F6F2] text-[#26322E]">

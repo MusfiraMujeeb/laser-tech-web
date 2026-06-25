@@ -35,12 +35,7 @@ export default function PortfolioPage() {
           <span className="text-xs font-bold uppercase tracking-widest text-[#C7923B]">
             Completed Work
           </span>
-          <h1 className="text-3xl md:text-5xl font-black tracking-tight">
-            Portfolio Showcase
-          </h1>
-          <p className="max-w-2xl text-sm md:text-base text-[#66706C] leading-relaxed">
-            A selection of completed signage, illuminated work, decorative pieces, and custom products.
-          </p>
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight">Portfolio Showcase</h1>
         </section>
 
         <section className="flex flex-wrap gap-2">
@@ -65,50 +60,23 @@ export default function PortfolioPage() {
 
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item) => (
-            <article
-              key={item.id}
-              className="bg-white border border-[#E4D7C4] rounded-2xl overflow-hidden shadow-sm flex flex-col"
-            >
+            <article key={item.id} className="bg-white border border-[#E4D7C4] rounded-2xl overflow-hidden shadow-sm flex flex-col">
               <div className="relative aspect-[4/3] bg-[#F1ECE4]">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-                {item.featured && (
-                  <span className="absolute top-3 left-3 px-2 py-1 rounded-md text-[10px] font-black uppercase bg-[#26322E] text-white">
-                    Featured
-                  </span>
-                )}
+                <Image src={item.image} alt={item.title} fill className="object-cover" />
               </div>
 
               <div className="p-5 space-y-3 flex-1 flex flex-col">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-widest text-[#7C5A28] font-bold">
-                    {item.category} / {item.subcategory}
-                  </p>
-                  <h2 className="text-lg font-black leading-snug">{item.title}</h2>
-                </div>
-
-                <p className="text-sm text-[#66706C] leading-relaxed">{item.description}</p>
-
-                <div className="text-xs font-mono text-[#7C5A28] bg-[#F8F6F2] rounded-lg px-3 py-2">
-                  Material: {item.material}
-                </div>
+                <p className="text-[10px] uppercase tracking-widest text-[#7C5A28] font-bold">
+                  {item.category} / {item.subcategory}
+                </p>
+                <h2 className="text-lg font-black">{item.title}</h2>
+                <p className="text-sm text-[#66706C]">{item.description}</p>
 
                 <div className="mt-auto pt-3 flex gap-3">
-                  <Link
-                    href={`/products/${item.slug}`}
-                    className="flex-1 text-center px-4 py-3 rounded-xl bg-[#26322E] text-white text-xs font-black uppercase tracking-wider hover:bg-[#33423D] transition-colors"
-                  >
+                  <Link href={`/products/${item.slug}`} className="flex-1 text-center px-4 py-3 rounded-xl bg-[#26322E] text-white text-xs font-black uppercase">
                     View Detail
                   </Link>
-                  <Link
-                    href={`/quote?product=${item.slug}`}
-                    className="flex-1 text-center px-4 py-3 rounded-xl bg-[#C7923B] text-white text-xs font-black uppercase tracking-wider hover:bg-[#B9822D] transition-colors"
-                  >
+                  <Link href={`/quote?product=${item.slug}`} className="flex-1 text-center px-4 py-3 rounded-xl bg-[#C7923B] text-white text-xs font-black uppercase">
                     Request Quote
                   </Link>
                 </div>
