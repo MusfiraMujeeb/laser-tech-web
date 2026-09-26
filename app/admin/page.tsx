@@ -345,6 +345,20 @@ export default function AdminDashboardPage() {
                   and convert them into quotations.
                 </p>
               </Link>
+              <Link
+  href="/admin/products"
+  className="card-soft p-6 block group"
+>
+  <p className="text-xs font-black uppercase tracking-widest text-walnut mb-2">
+    Product Manager
+  </p>
+  <h3 className="font-heading text-2xl font-semibold text-walnut mb-2">
+    Manage products →
+  </h3>
+  <p className="text-sm text-taupe">
+    Add new products, edit prices, upload images, and manage discounts.
+  </p>
+</Link>
             </section>
           </>
         )}
