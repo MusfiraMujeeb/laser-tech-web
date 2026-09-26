@@ -4,14 +4,14 @@ import { productItems } from "../data/products";
 
 const categories = [
   "All",
-  "Signage",
-  "Illuminated Signs",
-  "Decorative Panels",
   "Awards",
-  "Personalized Gifts",
+  "Clocks",
+  "LED Signs",
+  "Notebooks",
+  "Wedding",
+  "Signage",
   "Keychains",
-  "Name Plates",
-  "Brand Display",
+  "Decor",
 ] as const;
 
 type Category = (typeof categories)[number];
@@ -97,6 +97,7 @@ export default async function ProductsPage({
               product.priceLkr,
               product.discountPercent
             );
+            const hasPrice = product.priceLkr > 0;
 
             return (
               <article
@@ -131,24 +132,30 @@ export default async function ProductsPage({
                   <h2 className="font-heading text-xl font-semibold text-walnut leading-tight">
                     {product.title}
                   </h2>
-                  <p className="text-sm text-taupe leading-relaxed">
+                  <p className="text-sm text-taupe leading-relaxed line-clamp-2">
                     {product.description}
                   </p>
 
-                  {/* Price */}
+                  {/* Price or Request a Quote */}
                   <div className="text-sm font-bold">
-                    {product.discountPercent > 0 ? (
-                      <div className="flex items-center gap-2">
+                    {hasPrice ? (
+                      product.discountPercent > 0 ? (
+                        <div className="flex items-center gap-2">
+                          <span className="text-copper text-base">
+                            LKR {sale.toLocaleString()}
+                          </span>
+                          <span className="line-through text-taupe text-xs">
+                            LKR {product.priceLkr.toLocaleString()}
+                          </span>
+                        </div>
+                      ) : (
                         <span className="text-copper text-base">
-                          LKR {sale.toLocaleString()}
-                        </span>
-                        <span className="line-through text-taupe text-xs">
                           LKR {product.priceLkr.toLocaleString()}
                         </span>
-                      </div>
+                      )
                     ) : (
-                      <span className="text-copper text-base">
-                        LKR {product.priceLkr.toLocaleString()}
+                      <span className="text-copper text-sm">
+                        Request a Quote
                       </span>
                     )}
                   </div>
