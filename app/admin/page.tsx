@@ -1,333 +1,587 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FormEvent } from "react";
+import Link from "next/link";
+import {
+  Quotation,
+  loadQuotations,
+  calcTotal,
+  formatLKR,
+  formatDate,
+  getStatusColor,
+} from "@/lib/quotationUtils";
 
-interface QuoteItem {
-  _id: string;
-  name: string;
-  phone: string;
-  email: string;
-  service: string;
-  material: string;
-  dimensions: string;
-  description: string;
-  fileUrl?: string;
-  createdAt: string;
-}
+// ==========================================
+// ⚙️ ADMIN PASSWORD
+// Change this before going live.
+// ==========================================
+const ADMIN_PASSWORD = "lasertech2026";
 
-interface OrderItem {
+// ==========================================
+// TYPES
+// ==========================================
+
+type Order = {
   orderId: string;
   createdAt: string;
+  productTitle: string;
   customerName: string;
   customerPhone: string;
   shippingAddress: string;
-  productTitle: string;
   totalAmount: number;
   status: string;
-}
+};
 
-export default function AdminDashboard() {
-  const [quotes, setQuotes] = useState<QuoteItem[]>([]);
-  const [orders, setOrders] = useState<OrderItem[]>([]);
-  const [loading, setLoading] = useState(false);
+const ORDER_STATUSES = [
+  "Pending Production",
+  "Laser Cutting",
+  "Shipped",
+];
+
+// ==========================================
+// MAIN COMPONENT
+// ==========================================
+
+export default function AdminDashboardPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [authError, setAuthError] = useState('');
-  
-  // Terminal view controls: 'quotes' | 'orders'
-  const [activeTab, setActiveTab] = useState<'quotes' | 'orders'>('quotes');
-  const [quoteFilter, setQuoteFilter] = useState('All');
-  const [orderFilter, setOrderFilter] = useState('All');
+  const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
+  const [activeTab, setActiveTab] = useState<"overview" | "quotes" | "orders">(
+    "overview"
+  );
 
-  // Load static direct marketplace orders from local storage context
-  const loadLocalStorageOrders = () => {
-    const stored = JSON.parse(localStorage.getItem('laser_tech_orders') || '[]');
-    setOrders(stored);
-  };
+  const [quotations, setQuotations] = useState<Quotation[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setAuthError('');
-
-    try {
-      const res = await fetch(`/quote/api?auth=${encodeURIComponent(password)}`);
-      if (res.ok) {
-        const data = await res.json();
-        setQuotes(data);
-        loadLocalStorageOrders();
-        setIsAuthenticated(true);
-        sessionStorage.setItem('admin_token', password);
-      } else {
-        setAuthError('Invalid administrative gate credentials. Access Denied.');
-      }
-    } catch (err) {
-      console.error('Auth Pipeline Failure:', err);
-      setAuthError('System authorization failure.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Check session on mount
   useEffect(() => {
-    const savedToken = sessionStorage.getItem('admin_token');
-    if (savedToken) {
-      const autoFetch = async () => {
-        try {
-          const res = await fetch(`/quote/api?auth=${encodeURIComponent(savedToken)}`);
-          if (res.ok) {
-            const data = await res.json();
-            setQuotes(data);
-            loadLocalStorageOrders();
-            setIsAuthenticated(true);
-          }
-        } catch (e) {
-          sessionStorage.removeItem('admin_token');
-        }
-      };
-      autoFetch();
+    if (typeof window === "undefined") return;
+    const token = sessionStorage.getItem("admin_token_v2");
+    if (token === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      loadData();
     }
   }, []);
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('admin_token');
-    setIsAuthenticated(false);
-    setPassword('');
-    setQuotes([]);
-    setOrders([]);
-  };
-
-  // Mutate order state lines and save to local storage
-  const updateOrderStatus = (orderId: string, newStatus: string) => {
-    const updated = orders.map(order => {
-      if (order.orderId === orderId) return { ...order, status: newStatus };
-      return order;
-    });
-    setOrders(updated);
-    localStorage.setItem('laser_tech_orders', JSON.stringify(updated));
-  };
-
-  const clearOrderLogs = () => {
-    if (confirm('Wipe complete catalog product order history logs permanent?')) {
-      localStorage.removeItem('laser_tech_orders');
+  const loadData = () => {
+    setQuotations(loadQuotations());
+    try {
+      const storedOrders = JSON.parse(
+        localStorage.getItem("laser_tech_orders") || "[]"
+      );
+      setOrders(storedOrders);
+    } catch {
       setOrders([]);
     }
   };
 
-  const filteredQuotes = quoteFilter === 'All' 
-    ? quotes 
-    : quotes.filter(q => q.service === quoteFilter);
+  const handleLogin = (e: FormEvent) => {
+    e.preventDefault();
+    setAuthError("");
+    if (password === ADMIN_PASSWORD) {
+      sessionStorage.setItem("admin_token_v2", password);
+      setIsAuthenticated(true);
+      loadData();
+    } else {
+      setAuthError("Incorrect password. Please try again.");
+      setPassword("");
+    }
+  };
 
-  const filteredOrders = orderFilter === 'All'
-    ? orders
-    : orders.filter(o => o.status === orderFilter);
+  const handleLock = () => {
+    sessionStorage.removeItem("admin_token_v2");
+    setIsAuthenticated(false);
+    setPassword("");
+  };
+
+  // ==========================================
+  // LOGIN SCREEN
+  // ==========================================
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center px-4" style={{ backgroundColor: 'var(--studio-bg)' }}>
-        <div className="p-8 md:p-10 rounded-3xl shadow-xl max-w-sm w-full text-center" style={{ backgroundColor: 'var(--studio-card)', border: '1px solid var(--studio-border)' }}>
-          <span className="text-4xl block mb-4">🔐</span>
-          <h2 className="text-2xl font-black mb-2" style={{ color: 'var(--studio-moss)' }}>Workshop Terminal Login</h2>
-          <p className="text-xs font-semibold uppercase tracking-wider mb-8" style={{ color: 'var(--studio-gold)' }}>Authorized Operational Staff Only</p>
-          
-          <form onSubmit={handleLogin} className="space-y-4">
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter Terminal Password"
-              className="w-full px-4 py-3.5 rounded-xl border focus:outline-none text-center text-sm tracking-widest font-mono"
-              style={{ backgroundColor: 'var(--studio-bg)', borderColor: 'var(--studio-border)', color: 'var(--studio-moss)' }}
-            />
-            {authError && <p className="text-xs font-bold text-rose-600 bg-rose-50 py-2.5 px-3 rounded-xl border border-rose-200">{authError}</p>}
-            <button type="submit" disabled={loading} className="w-full text-white font-black py-3.5 rounded-xl transition-all shadow-md cursor-pointer flex items-center justify-center" style={{ backgroundColor: 'var(--studio-moss)' }}>
-              {loading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : "Unlock Orders Core 🔓"}
-            </button>
-          </form>
+      <div className="min-h-screen bg-ivory flex items-center justify-center px-4">
+        <div className="w-full max-w-md">
+          <div className="card-soft p-8 md:p-10 text-center space-y-6">
+            <div className="text-5xl">🔐</div>
+
+            <div className="space-y-2">
+              <h1 className="font-heading text-3xl font-semibold text-walnut">
+                Laser Tech Admin
+              </h1>
+              <p className="text-xs font-bold uppercase tracking-widest text-copper">
+                Authorized Staff Only
+              </p>
+            </div>
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setAuthError("");
+                }}
+                required
+                autoFocus
+                placeholder="Enter admin password"
+                className="w-full px-4 py-3.5 rounded-lg border border-wood-border bg-ivory text-charcoal text-center tracking-widest font-mono focus:border-copper focus:outline-none focus:ring-2 focus:ring-copper/20 transition"
+              />
+
+              {authError && (
+                <div className="text-xs font-bold text-error bg-error-bg py-2.5 px-3 rounded-lg border border-error/30">
+                  ⚠ {authError}
+                </div>
+              )}
+
+              <button type="submit" className="btn-primary w-full">
+                Unlock Dashboard
+              </button>
+            </form>
+
+            <p className="text-xs text-taupe pt-2">
+              <Link href="/" className="hover:text-copper transition">
+                ← Return to website
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
+  // ==========================================
+  // DASHBOARD
+  // ==========================================
+
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const quotesThisMonth = quotations.filter(
+    (q) => new Date(q.createdAt) >= monthStart
+  );
+
+  const totalQuoteValue = quotations.reduce((sum, q) => {
+    const totals = calcTotal(
+      q.items,
+      q.discountType,
+      q.discountValue,
+      q.deliveryFee
+    );
+    return sum + totals.total;
+  }, 0);
+
+  const ordersThisMonth = orders.filter(
+    (o) => new Date(o.createdAt) >= monthStart
+  );
+
+  const totalOrderValue = orders.reduce(
+    (sum, o) => sum + o.totalAmount,
+    0
+  );
+
+  const pendingQuotes = quotations.filter(
+    (q) => q.status === "Draft" || q.status === "Sent" || q.status === "Awaiting Reply"
+  ).length;
+
+  const inProduction = orders.filter(
+    (o) => o.status === "Laser Cutting" || o.status === "Pending Production"
+  ).length;
+
   return (
-    <div className="min-h-screen py-12 px-6" style={{ backgroundColor: 'var(--studio-bg)' }}>
-      <div className="max-w-7xl mx-auto">
-        
-        {/* OPERATIONAL HEADER */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8 pb-6 border-b" style={{ borderColor: 'var(--studio-border)' }}>
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-black tracking-tight" style={{ color: 'var(--studio-moss)' }}>Workshop Control Center</h1>
-              <button onClick={handleLogout} className="px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border cursor-pointer text-rose-700 bg-rose-50 border-rose-200">
-                Lock Terminal 🔒
-              </button>
+    <div className="min-h-screen bg-beige">
+      {/* ============================================
+          ADMIN HEADER
+      ============================================ */}
+      <header className="bg-walnut text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-oak">
+                Laser Tech
+              </p>
+              <h1 className="font-heading text-2xl font-semibold">
+                Admin Dashboard
+              </h1>
             </div>
-            <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: 'var(--studio-gold)' }}>Laser Tech Operational Log Dashboard</p>
           </div>
 
-          {/* MAIN SWITCH BETWEEN QUOTES VS ORDERS */}
-          <div className="bg-stone-200/60 p-1 rounded-xl inline-flex gap-1 border border-stone-300/40">
-            <button 
-              onClick={() => setActiveTab('quotes')}
-              className={`px-4 py-2 text-xs font-black rounded-lg transition-all ${activeTab === 'quotes' ? 'bg-stone-900 text-white shadow-xs' : 'text-stone-600'}`}
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="text-xs font-bold uppercase tracking-wider text-sand hover:text-white transition"
             >
-              📁 Custom Build Quotes ({quotes.length})
-            </button>
-            <button 
-              onClick={() => setActiveTab('orders')}
-              className={`px-4 py-2 text-xs font-black rounded-lg transition-all ${activeTab === 'orders' ? 'bg-stone-900 text-white shadow-xs' : 'text-stone-600'}`}
+              View Website
+            </Link>
+            <button
+              onClick={handleLock}
+              className="px-4 py-2 rounded-lg bg-copper text-white text-xs font-bold uppercase tracking-wider hover:bg-copper-dark transition"
             >
-              🛒 Direct Store Orders ({orders.length})
+              Lock 🔒
             </button>
           </div>
         </div>
 
-        {/* --- LEDGER TRACK A: CUSTOM BLUEPRINT QUOTES LAYER --- */}
-        {activeTab === 'quotes' && (
-          <div className="space-y-6">
-            <div className="flex flex-wrap gap-2 pb-4 border-b border-dashed" style={{ borderColor: 'var(--studio-border)' }}>
-              {['All', 'Laser Cutting', 'Laser Engraving', 'Corporate Branding / Identity', 'Custom Merchandise Print'].map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setQuoteFilter(category)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold border shadow-xs"
-                  style={{
-                    backgroundColor: quoteFilter === category ? 'var(--studio-moss)' : 'var(--studio-card)',
-                    color: quoteFilter === category ? '#ffffff' : 'var(--studio-moss)',
-                    borderColor: 'var(--studio-border)'
-                  }}
-                >
-                  {category === 'Corporate Branding / Identity' ? 'Corporate' : category === 'Custom Merchandise Print' ? 'Print & Merch' : category}
-                </button>
-              ))}
-            </div>
-
-            {filteredQuotes.length === 0 ? (
-              <div className="text-center py-20 p-8 rounded-3xl border border-dashed" style={{ backgroundColor: 'var(--studio-card)', borderColor: 'var(--studio-border)' }}>
-                <span className="text-4xl block mb-2">📁</span>
-                <p className="font-bold text-sm" style={{ color: 'var(--studio-moss)' }}>No custom build entries filed under this filter category.</p>
-              </div>
-            ) : (
-              <div className="overflow-hidden rounded-3xl border shadow-md" style={{ backgroundColor: 'var(--studio-card)', borderColor: 'var(--studio-border)' }}>
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="text-xs uppercase tracking-wider border-b" style={{ backgroundColor: 'var(--studio-hero)', borderColor: 'var(--studio-border)', color: 'var(--studio-moss)' }}>
-                      <th className="p-4 font-black">Date</th>
-                      <th className="p-4 font-black">Client Info</th>
-                      <th className="p-4 font-black">Service & Material</th>
-                      <th className="p-4 font-black">Dimensions</th>
-                      <th className="p-4 font-black">Job Blueprint Specifications</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-solid text-sm" style={{ borderColor: 'var(--studio-bg)', color: 'var(--studio-moss)' }}>
-                    {filteredQuotes.map((quote) => (
-                      <tr key={quote._id} className="hover:bg-amber-50/30 transition-colors">
-                        <td className="p-4 align-top whitespace-nowrap text-xs font-mono font-bold text-stone-400">
-                          {new Date(quote.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                        </td>
-                        <td className="p-4 align-top max-w-[220px]">
-                          <p className="font-black text-slate-900">{quote.name}</p>
-                          <p className="text-xs font-semibold text-stone-400">{quote.email}</p>
-                          <div className="flex flex-col gap-1.5 mt-2">
-                            <a href={`https://wa.me/${quote.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-700">💬 WhatsApp</a>
-                            {quote.fileUrl && <a href={quote.fileUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-800 bg-amber-100 border border-amber-200">📐 View Blueprint File</a>}
-                          </div>
-                        </td>
-                        <td className="p-4 align-top">
-                          <span className="inline-block px-2.5 py-1 rounded-md text-[11px] font-black tracking-wide uppercase mb-1.5 border" style={{ backgroundColor: 'var(--studio-hero)', borderColor: 'var(--studio-border)', color: 'var(--studio-moss)' }}>{quote.service}</span>
-                          <p className="text-xs font-medium text-stone-500">Material: <span className="font-bold text-slate-800">{quote.material}</span></p>
-                        </td>
-                        <td className="p-4 align-top font-mono text-xs font-bold">{quote.dimensions || 'Standard'}</td>
-                        <td className="p-4 align-top">
-                          <p className="text-xs leading-relaxed text-slate-700 bg-slate-50 p-3 rounded-xl border border-dotted font-medium whitespace-pre-line" style={{ borderColor: 'var(--studio-border)' }}>{quote.description}</p>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* --- LEDGER TRACK B: DIRECT MARKETPLACE ORDERS LAYER --- */}
-        {activeTab === 'orders' && (
-          <div className="space-y-6">
-            <div className="flex flex-wrap justify-between items-center gap-4 pb-4 border-b border-dashed" style={{ borderColor: 'var(--studio-border)' }}>
-              <div className="flex gap-1 bg-stone-100 p-1 rounded-xl border">
-                {['All', 'Pending Production', 'Laser Cutting', 'Shipped'].map((status) => (
-                  <button
-                    key={status}
-                    onClick={() => setOrderFilter(status)}
-                    className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${orderFilter === status ? 'bg-stone-900 text-white' : 'text-stone-500 hover:bg-stone-200'}`}
-                  >
-                    {status}
-                  </button>
-                ))}
-              </div>
-              <button onClick={clearOrderLogs} className="px-3 py-1.5 rounded-xl text-xs font-bold bg-red-50 border border-red-200 text-red-700 hover:bg-red-100">
-                ⚠️ Wipe Order Database Cache
+        {/* Tabs */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex gap-1 -mb-px">
+            {[
+              { key: "overview", label: "Overview" },
+              { key: "quotes", label: "Quotations" },
+              { key: "orders", label: "Orders" },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key as typeof activeTab)}
+                className={`px-4 py-3 text-xs font-bold uppercase tracking-wider rounded-t-lg transition ${
+                  activeTab === tab.key
+                    ? "bg-beige text-walnut"
+                    : "text-sand/70 hover:text-white"
+                }`}
+              >
+                {tab.label}
               </button>
-            </div>
-
-            {filteredOrders.length === 0 ? (
-              <div className="text-center py-20 p-8 rounded-3xl border border-dashed" style={{ backgroundColor: 'var(--studio-card)', borderColor: 'var(--studio-border)' }}>
-                <span className="text-4xl block mb-2">🛒</span>
-                <p className="font-bold text-sm" style={{ color: 'var(--studio-moss)' }}>No automated store catalog transactions matched the active filters.</p>
-              </div>
-            ) : (
-              <div className="overflow-hidden rounded-3xl border shadow-md" style={{ backgroundColor: 'var(--studio-card)', borderColor: 'var(--studio-border)' }}>
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="text-xs uppercase tracking-wider border-b" style={{ backgroundColor: 'var(--studio-hero)', borderColor: 'var(--studio-border)', color: 'var(--studio-moss)' }}>
-                      <th className="p-4 font-black">ID</th>
-                      <th className="p-4 font-black">Timestamp</th>
-                      <th className="p-4 font-black">Product Target</th>
-                      <th className="p-4 font-black">Customer Details & Address</th>
-                      <th className="p-4 font-black">Price Matched</th>
-                      <th className="p-4 font-black text-right">Fulfillment Tracking Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-solid text-sm font-medium" style={{ borderColor: 'var(--studio-bg)', color: 'var(--studio-moss)' }}>
-                    {filteredOrders.map((order) => (
-                      <tr key={order.orderId} className="hover:bg-amber-50/30 transition-colors">
-                        <td className="p-4 font-mono font-bold text-stone-900">{order.orderId}</td>
-                        <td className="p-4 text-xs font-mono text-stone-400">
-                          {new Date(order.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                        </td>
-                        <td className="p-4 font-bold text-stone-800">{order.productTitle}</td>
-                        <td className="p-4 space-y-0.5 max-w-xs">
-                          <p className="font-bold text-slate-900">{order.customerName}</p>
-                          <p className="text-stone-400 font-mono text-xs">{order.customerPhone}</p>
-                          <p className="text-stone-500 text-[11px] leading-relaxed bg-stone-50 p-2 rounded-lg border mt-1 italic">{order.shippingAddress}</p>
-                        </td>
-                        <td className="p-4 font-mono font-bold text-amber-700">LKR {order.totalAmount.toLocaleString()}</td>
-                        <td className="p-4 text-right">
-                          <select
-                            value={order.status}
-                            onChange={(e) => updateOrderStatus(order.orderId, e.target.value)}
-                            className={`px-3 py-1.5 rounded-lg border text-xs font-bold bg-white focus:outline-none ${
-                              order.status === 'Shipped' ? 'text-emerald-700 border-emerald-300 bg-emerald-50/50' :
-                              order.status === 'Laser Cutting' ? 'text-sky-700 border-sky-300 bg-sky-50/50' :
-                              'text-amber-700 border-amber-300 bg-amber-50/50'
-                            }`}
-                          >
-                            <option value="Pending Production">⏳ Pending Production</option>
-                            <option value="Laser Cutting">⚡ Laser Cutting</option>
-                            <option value="Shipped">🚚 Shipped via Delivery</option>
-                          </select>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            ))}
           </div>
+        </div>
+      </header>
+
+      {/* ============================================
+          MAIN CONTENT
+      ============================================ */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+        {/* ============================================
+            OVERVIEW TAB
+        ============================================ */}
+        {activeTab === "overview" && (
+          <>
+            {/* Stat cards */}
+            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <StatCard
+                label="Total Quotations"
+                value={quotations.length.toString()}
+                sub={`${quotesThisMonth.length} this month`}
+                accent="copper"
+              />
+              <StatCard
+                label="Pending Quotes"
+                value={pendingQuotes.toString()}
+                sub="Awaiting action"
+                accent="walnut"
+              />
+              <StatCard
+                label="Total Orders"
+                value={orders.length.toString()}
+                sub={`${ordersThisMonth.length} this month`}
+                accent="oak"
+              />
+              <StatCard
+                label="In Production"
+                value={inProduction.toString()}
+                sub="Active jobs"
+                accent="copper"
+              />
+            </section>
+
+            {/* Value cards */}
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="card-soft p-6">
+                <p className="text-xs font-bold uppercase tracking-widest text-taupe">
+                  Total Quote Value
+                </p>
+                <p className="font-heading text-3xl font-semibold text-walnut mt-2">
+                  {formatLKR(totalQuoteValue)}
+                </p>
+                <p className="text-xs text-taupe mt-1">
+                  Across {quotations.length} quotation
+                  {quotations.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+
+              <div className="card-soft p-6">
+                <p className="text-xs font-bold uppercase tracking-widest text-taupe">
+                  Total Order Value
+                </p>
+                <p className="font-heading text-3xl font-semibold text-walnut mt-2">
+                  {formatLKR(totalOrderValue)}
+                </p>
+                <p className="text-xs text-taupe mt-1">
+                  Across {orders.length} order
+                  {orders.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+            </section>
+
+            {/* Quick actions */}
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Link
+                href="/admin/quotations"
+                className="card-soft p-6 block group"
+              >
+                <p className="text-xs font-black uppercase tracking-widest text-copper mb-2">
+                  Quotation Builder
+                </p>
+                <h3 className="font-heading text-2xl font-semibold text-walnut mb-2">
+                  Create a new quote →
+                </h3>
+                <p className="text-sm text-taupe">
+                  Build professional quotations with line items, discounts, and
+                  delivery fees. Send via WhatsApp or print.
+                </p>
+              </Link>
+
+              <Link
+                href="/admin/quotations"
+                className="card-soft p-6 block group"
+              >
+                <p className="text-xs font-black uppercase tracking-widest text-oak mb-2">
+                  Pending Inquiries
+                </p>
+                <h3 className="font-heading text-2xl font-semibold text-walnut mb-2">
+                  Review customer requests →
+                </h3>
+                <p className="text-sm text-taupe">
+                  See all incoming quote requests submitted through the website
+                  and convert them into quotations.
+                </p>
+              </Link>
+            </section>
+          </>
         )}
 
-      </div>
+        {/* ============================================
+            QUOTES TAB
+        ============================================ */}
+        {activeTab === "quotes" && (
+          <section className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="font-heading text-2xl font-semibold text-walnut">
+                Recent Quotations
+              </h2>
+              <Link href="/admin/quotations" className="btn-primary">
+                Manage Quotations
+              </Link>
+            </div>
+
+            {quotations.length === 0 ? (
+              <div className="card-soft p-12 text-center space-y-3">
+                <p className="text-lg font-semibold text-walnut">
+                  No quotations yet
+                </p>
+                <p className="text-sm text-taupe">
+                  Create your first quotation to get started.
+                </p>
+                <Link
+                  href="/admin/quotations"
+                  className="btn-primary inline-flex mt-4"
+                >
+                  Go to Quotation Builder
+                </Link>
+              </div>
+            ) : (
+              <div className="card-soft overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead className="bg-sand border-b border-wood-border">
+                      <tr>
+                        <th className="p-4 text-xs font-bold uppercase tracking-wider text-walnut">
+                          Quote #
+                        </th>
+                        <th className="p-4 text-xs font-bold uppercase tracking-wider text-walnut">
+                          Date
+                        </th>
+                        <th className="p-4 text-xs font-bold uppercase tracking-wider text-walnut">
+                          Customer
+                        </th>
+                        <th className="p-4 text-xs font-bold uppercase tracking-wider text-walnut text-right">
+                          Total
+                        </th>
+                        <th className="p-4 text-xs font-bold uppercase tracking-wider text-walnut">
+                          Status
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-wood-border">
+                      {quotations.slice(0, 10).map((q) => {
+                        const totals = calcTotal(
+                          q.items,
+                          q.discountType,
+                          q.discountValue,
+                          q.deliveryFee
+                        );
+                        return (
+                          <tr
+                            key={q.id}
+                            className="hover:bg-sand/50 transition-colors"
+                          >
+                            <td className="p-4 font-mono text-xs font-bold text-copper">
+                              {q.id}
+                            </td>
+                            <td className="p-4 text-sm text-taupe">
+                              {formatDate(q.createdAt)}
+                            </td>
+                            <td className="p-4">
+                              <p className="font-bold text-walnut">
+                                {q.customerName || "—"}
+                              </p>
+                              <p className="text-xs text-taupe">
+                                {q.customerPhone}
+                              </p>
+                            </td>
+                            <td className="p-4 text-right font-bold text-walnut">
+                              {formatLKR(totals.total)}
+                            </td>
+                            <td className="p-4">
+                              <span className={getStatusColor(q.status)}>
+                                {q.status}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* ============================================
+            ORDERS TAB
+        ============================================ */}
+        {activeTab === "orders" && (
+          <section className="space-y-6">
+            <h2 className="font-heading text-2xl font-semibold text-walnut">
+              Store Orders
+            </h2>
+
+            {orders.length === 0 ? (
+              <div className="card-soft p-12 text-center space-y-3">
+                <p className="text-lg font-semibold text-walnut">
+                  No orders yet
+                </p>
+                <p className="text-sm text-taupe">
+                  Direct product orders will appear here once customers start
+                  checking out.
+                </p>
+              </div>
+            ) : (
+              <div className="card-soft overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead className="bg-sand border-b border-wood-border">
+                      <tr>
+                        <th className="p-4 text-xs font-bold uppercase tracking-wider text-walnut">
+                          Order ID
+                        </th>
+                        <th className="p-4 text-xs font-bold uppercase tracking-wider text-walnut">
+                          Product
+                        </th>
+                        <th className="p-4 text-xs font-bold uppercase tracking-wider text-walnut">
+                          Customer
+                        </th>
+                        <th className="p-4 text-xs font-bold uppercase tracking-wider text-walnut text-right">
+                          Amount
+                        </th>
+                        <th className="p-4 text-xs font-bold uppercase tracking-wider text-walnut">
+                          Status
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-wood-border">
+                      {orders.map((o) => (
+                        <tr
+                          key={o.orderId}
+                          className="hover:bg-sand/50 transition-colors"
+                        >
+                          <td className="p-4 font-mono text-xs font-bold text-copper">
+                            {o.orderId}
+                          </td>
+                          <td className="p-4 text-sm font-bold text-walnut">
+                            {o.productTitle}
+                          </td>
+                          <td className="p-4">
+                            <p className="font-bold text-walnut">
+                              {o.customerName}
+                            </p>
+                            <p className="text-xs text-taupe">
+                              {o.customerPhone}
+                            </p>
+                          </td>
+                          <td className="p-4 text-right font-bold text-walnut">
+                            {formatLKR(o.totalAmount)}
+                          </td>
+                          <td className="p-4">
+                            <select
+                              value={o.status}
+                              onChange={(e) => {
+                                const updated = orders.map((order) =>
+                                  order.orderId === o.orderId
+                                    ? { ...order, status: e.target.value }
+                                    : order
+                                );
+                                setOrders(updated);
+                                localStorage.setItem(
+                                  "laser_tech_orders",
+                                  JSON.stringify(updated)
+                                );
+                              }}
+                              className="px-3 py-1.5 rounded-lg border border-wood-border bg-ivory text-xs font-bold focus:border-copper focus:outline-none"
+                            >
+                              {ORDER_STATUSES.map((s) => (
+                                <option key={s} value={s}>
+                                  {s}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+      </main>
+    </div>
+  );
+}
+
+// ==========================================
+// STAT CARD COMPONENT
+// ==========================================
+
+function StatCard({
+  label,
+  value,
+  sub,
+  accent,
+}: {
+  label: string;
+  value: string;
+  sub: string;
+  accent: "copper" | "walnut" | "oak";
+}) {
+  const accentColor =
+    accent === "copper"
+      ? "bg-copper"
+      : accent === "walnut"
+      ? "bg-walnut"
+      : "bg-oak";
+
+  return (
+    <div className="card-soft p-6">
+      <div className={`w-10 h-1 rounded-full mb-4 ${accentColor}`} />
+      <p className="text-xs font-bold uppercase tracking-widest text-taupe">
+        {label}
+      </p>
+      <p className="font-heading text-3xl font-semibold text-walnut mt-2">
+        {value}
+      </p>
+      <p className="text-xs text-taupe mt-1">{sub}</p>
     </div>
   );
 }

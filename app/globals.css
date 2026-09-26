@@ -1,45 +1,68 @@
 @import "tailwindcss";
 
 /* ==========================================
-   LASER TECH DESIGN SYSTEM
-   Walnut + Copper + Ivory palette
+   LASER TECH DESIGN SYSTEM — Tailwind v4
+   Register colors with @theme so classes work
+   ========================================== */
+
+@theme {
+  --color-ivory: #FBF8F2;
+  --color-surface: #FFFDFC;
+  --color-sand: #F1E5D3;
+  --color-beige: #E9DED0;
+
+  --color-walnut: #2B1A12;
+  --color-espresso: #1A100C;
+  --color-charcoal: #302823;
+  --color-taupe: #70645B;
+
+  --color-copper: #B86632;
+  --color-copper-dark: #954A24;
+  --color-oak: #C8945F;
+  --color-gold: #D7A05D;
+
+  --color-wood-border: #E3D4C3;
+
+  --color-whatsapp: #198754;
+  --color-whatsapp-dark: #146C43;
+  --color-success: #E8F5EC;
+
+  --color-error: #B42318;
+  --color-error-bg: #FDECEC;
+
+  --font-heading: var(--font-heading), Georgia, serif;
+  --font-body: var(--font-body), system-ui, sans-serif;
+}
+
+/* ==========================================
+   CSS VARIABLES (for inline style usage)
    ========================================== */
 
 :root {
-  /* Backgrounds */
-  --bg: #fbf8f2;              /* Ivory Cream - main page background */
-  --surface: #fffdfc;          /* Soft White - cards, forms */
-  --surface-soft: #f1e5d3;     /* Warm Sand - secondary sections */
-  --surface-muted: #e9ded0;    /* Muted Beige - subtle backgrounds */
+  --bg: #fbf8f2;
+  --surface: #fffdfc;
+  --surface-soft: #f1e5d3;
+  --surface-muted: #e9ded0;
 
-  /* Brand darks */
-  --walnut: #2b1a12;           /* Dark Walnut - main brand color */
-  --espresso: #1a100c;         /* Espresso - darkest sections */
-  --charcoal: #302823;         /* Charcoal Brown - body text */
-  --taupe: #70645b;            /* Warm Taupe - muted text */
+  --walnut: #2b1a12;
+  --espresso: #1a100c;
+  --charcoal: #302823;
+  --taupe: #70645b;
 
-  /* Accents */
-  --copper: #b86632;           /* Burnt Copper - primary actions */
-  --copper-dark: #954a24;      /* Dark Copper - hover state */
-  --oak: #c8945f;              /* Natural Oak - highlights */
-  --gold: #d7a05d;             /* Warm Gold - special highlights */
+  --copper: #b86632;
+  --copper-dark: #954a24;
+  --oak: #c8945f;
+  --gold: #d7a05d;
 
-  /* Borders */
-  --line: #e3d4c3;             /* Light Wood Border */
+  --line: #e3d4c3;
 
-  /* WhatsApp & success (restricted use) */
   --whatsapp: #198754;
   --whatsapp-dark: #146c43;
   --success-bg: #e8f5ec;
 
-  /* Errors */
   --error: #b42318;
   --error-bg: #fdecec;
 }
-
-/* ==========================================
-   BASE STYLES
-   ========================================== */
 
 * {
   border-color: var(--line);
@@ -65,10 +88,6 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
 }
 
-/* ==========================================
-   FOCUS STATES (Accessibility)
-   ========================================== */
-
 :focus-visible {
   outline: 2px solid var(--copper);
   outline-offset: 3px;
@@ -79,7 +98,6 @@ h1, h2, h3, h4, h5, h6 {
    REUSABLE COMPONENTS
    ========================================== */
 
-/* Buttons */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -95,6 +113,7 @@ h1, h2, h3, h4, h5, h6 {
   transition: all 0.2s ease;
   border: 1px solid var(--copper);
   cursor: pointer;
+  text-decoration: none;
 }
 
 .btn-primary:hover {
@@ -124,6 +143,7 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid var(--walnut);
   transition: all 0.2s ease;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .btn-secondary:hover {
@@ -144,13 +164,13 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.875rem;
   transition: background-color 0.2s ease;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .btn-whatsapp:hover {
   background-color: var(--whatsapp-dark);
 }
 
-/* Cards */
 .card-soft {
   background-color: var(--surface);
   border: 1px solid var(--line);
@@ -164,7 +184,6 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-2px);
 }
 
-/* Status badges */
 .status-active {
   background: rgba(184, 102, 50, 0.12);
   color: var(--copper-dark);
@@ -205,7 +224,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
 }
 
-/* Utility classes */
 .text-muted {
   color: var(--taupe);
 }
@@ -217,5 +235,25 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 768px) {
   .section-padding {
     padding: 3rem 1rem;
+  }
+}
+
+/* ==========================================
+   PRINT STYLES (for quotation printing)
+   ========================================== */
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #quotation-print-area,
+  #quotation-print-area * {
+    visibility: visible;
+  }
+  #quotation-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
   }
 }
