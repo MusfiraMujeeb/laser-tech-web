@@ -1,108 +1,221 @@
 @import "tailwindcss";
 
+/* ==========================================
+   LASER TECH DESIGN SYSTEM
+   Walnut + Copper + Ivory palette
+   ========================================== */
+
 :root {
   /* Backgrounds */
-  --bg: #f8f6f2;
-  --surface: #ffffff;
-  --surface-soft: #f3ede3;
-  --surface-muted: #f1ece4;
+  --bg: #fbf8f2;              /* Ivory Cream - main page background */
+  --surface: #fffdfc;          /* Soft White - cards, forms */
+  --surface-soft: #f1e5d3;     /* Warm Sand - secondary sections */
+  --surface-muted: #e9ded0;    /* Muted Beige - subtle backgrounds */
 
-  /* Brand */
-  --forest: #26322e;
-  --forest-2: #33423d;
-  --brass: #c7923b;
-  --brass-2: #b9822d;
+  /* Brand darks */
+  --walnut: #2b1a12;           /* Dark Walnut - main brand color */
+  --espresso: #1a100c;         /* Espresso - darkest sections */
+  --charcoal: #302823;         /* Charcoal Brown - body text */
+  --taupe: #70645b;            /* Warm Taupe - muted text */
 
-  /* Supporting */
-  --sand: #efe4d2;
-  --sage: #b2b9a6;
-  --rose: #d9b7ae;
-  --line: #e4d7c4;
+  /* Accents */
+  --copper: #b86632;           /* Burnt Copper - primary actions */
+  --copper-dark: #954a24;      /* Dark Copper - hover state */
+  --oak: #c8945f;              /* Natural Oak - highlights */
+  --gold: #d7a05d;             /* Warm Gold - special highlights */
 
-  /* Text */
-  --text: #26322e;
-  --text-soft: #66706c;
+  /* Borders */
+  --line: #e3d4c3;             /* Light Wood Border */
+
+  /* WhatsApp & success (restricted use) */
+  --whatsapp: #198754;
+  --whatsapp-dark: #146c43;
+  --success-bg: #e8f5ec;
+
+  /* Errors */
+  --error: #b42318;
+  --error-bg: #fdecec;
+}
+
+/* ==========================================
+   BASE STYLES
+   ========================================== */
+
+* {
+  border-color: var(--line);
 }
 
 html {
   scroll-behavior: smooth;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--charcoal);
+  font-family: var(--font-body), system-ui, sans-serif;
+  line-height: 1.6;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), Georgia, serif;
+  color: var(--walnut);
+  font-weight: 600;
+  line-height: 1.2;
 }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
-}
+/* ==========================================
+   FOCUS STATES (Accessibility)
+   ========================================== */
 
 :focus-visible {
-  outline: 2px solid var(--brass);
+  outline: 2px solid var(--copper);
   outline-offset: 3px;
+  border-radius: 4px;
 }
 
-::selection {
-  background: rgba(199, 146, 59, 0.2);
+/* ==========================================
+   REUSABLE COMPONENTS
+   ========================================== */
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--copper);
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+  transition: all 0.2s ease;
+  border: 1px solid var(--copper);
+  cursor: pointer;
 }
 
-/* Reusable UI helpers */
+.btn-primary:hover {
+  background-color: var(--copper-dark);
+  border-color: var(--copper-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(184, 102, 50, 0.25);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--surface);
+  color: var(--walnut);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 1px solid var(--walnut);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: var(--walnut);
+  color: #ffffff;
+}
+
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--whatsapp);
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-whatsapp:hover {
+  background-color: var(--whatsapp-dark);
+}
+
+/* Cards */
 .card-soft {
-  background: var(--surface);
+  background-color: var(--surface);
   border: 1px solid var(--line);
-  box-shadow: 0 8px 24px rgba(38, 50, 46, 0.06);
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(43, 26, 18, 0.05);
+  transition: all 0.25s ease;
 }
 
-.btn-dark {
-  background: var(--forest);
-  color: #ffffff;
-}
-.btn-dark:hover {
-  background: var(--forest-2);
-  color: #ffffff;
+.card-soft:hover {
+  box-shadow: 0 12px 32px rgba(43, 26, 18, 0.08);
+  transform: translateY(-2px);
 }
 
-.btn-gold {
-  background: var(--brass);
-  color: #ffffff;
-}
-.btn-gold:hover {
-  background: var(--brass-2);
-  color: #ffffff;
-}
-
-.btn-soft {
-  background: var(--surface-muted);
-  color: var(--forest);
-  border: 1px solid var(--line);
-}
-.btn-soft:hover {
-  background: var(--sand);
+/* Status badges */
+.status-active {
+  background: rgba(184, 102, 50, 0.12);
+  color: var(--copper-dark);
+  border: 1px solid rgba(184, 102, 50, 0.3);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
-.pastel-pill {
-  background: var(--surface-muted);
-  color: var(--forest);
-  border: 1px solid var(--line);
+.status-pending {
+  background: var(--surface-soft);
+  color: var(--walnut);
+  border: 1px solid var(--gold);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
+.status-success {
+  background: var(--success-bg);
+  color: var(--whatsapp-dark);
+  border: 1px solid rgba(25, 135, 84, 0.25);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-error {
+  background: var(--error-bg);
+  color: var(--error);
+  border: 1px solid rgba(180, 35, 24, 0.25);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Utility classes */
 .text-muted {
-  color: var(--text-soft);
+  color: var(--taupe);
+}
+
+.section-padding {
+  padding: 5rem 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 3rem 1rem;
+  }
 }

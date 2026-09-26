@@ -12,82 +12,178 @@ export function generateStaticParams() {
   return productItems.map((product) => ({ slug: product.slug }));
 }
 
-export default function ProductDetailPage({ params }: { params: { slug: string } }) {
-  const product = productItems.find((item) => item.slug === params.slug);
+export default async function ProductDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const product = productItems.find((item) => item.slug === slug);
   if (!product) notFound();
 
   const relatedProducts = productItems
-    .filter((item) => item.category === product.category && item.slug !== product.slug)
+    .filter(
+      (item) => item.category === product.category && item.slug !== product.slug
+    )
     .slice(0, 3);
 
   const sale = discountedPrice(product.priceLkr, product.discountPercent);
 
+  // WhatsApp number placeholder — replace with confirmed number when available
+  const whatsappNumber = "94757991141";
+  const whatsappMessage = encodeURIComponent(
+    `Hi Laser Tech, I'm interested in: ${product.title}`
+  );
+  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+
   return (
-    <div className="min-h-screen bg-[#F8F6F2] text-[#26322E] px-4 py-12">
+    <div className="min-h-screen bg-ivory text-charcoal px-4 py-12">
       <div className="max-w-6xl mx-auto space-y-10">
-        <Link href="/products" className="text-sm font-bold text-[#7C5A28] hover:text-[#C7923B]">
+        {/* Breadcrumb */}
+        <Link
+          href="/products"
+          className="inline-flex items-center gap-2 text-sm font-bold text-taupe hover:text-copper transition"
+        >
           ← Back to catalog
         </Link>
 
+        {/* Product Detail */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-          <div className="relative aspect-square bg-white rounded-3xl border border-[#E4D7C4] overflow-hidden shadow-sm">
-            <Image src={product.image} alt={product.title} fill className="object-cover" priority />
+          {/* Product Image */}
+          <div className="relative aspect-square bg-sand rounded-3xl border border-wood-border overflow-hidden shadow-soft">
+            <Image
+              src={product.image}
+              alt={product.title}
+              fill
+              className="object-cover"
+              priority
+            />
+            {product.featured && (
+              <span className="absolute top-4 left-4 px-3 py-1.5 rounded-md text-[10px] font-black uppercase bg-walnut text-white">
+                Featured
+              </span>
+            )}
+            {product.discountPercent > 0 && (
+              <span className="absolute top-4 right-4 px-3 py-1.5 rounded-md text-[10px] font-black uppercase bg-copper text-white">
+                {product.discountPercent}% Off
+              </span>
+            )}
           </div>
 
+          {/* Product Info */}
           <div className="space-y-5">
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C7923B]">
+            <p className="text-xs font-bold uppercase tracking-widest text-oak">
               {product.category} / {product.subcategory}
             </p>
-            <h1 className="text-3xl md:text-5xl font-black">{product.title}</h1>
-            <p className="text-base leading-relaxed text-[#66706C]">{product.description}</p>
 
-            <div className="bg-white border border-[#E4D7C4] rounded-2xl p-4 space-y-2">
-              <p className="text-sm"><span className="font-bold">Material:</span> {product.material}</p>
+            <h1 className="font-heading text-4xl md:text-5xl font-semibold text-walnut leading-tight">
+              {product.title}
+            </h1>
+
+            <p className="text-base leading-relaxed text-taupe">
+              {product.description}
+            </p>
+
+            {/* Details Card */}
+            <div className="bg-surface border border-wood-border rounded-2xl p-5 space-y-3">
               <p className="text-sm">
-                <span className="font-bold">Price:</span>{" "}
+                <span className="font-bold text-walnut">Material:</span>{" "}
+                <span className="text-taupe">{product.material}</span>
+              </p>
+              <p className="text-sm">
+                <span className="font-bold text-walnut">Price:</span>{" "}
                 {product.discountPercent > 0 ? (
                   <>
-                    <span className="font-bold text-[#26322E]">LKR {sale.toLocaleString()}</span>{" "}
-                    <span className="line-through text-[#999] text-xs ml-2">
+                    <span className="font-bold text-copper text-base">
+                      LKR {sale.toLocaleString()}
+                    </span>{" "}
+                    <span className="line-through text-taupe text-xs ml-2">
                       LKR {product.priceLkr.toLocaleString()}
                     </span>
                   </>
                 ) : (
-                  <span className="font-bold text-[#C7923B]">LKR {product.priceLkr.toLocaleString()}</span>
+                  <span className="font-bold text-copper text-base">
+                    LKR {product.priceLkr.toLocaleString()}
+                  </span>
                 )}
               </p>
               <p className="text-sm">
-                <span className="font-bold">Availability:</span>{" "}
-                <span className={product.available ? "text-emerald-700 font-bold" : "text-rose-700 font-bold"}>
+                <span className="font-bold text-walnut">Availability:</span>{" "}
+                <span
+                  className={
+                    product.available
+                      ? "text-whatsapp-dark font-bold"
+                      : "text-error font-bold"
+                  }
+                >
                   {product.available ? "Available" : "Unavailable"}
                 </span>
               </p>
             </div>
 
+            {/* Actions */}
             <div className="flex gap-4 flex-wrap pt-3">
-              <Link href={`/quote?product=${product.slug}`} className="px-6 py-4 rounded-xl bg-[#26322E] text-white text-xs font-black uppercase">
+              <Link
+                href={`/quote?product=${product.slug}`}
+                className="btn-primary"
+              >
                 Request Quote
               </Link>
-              <a href="https://wa.me/94776632244" target="_blank" rel="noreferrer" className="px-6 py-4 rounded-xl bg-[#C7923B] text-white text-xs font-black uppercase">
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-whatsapp"
+              >
                 WhatsApp Us
               </a>
             </div>
+
+            {/* Trust note */}
+            <p className="text-xs text-taupe pt-2">
+              Every custom request is reviewed by our team before production.
+            </p>
           </div>
         </section>
 
+        {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <section className="space-y-4">
-            <h2 className="text-2xl font-black">Related Products</h2>
+          <section className="space-y-6 pt-8 border-t border-wood-border">
+            <h2 className="font-heading text-3xl font-semibold text-walnut">
+              Related Products
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {relatedProducts.map((item) => (
-                <Link key={item.id} href={`/products/${item.slug}`} className="bg-white border border-[#E4D7C4] rounded-2xl p-4 shadow-sm">
-                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-3">
-                    <Image src={item.image} alt={item.title} fill className="object-cover" />
-                  </div>
-                  <h3 className="font-black">{item.title}</h3>
-                  <p className="text-sm text-[#66706C]">{item.subcategory}</p>
-                </Link>
-              ))}
+              {relatedProducts.map((item) => {
+                const itemSale = discountedPrice(
+                  item.priceLkr,
+                  item.discountPercent
+                );
+                return (
+                  <Link
+                    key={item.id}
+                    href={`/products/${item.slug}`}
+                    className="card-soft p-4 block"
+                  >
+                    <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-sand">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <h3 className="font-heading text-lg font-semibold text-walnut leading-tight">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm text-taupe mt-1">
+                      {item.subcategory}
+                    </p>
+                    <p className="text-sm font-bold text-copper mt-2">
+                      LKR {itemSale.toLocaleString()}
+                    </p>
+                  </Link>
+                );
+              })}
             </div>
           </section>
         )}

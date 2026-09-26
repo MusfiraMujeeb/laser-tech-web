@@ -1,48 +1,56 @@
-﻿import "./globals.css";
-import type { Metadata, Viewport } from "next";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+﻿import type { Metadata } from "next";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
+import "./globals.css";
+
+const headingFont = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
+const bodyFont = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://laser-tech-mw.vercel.app"),
   title: {
-    default: "Laser Tech | Precision Manufacturing & Custom Products",
+    default: "Laser Tech | Precision Laser Cutting & Engraving in Sri Lanka",
     template: "%s | Laser Tech",
   },
   description:
-    "Laser Tech provides CNC routing, laser cutting, engraving, signage, awards, gifts, and custom fabrication in Sri Lanka.",
+    "Laser Tech is a Sri Lankan precision manufacturing company specializing in laser cutting, engraving, CNC routing, laser marking, and custom production. Based in Mawanella, serving customers island-wide.",
+  metadataBase: new URL("https://lasertech.lk"),
+  keywords: [
+    "laser cutting Sri Lanka",
+    "laser engraving Mawanella",
+    "CNC routing Sri Lanka",
+    "custom signage Sri Lanka",
+    "personalized gifts Sri Lanka",
+    "laser marking services",
+  ],
   openGraph: {
-    title: "Laser Tech | Precision Manufacturing & Custom Products",
+    title: "Laser Tech | Precision Laser Cutting & Engraving",
     description:
-      "CNC routing, laser cutting, engraving, signage, awards, gifts, and custom fabrication in Sri Lanka.",
-    url: "https://laser-tech-mw.vercel.app",
-    siteName: "Laser Tech",
+      "Custom laser cutting, engraving, CNC routing, and signage in Sri Lanka. The Art of Engraving, Uniquely Yours.",
     type: "website",
-    locale: "en_US",
+    locale: "en_LK",
+    siteName: "Laser Tech",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Laser Tech | Precision Manufacturing & Custom Products",
-    description:
-      "CNC routing, laser cutting, engraving, signage, awards, gifts, and custom fabrication in Sri Lanka.",
-  },
-};
-
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en">
-      <body className="min-h-screen flex flex-col antialiased bg-[#F8F6F2] text-[#26322E]">
-        <div className="w-full h-1 bg-[#C7923B]" />
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
+    <html lang="en" className={`${headingFont.variable} ${bodyFont.variable}`}>
+      <body className="font-body bg-ivory text-charcoal antialiased">
+        {children}
       </body>
     </html>
   );
