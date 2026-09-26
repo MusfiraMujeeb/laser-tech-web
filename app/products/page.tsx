@@ -95,51 +95,7 @@ export default async function ProductsPage({
           </p>
         </section>
 
-        {/* Active Offers Banner */}
-        {activeOffers.length > 0 && (
-          <section className="space-y-3">
-            {activeOffers.map((offer: any) => (
-              <div
-                key={offer._id.toString()}
-                className="rounded-2xl bg-copper text-white p-5 flex flex-wrap items-center justify-between gap-3 shadow-soft"
-              >
-                <div className="flex items-center gap-4">
-                  <span className="text-3xl">🎉</span>
-                  <div>
-                    <p className="font-heading text-xl font-semibold">
-                      {offer.name}
-                    </p>
-                    <p className="text-sm text-white/90">
-                      {offer.type === "percentage" &&
-                        `Save ${offer.value}%${
-                          offer.scope === "category"
-                            ? ` on ${offer.targetCategory}`
-                            : offer.scope === "all"
-                            ? " on all products"
-                            : ""
-                        }`}
-                      {offer.type === "fixed" &&
-                        `Save LKR ${offer.value.toLocaleString()}`}
-                      {offer.type === "free-delivery" && "Free delivery"}
-                      {offer.minOrderValue > 0 &&
-                        ` · Min order LKR ${offer.minOrderValue.toLocaleString()}`}
-                    </p>
-                  </div>
-                </div>
-                {offer.code && (
-                  <div className="bg-espresso px-4 py-2 rounded-lg">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-oak">
-                      Use Code
-                    </p>
-                    <p className="font-mono font-bold text-white text-sm">
-                      {offer.code}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </section>
-        )}
+        
 
         {/* Category Filters */}
         <section className="flex flex-wrap gap-2">

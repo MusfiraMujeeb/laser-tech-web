@@ -2,10 +2,8 @@
 import Image from "next/image";
 import { connectMongo } from "@/lib/mongodb";
 import { Offer } from "@/models/Offer";
+import { Product } from "@/models/Product";
 
-// ==========================================
-// HELPER — fetch active offers
-// ==========================================
 async function getActiveOffers() {
   try {
     await connectMongo();
@@ -23,236 +21,320 @@ async function getActiveOffers() {
   }
 }
 
-const highlights = [
-  { label: "Laser Cutting", icon: "✦" },
-  { label: "Laser Engraving", icon: "✦" },
-  { label: "CNC Routing", icon: "✦" },
-  { label: "Fiber Laser Marking", icon: "✦" },
-  { label: "Signage & Name Boards", icon: "✦" },
-  { label: "Custom Gifts", icon: "✦" },
+async function getFeaturedProducts() {
+  try {
+    await connectMongo();
+    const products = await Product.find({ available: true })
+      .sort({ featured: -1, createdAt: -1 })
+      .limit(8)
+      .lean();
+    return products;
+  } catch {
+    return [];
+  }
+}
+
+const services = [
+  {
+    label: "Laser Cutting",
+    description: "Precision cutting for acrylic, MDF, plywood, and wood.",
+  },
+  {
+    label: "Laser Engraving",
+    description: "Detailed engraving on wood, leather, acrylic, and gifts.",
+  },
+  {
+    label: "CNC Routing",
+    description: "Custom carving, shaping, and machining for large formats.",
+  },
+  {
+    label: "Fiber Laser Marking",
+    description: "Permanent marking on metals — logos, serials, QR codes.",
+  },
+  {
+    label: "Signage",
+    description: "Illuminated and non-illuminated signage for businesses.",
+  },
+  {
+    label: "Custom Production",
+    description: "Bespoke manufacturing for individuals, events, corporates.",
+  },
 ];
 
-const journeyCards = [
-  {
-    title: "Shop Products",
-    description:
-      "Browse our ready-made collection of awards, keychains, notebooks, clocks, and personalized gifts.",
-    cta: "Browse Products",
-    href: "/products",
-    accent: "copper",
-  },
-  {
-    title: "Request Custom Work",
-    description:
-      "Send us your design, text, dimensions, and material preference. We review every custom request before production.",
-    cta: "Start a Custom Order",
-    href: "/quote",
-    accent: "walnut",
-  },
-  {
-    title: "Bulk & Corporate Orders",
-    description:
-      "Corporate gifts, event products, awards, signage, and industrial components — priced by quantity and specification.",
-    cta: "Request a Bulk Quote",
-    href: "/quote",
-    accent: "oak",
-  },
-];
-
-// ==========================================
-// HOME PAGE — must be async
-// ==========================================
 export default async function Home() {
-  const activeOffers = await getActiveOffers();
+  const [activeOffers, featuredProducts] = await Promise.all([
+    getActiveOffers(),
+    getFeaturedProducts(),
+  ]);
 
   const whatsappNumber = "94757991141";
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     "Hi Laser Tech, I'd like to know more about your services."
   )}`;
 
+  const primaryOffer = activeOffers[0] as any;
+
   return (
-    <div className="bg-ivory min-h-screen">
+    <div className="bg-ivory">
       {/* ============================================
-          ACTIVE OFFERS BANNER
+          OFFER ANNOUNCEMENT
       ============================================ */}
-      {activeOffers.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-          <div className="space-y-3">
-            {activeOffers.map((offer: any) => (
-              <div
-                key={offer._id.toString()}
-                className="rounded-2xl bg-copper text-white p-5 flex flex-wrap items-center justify-between gap-3 shadow-soft"
+      {primaryOffer && (
+        <div className="border-b border-wood-border/60 bg-ivory">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-center gap-3 text-center">
+            <span className="w-1.5 h-1.5 rounded-full bg-copper animate-pulse-dot" />
+            <p className="text-xs sm:text-sm text-taupe tracking-wide">
+              <span className="font-semibold text-walnut">
+                {primaryOffer.type === "percentage" &&
+                  `${primaryOffer.value}% off`}
+                {primaryOffer.type === "fixed" &&
+                  `LKR ${primaryOffer.value.toLocaleString()} off`}
+                {primaryOffer.type === "free-delivery" && `Free delivery`}
+              </span>
+              {primaryOffer.code && (
+                <>
+                  {" — use code "}
+                  <span className="font-mono font-semibold text-copper">
+                    {primaryOffer.code}
+                  </span>
+                </>
+              )}
+              {" · "}
+              <Link
+                href="/products"
+                className="underline underline-offset-4 decoration-copper/40 hover:decoration-copper text-walnut"
               >
-                <div className="flex items-center gap-4">
-                  <span className="text-3xl">🎉</span>
-                  <div>
-                    <p className="font-heading text-xl font-semibold">
-                      {offer.name}
+                Shop now
+              </Link>
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================
+          HERO — SHOWROOM BACKGROUND
+      ============================================ */}
+      <section className="relative min-h-[85vh] lg:min-h-screen w-full overflow-hidden">
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/products/lasertech-showroom.png"
+            alt="Laser Tech showroom in Mawanella"
+            fill
+            className="object-cover "
+            priority
+          />
+        </div>
+
+        {/* Dark gradient — darker on left, subtle on right */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(26, 16, 12, 0.90) 0%, rgba(26, 16, 12, 0.85) 25%, rgba(26, 16, 12, 0.80) 50%, rgba(26, 16, 12, 0.62) 75%, rgba(26, 16, 12, 0.55) 100%)",
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative z-10 min-h-[85vh] lg:min-h-screen max-w-7xl mx-auto px-6 lg:px-12 py-20 flex flex-col justify-center">
+          <div className="max-w-3xl space-y-6">
+            <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-oak">
+              Mawanella · Sri Lanka · Since 2019
+            </p>
+
+            <h1 className="font-heading text-6xl md:text-7xl lg:text-[7rem] xl:text-[8rem] leading-[0.95] tracking-tight text-beige font-medium">
+              The Art of
+              <br />
+              <span className="italic text-oak">Engraving.</span>
+            </h1>
+
+            <p className="text-base lg:text-lg text-sand/85 max-w-lg leading-relaxed pt-4">
+              Laser cutting, engraving, CNC routing, and custom production for
+              individuals, businesses, and industrial clients across Sri Lanka.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              <Link
+                href="/products"
+                className="inline-flex items-center gap-3 bg-oak text-walnut px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-surface transition-colors"
+              >
+                Explore Products
+                <span aria-hidden="true">→</span>
+              </Link>
+              <Link
+                href="/quote"
+                className="inline-flex items-center gap-3 border border-sand/40 text-surface px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-surface hover:text-walnut transition-colors"
+              >
+                Request a Quote
+              </Link>
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Chat on WhatsApp"
+                className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-whatsapp text-white hover:bg-whatsapp-dark transition-all hover:scale-105"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================
+          FEATURED PRODUCTS
+      ============================================ */}
+      {featuredProducts.length > 0 && (
+        <section className="py-24 lg:py-32 bg-ivory">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
+              <div className="space-y-4">
+                <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-copper">
+                  Our Craft
+                </p>
+                <h2 className="font-heading text-5xl lg:text-6xl font-medium text-walnut leading-[1.05] tracking-tight">
+                  Made by hand.
+                  <br />
+                  <span className="italic text-copper">Built to last.</span>
+                </h2>
+              </div>
+              <Link
+                href="/products"
+                className="inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-walnut hover:text-copper transition-colors shrink-0"
+              >
+                View All Products
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+              {featuredProducts.slice(0, 8).map((product: any) => (
+                <Link
+                  key={product._id.toString()}
+                  href={`/products/${product.slug}`}
+                  className="group block"
+                >
+                  <div className="relative aspect-square overflow-hidden rounded-xl bg-sand">
+                    <Image
+                      src={product.image}
+                      alt={product.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    {product.discountPercent > 0 && (
+                      <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-black uppercase bg-copper text-white">
+                        {product.discountPercent}% Off
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-4 space-y-1">
+                    <p className="text-[10px] uppercase tracking-widest text-oak font-bold">
+                      {product.category}
                     </p>
-                    <p className="text-sm text-white/90">
-                      {offer.type === "percentage" &&
-                        `Save ${offer.value}%${
-                          offer.scope === "category"
-                            ? ` on ${offer.targetCategory}`
-                            : offer.scope === "all"
-                            ? " on all products"
-                            : ""
-                        }`}
-                      {offer.type === "fixed" &&
-                        `Save LKR ${offer.value.toLocaleString()}`}
-                      {offer.type === "free-delivery" && "Free delivery"}
-                      {offer.minOrderValue > 0 &&
-                        ` · Min order LKR ${offer.minOrderValue.toLocaleString()}`}
+                    <h3 className="font-heading text-lg font-medium text-walnut leading-tight group-hover:text-copper transition-colors">
+                      {product.title}
+                    </h3>
+                    <p className="text-sm font-bold text-copper">
+                      {product.priceLkr > 0
+                        ? `LKR ${product.priceLkr.toLocaleString()}`
+                        : "Request a Quote"}
                     </p>
                   </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  {offer.code && (
-                    <div className="bg-espresso px-4 py-2 rounded-lg">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-oak">
-                        Code
-                      </p>
-                      <p className="font-mono font-bold text-white text-sm">
-                        {offer.code}
-                      </p>
-                    </div>
-                  )}
-                  <Link
-                    href="/products"
-                    className="bg-espresso text-white px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-walnut transition"
-                  >
-                    Shop Now
-                  </Link>
-                </div>
-              </div>
-            ))}
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
       )}
 
       {/* ============================================
-          HERO
+          SERVICES
       ============================================ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div className="space-y-7">
-          <span className="inline-block px-3 py-1.5 text-[10px] font-black uppercase bg-walnut text-white rounded-md tracking-widest">
-            Mawanella, Sri Lanka
-          </span>
-
-          <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] text-walnut">
-            The Art of Engraving,
-            <span className="block italic text-copper">Uniquely Yours.</span>
-          </h1>
-
-          <p className="text-taupe text-lg leading-relaxed max-w-lg">
-            Laser cutting, engraving, CNC routing, laser marking, fiber laser
-            services, and custom production for individuals, businesses,
-            organizations, and industrial clients across Sri Lanka.
-          </p>
-
-          <div className="flex flex-wrap gap-4 pt-2">
-            <Link href="/products" className="btn-primary">
-              Shop Products
-            </Link>
-            <Link href="/quote" className="btn-secondary">
-              Request a Quote
-            </Link>
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noreferrer"
-              className="btn-whatsapp"
-            >
-              Chat on WhatsApp
-            </a>
-          </div>
-        </div>
-
-        <div className="card-soft overflow-hidden">
-          <div className="relative aspect-[16/11] bg-sand">
-            <Image
-              src="/products/planet-fitness-board.jpg"
-              alt="Laser Tech custom illuminated signage"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-          <div className="p-6">
-            <p className="text-[10px] font-black uppercase tracking-widest text-oak">
-              Featured Work
+      <section className="py-24 lg:py-32 bg-sand">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="max-w-3xl space-y-5 mb-20">
+            <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-copper">
+              What We Do
             </p>
-            <h3 className="font-heading text-2xl font-semibold text-walnut mt-2">
-              Custom Signage &amp; Fabrication
-            </h3>
-            <p className="text-sm text-taupe mt-2 leading-relaxed">
-              Illuminated signs, corporate boards, and custom fabrication
-              produced at our Mawanella workshop.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================
-          SERVICES STRIP
-      ============================================ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          {highlights.map((service) => (
-            <div
-              key={service.label}
-              className="bg-surface border border-wood-border rounded-xl px-4 py-4 text-center transition hover:border-copper hover:-translate-y-0.5"
-            >
-              <span className="block text-copper text-lg mb-1">
-                {service.icon}
-              </span>
-              <span className="text-xs font-bold text-walnut leading-tight">
-                {service.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ============================================
-          JOURNEY CARDS
-      ============================================ */}
-      <section className="bg-sand py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 space-y-3">
-            <span className="text-xs font-black uppercase tracking-widest text-copper">
-              How We Work
-            </span>
-            <h2 className="font-heading text-4xl md:text-5xl font-semibold text-walnut">
-              Three ways to work with us
+            <h2 className="font-heading text-5xl lg:text-6xl font-medium text-walnut leading-[1.05] tracking-tight">
+              Six disciplines.
+              <br />
+              One workshop.
             </h2>
-            <p className="text-taupe max-w-2xl mx-auto">
-              Whether you need a ready-made product, a one-off custom piece, or
-              a bulk production run — we have a workflow for it.
-            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {journeyCards.map((card) => (
-              <div key={card.title} className="card-soft p-7 flex flex-col">
-                <div
-                  className={`w-12 h-1 rounded-full mb-5 ${
-                    card.accent === "copper"
-                      ? "bg-copper"
-                      : card.accent === "walnut"
-                      ? "bg-walnut"
-                      : "bg-oak"
-                  }`}
-                />
-                <h3 className="font-heading text-2xl font-semibold text-walnut mb-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12">
+            {services.map((service, idx) => (
+              <div key={service.label} className="space-y-3 border-t border-walnut/15 pt-6">
+                <span className="font-heading text-xl text-copper">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
+                <h3 className="font-heading text-2xl font-medium text-walnut">
+                  {service.label}
+                </h3>
+                <p className="text-sm text-taupe leading-relaxed">
+                  {service.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================
+          THREE WAYS — DARK SECTION
+      ============================================ */}
+      <section className="py-24 lg:py-32 bg-walnut text-ivory">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="max-w-3xl space-y-5 mb-20">
+            <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-oak">
+              How We Work
+            </p>
+            <h2 className="font-heading text-5xl lg:text-6xl font-medium text-surface leading-[1.05] tracking-tight">
+              Three ways to{" "}
+              <span className="italic text-oak">work with us.</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
+            {[
+              {
+                num: "01",
+                title: "Shop Ready-Made",
+                desc: "Browse our collection of awards, keychains, notebooks, and gifts — ready to ship.",
+                cta: "Browse Products",
+                href: "/products",
+              },
+              {
+                num: "02",
+                title: "Custom Orders",
+                desc: "Send us your design, text, or reference. We review every request before production.",
+                cta: "Start a Custom Order",
+                href: "/quote",
+              },
+              {
+                num: "03",
+                title: "Bulk & Corporate",
+                desc: "Corporate gifts, event products, signage, and industrial work — priced by specification.",
+                cta: "Request a Bulk Quote",
+                href: "/quote",
+              },
+            ].map((card) => (
+              <div key={card.num} className="border-t border-sand/25 pt-8 space-y-5">
+                <span className="font-heading text-4xl text-oak">
+                  {card.num}
+                </span>
+                <h3 className="font-heading text-3xl font-medium text-surface">
                   {card.title}
                 </h3>
-                <p className="text-sm text-taupe leading-relaxed mb-6 flex-1">
-                  {card.description}
+                <p className="text-base text-sand/70 leading-relaxed">
+                  {card.desc}
                 </p>
                 <Link
                   href={card.href}
-                  className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-copper hover:text-copper-dark transition"
+                  className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-oak hover:text-copper transition pt-2"
                 >
                   {card.cta}
                   <span aria-hidden="true">→</span>
@@ -266,98 +348,96 @@ export default async function Home() {
       {/* ============================================
           ABOUT
       ============================================ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-5">
-            <span className="text-xs font-black uppercase tracking-widest text-copper">
-              About Laser Tech
-            </span>
-            <h2 className="font-heading text-4xl md:text-5xl font-semibold text-walnut leading-tight">
-              A Sri Lankan workshop built on precision, care, and craft.
-            </h2>
-            <p className="text-taupe leading-relaxed">
-              Founded in 2019 in Mawanella, Laser Tech has grown into a
-              full-service precision manufacturing company serving individuals,
-              businesses, organizations, and industrial clients across Sri
-              Lanka.
-            </p>
-            <p className="text-taupe leading-relaxed">
-              From personalized gifts and elegant signage to CNC routing, laser
-              marking, fiber laser services, and industrial components — we
-              combine modern technology with careful craftsmanship.
-            </p>
-
-            <div className="flex flex-wrap gap-2 pt-3">
-              {[
-                "Precision",
-                "Quality",
-                "Innovation",
-                "Reliability",
-                "Customer Satisfaction",
-              ].map((value) => (
-                <span
-                  key={value}
-                  className="px-3 py-1.5 rounded-full text-[11px] font-bold bg-ivory border border-wood-border text-walnut"
-                >
-                  {value}
-                </span>
-              ))}
-            </div>
-
-            <div className="pt-3">
-              <Link href="/about" className="btn-secondary">
-                Learn More About Us
-              </Link>
-            </div>
-          </div>
-
-          <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-wood-border shadow-soft bg-sand">
+      <section className="py-24 lg:py-32 bg-ivory">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+          <div className="lg:col-span-5 relative aspect-[4/5] rounded-2xl overflow-hidden bg-sand">
             <Image
-              src="/products/planet-fitness-board.jpg"
-              alt="Laser Tech workshop in Mawanella"
+              src="/products/lasertech-workshop.png"
+              alt="Laser Tech showroom interior"
               fill
               className="object-cover"
             />
+          </div>
+
+          <div className="lg:col-span-7 space-y-7">
+            <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-copper">
+              About Laser Tech
+            </p>
+            <h2 className="font-heading text-4xl lg:text-5xl font-medium text-walnut leading-[1.1] tracking-tight">
+              A Sri Lankan workshop built on precision, care, and craft.
+            </h2>
+            <p className="text-base lg:text-lg text-taupe leading-relaxed">
+              Founded in 2019 in Mawanella, Laser Tech has grown into a
+              full-service precision manufacturing company serving individuals,
+              businesses, and industrial clients across Sri Lanka.
+            </p>
+            <p className="text-base lg:text-lg text-taupe leading-relaxed">
+              From personalized gifts to elegant signage, CNC routing, and
+              fiber laser services — we combine modern technology with careful
+              craftsmanship.
+            </p>
+
+            <div className="flex flex-wrap gap-2 pt-4">
+              {["Precision", "Quality", "Innovation", "Reliability"].map(
+                (value) => (
+                  <span
+                    key={value}
+                    className="px-4 py-2 rounded-full text-xs font-semibold bg-sand border border-wood-border text-walnut tracking-wide"
+                  >
+                    {value}
+                  </span>
+                )
+              )}
+            </div>
+
+            <div className="pt-4">
+              <Link
+                href="/about"
+                className="inline-flex items-center gap-3 border border-walnut text-walnut px-6 py-3.5 rounded-lg font-bold text-xs uppercase tracking-wider hover:bg-walnut hover:text-surface transition-colors"
+              >
+                Learn More
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ============================================
-          CTA
+          FINAL CTA
       ============================================ */}
-      <section className="bg-walnut text-ivory py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          <span className="text-xs font-black uppercase tracking-widest text-oak">
-            Ready to Begin?
-          </span>
-          <h2 className="font-heading text-4xl md:text-5xl font-semibold text-surface leading-tight">
+      <section className="border-t border-wood-border/60 bg-sand">
+        <div className="max-w-3xl mx-auto px-6 lg:px-12 py-28 lg:py-36 text-center space-y-8">
+          <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-copper">
+            Ready to begin?
+          </p>
+          <h2 className="font-heading text-5xl lg:text-6xl font-medium text-walnut leading-[1.05] tracking-tight">
             Have an idea?
-            <span className="block italic text-oak">
-              Let&rsquo;s make it tangible.
+            <span className="block italic text-copper">
+              Let&rsquo;s make it real.
             </span>
           </h2>
-          <p className="text-sand/80 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base lg:text-lg text-taupe max-w-xl mx-auto leading-relaxed">
             Every custom request is reviewed by our team before production.
-            Send us your concept and we&rsquo;ll respond with a quotation.
+            Send us your concept — we&rsquo;ll respond with a quotation.
           </p>
-
-          <div className="flex flex-wrap gap-4 justify-center pt-4">
-            <Link href="/quote" className="btn-primary">
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+            <Link
+              href="/quote"
+              className="inline-flex items-center gap-3 bg-copper text-white px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-copper-dark transition-colors"
+            >
               Request a Quote
             </Link>
             <a
               href={whatsappLink}
               target="_blank"
               rel="noreferrer"
-              className="btn-whatsapp"
+              className="inline-flex items-center gap-3 border border-walnut text-walnut px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-walnut hover:text-surface transition-colors"
             >
               Chat on WhatsApp
             </a>
           </div>
-
-          <p className="text-xs text-sand/60 pt-4">
-            33/1 Kandy - Colombo Rd, Mawanella, Sri Lanka &nbsp;•&nbsp;
-            +94 75 799 1141
+          <p className="text-xs text-taupe pt-6 tracking-wide">
+            33/1 Kandy - Colombo Rd, Mawanella · +94 75 799 1141
           </p>
         </div>
       </section>

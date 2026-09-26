@@ -31,16 +31,12 @@ export const metadata: Metadata = {
     "custom signage Sri Lanka",
     "personalized gifts Sri Lanka",
     "laser marking services",
-    "wooden awards Sri Lanka",
-    "custom wall clocks",
-    "personalized notebooks",
-    "wedding frames Sri Lanka",
   ],
   authors: [{ name: "Laser Tech" }],
   openGraph: {
     title: "Laser Tech | Precision Laser Cutting & Engraving",
     description:
-      "Custom laser cutting, engraving, CNC routing, and signage in Sri Lanka. The Art of Engraving, Uniquely Yours.",
+      "Custom laser cutting, engraving, CNC routing, and signage in Sri Lanka.",
     type: "website",
     locale: "en_LK",
     siteName: "Laser Tech",
@@ -56,21 +52,15 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Laser Tech | Precision Laser Cutting & Engraving",
-    description:
-      "Custom laser cutting, engraving, and signage in Sri Lanka.",
+    description: "Custom laser cutting, engraving, and signage in Sri Lanka.",
     images: ["/products/planet-fitness-board.jpg"],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -87,21 +77,10 @@ export default function RootLayout({
       addressLocality: "Mawanella",
       addressCountry: "LK",
     },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: "7.2547",
-      longitude: "80.4483",
-    },
+    geo: { "@type": "GeoCoordinates", latitude: "7.2547", longitude: "80.4483" },
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ],
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
       opens: "09:00",
       closes: "18:00",
     },
