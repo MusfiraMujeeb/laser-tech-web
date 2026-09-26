@@ -359,6 +359,18 @@ export default function AdminDashboardPage() {
     Add new products, edit prices, upload images, and manage discounts.
   </p>
 </Link>
+<Link href="/admin/offers" className="card-soft p-6 block">
+  <p className="text-xs font-black uppercase tracking-widest text-copper mb-2">
+    Offers Manager
+  </p>
+  <h3 className="font-heading text-2xl font-semibold text-walnut mb-2">
+    Create discounts →
+  </h3>
+  <p className="text-sm text-taupe">
+    Create percentage discounts, coupon codes, and promotions.
+  </p>
+</Link>
+
             </section>
           </>
         )}

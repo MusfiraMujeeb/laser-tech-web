@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { connectMongo } from "@/lib/mongodb";
 import { Product, IProduct } from "@/models/Product";
+import { Offer } from "@/models/Offer";
 
 const categories = [
   "All",
@@ -31,18 +32,54 @@ export default async function ProductsPage({
   const selectedCategory = (params.category as Category) || "All";
 
   await connectMongo();
-  const allProducts = (await Product.find({})
-    .sort({ createdAt: -1 })
-    .lean()) as unknown as IProduct[];
+
+  const [allProducts, allOffers] = await Promise.all([
+    Product.find({}).sort({ createdAt: -1 }).lean() as Promise<IProduct[]>,
+    Offer.find({ active: true, endDate: { $gte: new Date() } }).lean(),
+  ]);
+
+  // Filter to only offers that have started
+  const activeOffers = allOffers.filter(
+    (o: any) => new Date(o.startDate) <= new Date()
+  );
 
   const filteredProducts =
     selectedCategory === "All"
       ? allProducts
       : allProducts.filter((item) => item.category === selectedCategory);
 
+  // Helper: find best matching offer for a product
+  const getOfferForProduct = (product: IProduct) => {
+    return activeOffers.find((o: any) => {
+      if (o.scope === "all") return true;
+      if (o.scope === "category") return o.targetCategory === product.category;
+      if (o.scope === "product") return o.targetSlug === product.slug;
+      return false;
+    });
+  };
+
+  // Compute total discount for a product (product discount + active offer)
+  const getCombinedDiscount = (product: IProduct) => {
+    let total = product.discountPercent || 0;
+    const offer = getOfferForProduct(product);
+    if (offer && offer.type === "percentage") {
+      total += offer.value;
+    }
+    return Math.min(total, 90); // cap at 90%
+  };
+
   return (
     <div className="min-h-screen bg-ivory text-charcoal px-4 py-12">
       <div className="max-w-7xl mx-auto space-y-10">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-xs font-bold text-taupe">
+          <Link href="/" className="hover:text-copper transition">
+            Home
+          </Link>
+          <span className="text-wood-border">/</span>
+          <span className="text-walnut">Products</span>
+        </nav>
+
         {/* Page Header */}
         <section className="space-y-4">
           <span className="text-xs font-bold uppercase tracking-widest text-copper">
@@ -57,6 +94,52 @@ export default async function ProductsPage({
             Mawanella workshop.
           </p>
         </section>
+
+        {/* Active Offers Banner */}
+        {activeOffers.length > 0 && (
+          <section className="space-y-3">
+            {activeOffers.map((offer: any) => (
+              <div
+                key={offer._id.toString()}
+                className="rounded-2xl bg-copper text-white p-5 flex flex-wrap items-center justify-between gap-3 shadow-soft"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="text-3xl">🎉</span>
+                  <div>
+                    <p className="font-heading text-xl font-semibold">
+                      {offer.name}
+                    </p>
+                    <p className="text-sm text-white/90">
+                      {offer.type === "percentage" &&
+                        `Save ${offer.value}%${
+                          offer.scope === "category"
+                            ? ` on ${offer.targetCategory}`
+                            : offer.scope === "all"
+                            ? " on all products"
+                            : ""
+                        }`}
+                      {offer.type === "fixed" &&
+                        `Save LKR ${offer.value.toLocaleString()}`}
+                      {offer.type === "free-delivery" && "Free delivery"}
+                      {offer.minOrderValue > 0 &&
+                        ` · Min order LKR ${offer.minOrderValue.toLocaleString()}`}
+                    </p>
+                  </div>
+                </div>
+                {offer.code && (
+                  <div className="bg-espresso px-4 py-2 rounded-lg">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-oak">
+                      Use Code
+                    </p>
+                    <p className="font-mono font-bold text-white text-sm">
+                      {offer.code}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </section>
+        )}
 
         {/* Category Filters */}
         <section className="flex flex-wrap gap-2">
@@ -100,11 +183,10 @@ export default async function ProductsPage({
         {/* Product Grid */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map((product) => {
-            const sale = discountedPrice(
-              product.priceLkr,
-              product.discountPercent
-            );
+            const totalDiscount = getCombinedDiscount(product);
+            const sale = discountedPrice(product.priceLkr, totalDiscount);
             const hasPrice = product.priceLkr > 0;
+            const hasOffer = totalDiscount > (product.discountPercent || 0);
 
             return (
               <article
@@ -123,9 +205,9 @@ export default async function ProductsPage({
                       Featured
                     </span>
                   )}
-                  {product.discountPercent > 0 && (
+                  {totalDiscount > 0 && (
                     <span className="absolute top-3 right-3 px-2 py-1 rounded-md text-[10px] font-black uppercase bg-copper text-white">
-                      {product.discountPercent}% Off
+                      {totalDiscount}% Off
                     </span>
                   )}
                   {product.type === "ready" && (
@@ -151,9 +233,15 @@ export default async function ProductsPage({
                     {product.description}
                   </p>
 
+                  {hasOffer && (
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-copper">
+                      🎉 Offer Applied
+                    </p>
+                  )}
+
                   <div className="text-sm font-bold">
                     {hasPrice ? (
-                      product.discountPercent > 0 ? (
+                      totalDiscount > 0 ? (
                         <div className="flex items-center gap-2">
                           <span className="text-copper text-base">
                             LKR {sale.toLocaleString()}

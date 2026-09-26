@@ -40,12 +40,20 @@ export default async function ProductDetailPage({
   return (
     <div className="min-h-screen bg-ivory text-charcoal px-4 py-12">
       <div className="max-w-6xl mx-auto space-y-10">
-        <Link
-          href="/products"
-          className="inline-flex items-center gap-2 text-sm font-bold text-taupe hover:text-copper transition"
-        >
-          ← Back to catalog
-        </Link>
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-xs font-bold text-taupe flex-wrap">
+          <Link href="/" className="hover:text-copper transition">
+            Home
+          </Link>
+          <span className="text-wood-border">/</span>
+          <Link href="/products" className="hover:text-copper transition">
+            Products
+          </Link>
+          <span className="text-wood-border">/</span>
+          <span className="text-walnut truncate max-w-[200px]">
+            {product.title}
+          </span>
+        </nav>
 
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           <div className="relative aspect-square bg-sand rounded-3xl border border-wood-border overflow-hidden shadow-soft">

@@ -1,5 +1,27 @@
 ﻿import Link from "next/link";
 import Image from "next/image";
+import { connectMongo } from "@/lib/mongodb";
+import { Offer } from "@/models/Offer";
+
+// ==========================================
+// HELPER — fetch active offers
+// ==========================================
+async function getActiveOffers() {
+  try {
+    await connectMongo();
+    const now = new Date();
+    const offers = await Offer.find({
+      active: true,
+      endDate: { $gte: now },
+      startDate: { $lte: now },
+    })
+      .sort({ createdAt: -1 })
+      .lean();
+    return offers;
+  } catch {
+    return [];
+  }
+}
 
 const highlights = [
   { label: "Laser Cutting", icon: "✦" },
@@ -37,7 +59,12 @@ const journeyCards = [
   },
 ];
 
-export default function Home() {
+// ==========================================
+// HOME PAGE — must be async
+// ==========================================
+export default async function Home() {
+  const activeOffers = await getActiveOffers();
+
   const whatsappNumber = "94757991141";
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     "Hi Laser Tech, I'd like to know more about your services."
@@ -46,19 +73,75 @@ export default function Home() {
   return (
     <div className="bg-ivory min-h-screen">
       {/* ============================================
-          HERO SECTION
+          ACTIVE OFFERS BANNER
+      ============================================ */}
+      {activeOffers.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+          <div className="space-y-3">
+            {activeOffers.map((offer: any) => (
+              <div
+                key={offer._id.toString()}
+                className="rounded-2xl bg-copper text-white p-5 flex flex-wrap items-center justify-between gap-3 shadow-soft"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="text-3xl">🎉</span>
+                  <div>
+                    <p className="font-heading text-xl font-semibold">
+                      {offer.name}
+                    </p>
+                    <p className="text-sm text-white/90">
+                      {offer.type === "percentage" &&
+                        `Save ${offer.value}%${
+                          offer.scope === "category"
+                            ? ` on ${offer.targetCategory}`
+                            : offer.scope === "all"
+                            ? " on all products"
+                            : ""
+                        }`}
+                      {offer.type === "fixed" &&
+                        `Save LKR ${offer.value.toLocaleString()}`}
+                      {offer.type === "free-delivery" && "Free delivery"}
+                      {offer.minOrderValue > 0 &&
+                        ` · Min order LKR ${offer.minOrderValue.toLocaleString()}`}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  {offer.code && (
+                    <div className="bg-espresso px-4 py-2 rounded-lg">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-oak">
+                        Code
+                      </p>
+                      <p className="font-mono font-bold text-white text-sm">
+                        {offer.code}
+                      </p>
+                    </div>
+                  )}
+                  <Link
+                    href="/products"
+                    className="bg-espresso text-white px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-walnut transition"
+                  >
+                    Shop Now
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ============================================
+          HERO
       ============================================ */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="space-y-7">
-          <span className="inline-block px-3 py-1.5 text-[10px] font-black uppercase bg-[#2B1A12] text-white rounded-md tracking-widest">
-  Mawanella, Sri Lanka
-</span>
+          <span className="inline-block px-3 py-1.5 text-[10px] font-black uppercase bg-walnut text-white rounded-md tracking-widest">
+            Mawanella, Sri Lanka
+          </span>
 
           <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] text-walnut">
             The Art of Engraving,
-            <span className="block italic text-copper">
-              Uniquely Yours.
-            </span>
+            <span className="block italic text-copper">Uniquely Yours.</span>
           </h1>
 
           <p className="text-taupe text-lg leading-relaxed max-w-lg">
@@ -85,7 +168,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Hero Image Card */}
         <div className="card-soft overflow-hidden">
           <div className="relative aspect-[16/11] bg-sand">
             <Image
@@ -112,7 +194,7 @@ export default function Home() {
       </section>
 
       {/* ============================================
-          SERVICES HIGHLIGHT STRIP
+          SERVICES STRIP
       ============================================ */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -133,7 +215,7 @@ export default function Home() {
       </section>
 
       {/* ============================================
-          CUSTOMER JOURNEY CARDS
+          JOURNEY CARDS
       ============================================ */}
       <section className="bg-sand py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -152,10 +234,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {journeyCards.map((card) => (
-              <div
-                key={card.title}
-                className="card-soft p-7 flex flex-col"
-              >
+              <div key={card.title} className="card-soft p-7 flex flex-col">
                 <div
                   className={`w-12 h-1 rounded-full mb-5 ${
                     card.accent === "copper"
@@ -185,7 +264,7 @@ export default function Home() {
       </section>
 
       {/* ============================================
-          ABOUT LASER TECH
+          ABOUT
       ============================================ */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -244,7 +323,7 @@ export default function Home() {
       </section>
 
       {/* ============================================
-          CTA SECTION
+          CTA
       ============================================ */}
       <section className="bg-walnut text-ivory py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-6">
