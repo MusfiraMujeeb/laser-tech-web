@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { productItems } from "../data/products";
+import { connectMongo } from "@/lib/mongodb";
+import { Product, IProduct } from "@/models/Product";
 
 const categories = [
   "All",
@@ -28,10 +29,16 @@ export default async function ProductsPage({
 }) {
   const params = await searchParams;
   const selectedCategory = (params.category as Category) || "All";
+
+  await connectMongo();
+  const allProducts = (await Product.find({})
+    .sort({ createdAt: -1 })
+    .lean()) as unknown as IProduct[];
+
   const filteredProducts =
     selectedCategory === "All"
-      ? productItems
-      : productItems.filter((item) => item.category === selectedCategory);
+      ? allProducts
+      : allProducts.filter((item) => item.category === selectedCategory);
 
   return (
     <div className="min-h-screen bg-ivory text-charcoal px-4 py-12">
@@ -101,10 +108,9 @@ export default async function ProductsPage({
 
             return (
               <article
-                key={product.id}
+                key={product.slug}
                 className="card-soft flex flex-col overflow-hidden"
               >
-                {/* Product Image */}
                 <div className="relative aspect-[4/3] bg-sand">
                   <Image
                     src={product.image}
@@ -122,9 +128,18 @@ export default async function ProductsPage({
                       {product.discountPercent}% Off
                     </span>
                   )}
+                  {product.type === "ready" && (
+                    <span className="absolute bottom-3 left-3 px-2 py-1 rounded-md text-[10px] font-black uppercase bg-success text-whatsapp-dark border border-whatsapp/25">
+                      Ready to Ship
+                    </span>
+                  )}
+                  {product.type === "custom" && (
+                    <span className="absolute bottom-3 left-3 px-2 py-1 rounded-md text-[10px] font-black uppercase bg-sand text-walnut border border-wood-border">
+                      Made to Order
+                    </span>
+                  )}
                 </div>
 
-                {/* Product Info */}
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
                   <p className="text-[10px] uppercase tracking-widest text-oak font-bold">
                     {product.category} / {product.subcategory}
@@ -136,7 +151,6 @@ export default async function ProductsPage({
                     {product.description}
                   </p>
 
-                  {/* Price or Request a Quote */}
                   <div className="text-sm font-bold">
                     {hasPrice ? (
                       product.discountPercent > 0 ? (
@@ -160,7 +174,6 @@ export default async function ProductsPage({
                     )}
                   </div>
 
-                  {/* Availability Badge */}
                   <span
                     className={`inline-block px-2 py-1 rounded-full text-[10px] font-bold border w-fit ${
                       product.available
@@ -171,7 +184,6 @@ export default async function ProductsPage({
                     {product.available ? "Available" : "Unavailable"}
                   </span>
 
-                  {/* Actions */}
                   <div className="mt-auto pt-3 flex gap-3">
                     <Link
                       href={`/products/${product.slug}`}
