@@ -144,11 +144,11 @@ export default async function Home() {
               Mawanella · Sri Lanka · Since 2019
             </p>
 
-            <h1 className="font-heading text-6xl md:text-7xl lg:text-[7rem] xl:text-[8rem] leading-[0.95] tracking-tight text-beige font-medium">
-              The Art of
-              <br />
-              <span className="italic text-oak">Engraving.</span>
-            </h1>
+           <h1 className="font-heading text-6xl md:text-7xl lg:text-[7rem] xl:text-[8rem] leading-[0.95] tracking-tight font-medium">
+  <span className="text-[#9DA960]">The Art of</span>
+  <br />
+  <span className="italic text-oak">Engraving.</span>
+</h1>
 
             <p className="text-base lg:text-lg text-sand/85 max-w-lg leading-relaxed pt-4">
               Laser cutting, engraving, CNC routing, and custom production for
