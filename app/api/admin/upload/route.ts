@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { existsSync } from "fs";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(req: Request) {
   try {
@@ -13,12 +17,7 @@ export async function POST(req: Request) {
     }
 
     // Validate file type
-    const allowedTypes = [
-      "image/jpeg",
-      "image/jpg",
-      "image/png",
-      "image/webp",
-    ];
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
         { error: "Only JPG, PNG, and WebP images are allowed" },
@@ -34,36 +33,47 @@ export async function POST(req: Request) {
       );
     }
 
-    // Generate unique filename
-    const timestamp = Date.now();
-    const ext = path.extname(file.name) || ".jpg";
-    const baseName = path
-      .basename(file.name, ext)
+    // Convert file to buffer
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Generate unique public ID
+    const originalName = file.name || "image";
+    const baseName = originalName
+      .replace(/\.[^.]+$/, "")
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "")
       .slice(0, 40);
-    const filename = `${baseName}-${timestamp}${ext}`;
+    const publicId = `laser-tech/products/${baseName}-${Date.now()}`;
 
-    // Ensure the products directory exists
-    const uploadDir = path.join(process.cwd(), "public", "products");
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
+    // Upload to Cloudinary
+    const uploadResult = await new Promise<any>((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          public_id: publicId,
+          folder: "laser-tech/products",
+          resource_type: "image",
+          // Auto-optimize: convert to best format, apply quality
+          transformation: [
+            { quality: "auto:good", fetch_format: "auto" },
+          ],
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      uploadStream.end(buffer);
+    });
 
-    // Write the file
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const filePath = path.join(uploadDir, filename);
-    await writeFile(filePath, buffer);
-
-    // Return the public path
+    // Return the secure URL
     return NextResponse.json({
-      path: `/products/${filename}`,
-      filename,
+      path: uploadResult.secure_url,
+      filename: uploadResult.public_id,
     });
   } catch (error) {
-    console.error("Upload failed:", error);
+    console.error("Cloudinary upload failed:", error);
     return NextResponse.json(
       { error: "Failed to upload file" },
       { status: 500 }
