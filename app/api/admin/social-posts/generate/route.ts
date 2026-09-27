@@ -49,7 +49,7 @@ Generate the following in EXACTLY this JSON format (no markdown, just raw JSON):
 Keep the tone warm, premium, and inviting. Do not use overly salesy language.`;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -68,13 +68,13 @@ Keep the tone warm, premium, and inviting. Do not use overly salesy language.`;
     );
 
     if (!response.ok) {
-      const err = await response.text();
-      console.error("Gemini API error:", err);
-      return NextResponse.json(
-        { error: "AI generation failed. Please try again." },
-        { status: 500 }
-      );
-    }
+  const err = await response.text();
+  console.error("Gemini API error:", err);
+  return NextResponse.json(
+    { error: `AI failed: ${response.status} — ${err.slice(0, 200)}` },
+    { status: 500 }
+  );
+}
 
     const data = await response.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
