@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Generate unique public ID
+        // Generate unique public ID (folder applied separately via `folder` option)
     const originalName = file.name || "image";
     const baseName = originalName
       .replace(/\.[^.]+$/, "")
@@ -45,20 +45,20 @@ export async function POST(req: Request) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "")
       .slice(0, 40);
-    const publicId = `laser-tech/products/${baseName}-${Date.now()}`;
+    const publicId = `${baseName}-${Date.now()}`;
 
     // Upload to Cloudinary
     const uploadResult = await new Promise<any>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
+        
         {
-          public_id: publicId,
-          folder: "laser-tech/products",
-          resource_type: "image",
-          // Auto-optimize: convert to best format, apply quality
-          transformation: [
-            { quality: "auto:good", fetch_format: "auto" },
-          ],
-        },
+  public_id: publicId,
+  folder: "laser-tech/products",
+  resource_type: "image",
+  transformation: [
+    { quality: "auto:good", fetch_format: "auto" },
+  ],
+},
         (error, result) => {
           if (error) reject(error);
           else resolve(result);
