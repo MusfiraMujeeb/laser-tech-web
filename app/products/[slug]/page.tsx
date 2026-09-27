@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { connectMongo } from "@/lib/mongodb";
 import { Product, IProduct } from "@/models/Product";
 
+export const dynamic = "force-dynamic";
+
 function discountedPrice(price: number, discount: number) {
   if (!discount) return price;
   return Math.round(price - (price * discount) / 100);
