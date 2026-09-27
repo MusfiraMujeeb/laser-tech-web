@@ -2,6 +2,9 @@ import type { MetadataRoute } from "next";
 import { connectMongo } from "@/lib/mongodb";
 import { Product } from "@/models/Product";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lasertech.lk";
 

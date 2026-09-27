@@ -3,6 +3,8 @@
 import { useEffect, useState, FormEvent } from "react";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 type OfferForm = {
   _id?: string;
   name: string;

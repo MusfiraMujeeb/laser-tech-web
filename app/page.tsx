@@ -4,6 +4,8 @@ import { connectMongo } from "@/lib/mongodb";
 import { Offer } from "@/models/Offer";
 import { Product } from "@/models/Product";
 
+export const dynamic = "force-dynamic";
+
 async function getActiveOffers() {
   try {
     await connectMongo();

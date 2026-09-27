@@ -4,6 +4,8 @@ import { connectMongo } from "@/lib/mongodb";
 import { Product, IProduct } from "@/models/Product";
 import { Offer } from "@/models/Offer";
 
+export const dynamic = "force-dynamic";
+
 const categories = [
   "All",
   "Awards",
