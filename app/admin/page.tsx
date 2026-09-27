@@ -371,6 +371,18 @@ export default function AdminDashboardPage() {
   </p>
 </Link>
 
+          <Link href="/admin/social" className="card-soft p-6 block">
+  <p className="text-xs font-black uppercase tracking-widest text-copper mb-2">
+    Social Media
+  </p>
+  <h3 className="font-heading text-2xl font-semibold text-walnut mb-2">
+    Generate captions →
+  </h3>
+  <p className="text-sm text-taupe">
+    AI-powered captions for Instagram, Facebook, and WhatsApp.
+  </p>
+</Link>
+
             </section>
           </>
         )}
